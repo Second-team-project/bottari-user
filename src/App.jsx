@@ -13,9 +13,9 @@ function App() {
 
   // 백엔드 연결 테스트
   useEffect(() => {
-    console.log('API URL:', import.meta.env.VITE_API_URL);
+    console.log('API URL:', import.meta.env.VITE_SERVER_URL);
     const test = async () => {
-      const res = await axiosIns.get('/test/success');
+      const res = await axiosIns.get('/api/test/success');
       console.log(res.data);
     };
     test();

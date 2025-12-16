@@ -11,7 +11,7 @@ import BottariLogo2 from "../logo/BottariLogo2.jsx";
 // 아이콘 import
 import { User, Globe } from 'lucide-react';
 
-export default function Header() {
+export default function HeaderWeb() {
 
   return(
     <>
@@ -20,7 +20,7 @@ export default function Header() {
         {/* 왼쪽 영역 */}
         <div className="header-web-left-container">
           <div className="header-web-logo-wrapper header-web-click-effect">
-            <BottariLogo2 />
+            <BottariLogo2 width={135} height={75}/>
           </div>
         </div>
 

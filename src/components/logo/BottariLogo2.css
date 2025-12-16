@@ -27,3 +27,9 @@
   transform-origin: center center;
   animation: blink 3s ease-in-out infinite;
 }
+
+/* 홍조 둥실둥실 */
+.bottari-logo2-cls-3 {
+  transform-box: fill-box;
+  animation: float-blush 2.5s ease-in-out infinite;
+}

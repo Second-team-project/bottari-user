@@ -1,0 +1,27 @@
+/* 버튼 컨테이너 */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.login-text {
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.login-social-kakao-btn {
+  background-color: #FEE500;
+  border-radius: 12px;
+
+  width: 235px;
+}
+
+.login-kakao-btn {
+  width: 235px;
+}
+
+.login-kakao-text {
+  visibility: hidden;
+}

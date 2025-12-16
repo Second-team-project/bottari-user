@@ -5,7 +5,7 @@
  */
 
 import "./MenuMobile.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AnimatePresence, motion } from "motion/react"
 
 import { setMenuFlg } from "../../store/slices/menuSlice";
@@ -14,8 +14,7 @@ import { setMenuFlg } from "../../store/slices/menuSlice";
 import { X } from "lucide-react";
 
 export default function MenuMobile() {
-  const dispatch = useDispatch()
-  const menuFlg = useSelector(state => state.menu.menuFlg);
+  const dispatch = useDispatch();
 
   function handleMenu() {
     dispatch(setMenuFlg(false))
