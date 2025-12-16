@@ -1,0 +1,37 @@
+.app-container {
+  max-width: 1024px;
+  margin: 0 auto;
+  background-color: white;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* =========================================
+   ||     Mobile First Strategy
+   ||     '모바일' 기준
+   ========================================= */
+
+/* 기본: 모바일 모드 (웹 헤더 숨김, 모바일 요소 보임) */
+.app-header-web-wrapper {
+  display: none;
+}
+
+.app-header-mobile-wrapper {
+  display: block;
+}
+
+/* =========================================
+   Desktop / Tablet Styles
+   화면이 769px 이상일 때 적용됩니다.
+   ========================================= */
+@media (min-width: 769px) {
+  /* 웹 헤더 보임 */
+  .app-header-web-wrapper {
+    display: block;
+  }
+
+  /* 모바일 요소 숨김 */
+  .app-header-mobile-wrapper {
+    display: none;
+  }
+}

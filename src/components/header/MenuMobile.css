@@ -1,0 +1,107 @@
+.menu-mobile-blur-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  z-index: 10;
+
+}
+
+.menu-mobile-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  
+  width: 70%;
+  height: 100%;
+  padding: 10px;
+  background-color: #ffffff;
+  
+  border-radius: 0 30px 30px 0;
+  
+  z-index: 11;
+  
+  /* 드래그 방지 */
+  user-select: none; 
+  -webkit-user-select: none;
+}
+
+/* 상단 */
+.menu-mobile-top {
+  width: 80%;
+  height: 10%;
+  position: relative;
+  top: 13px;
+  left: 13px;
+}
+
+/* X 표시 */
+.menu-mobile-x-wrapper {
+  width: 14px;
+  height: 14px;
+}
+.menu-mobile-x-wrapper:hover {
+  cursor: pointer;
+}
+
+/* 메뉴 리스트 */
+.menu-mobile-list-container {
+  height: 100%;
+  padding: 3% 5%;
+  display: flex;
+  flex-direction: column;
+  gap: 1%;
+}
+.menu-mobile-list-item {
+  border-radius: 15px;
+  padding: 2% 5%;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.menu-mobile-list-item-padding {
+  margin-left: 5%;
+  padding-left: 5%;
+  border-left: 3px solid var(--bottari-navy);
+  border-radius: 0 15px 15px 0;
+}
+
+.menu-mobile-list-item-padding h3 {
+  font-size: 0.9em;
+  font-weight: 700;
+}
+
+/* 호버&클릭 효과 */
+.menu-mobile-list-item:hover,
+.menu-mobile-list-item:active {
+  transform: scale(0.98);
+  /* color: var(--bottari-navy); */
+  background-color: var(--bottari-skyblue);
+}
+
+.menu-mobile-list-item-padding:hover,
+.menu-mobile-list-item-padding:active {
+  transform: scale(0.98);
+  /* color: var(--bottari-navy); */
+  background-color: var(--bottari-pink);
+}
+
+/* .menu-mobile-list-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: var(--bottari-navy);
+  transition: width 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.menu-mobile-list-item:hover::after {
+  width: 100%;
+} */

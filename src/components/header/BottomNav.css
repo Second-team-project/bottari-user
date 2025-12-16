@@ -1,0 +1,62 @@
+/* 전체 영역 */
+.bottom-nav-container {
+  width: 100%;
+  height: 100px;
+
+  border: 1px solid var(--bottari-blue);
+  border-radius: 10px;
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+
+  /* 드래그 방지 */
+  user-select: none;
+  -webkit-user-select: none;
+
+  overflow: hidden;
+}
+
+/* 아이콘 */
+.bottom-nav-icon {
+  width: 15%;
+  color: var(--bottari-navy);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+}
+
+/* 클릭된 메뉴 - relative 설정 */
+.menu-relative {
+  position: relative;
+}
+
+/* 떨어지는 보따리 아이콘 */
+.bottari-drop {
+  position: absolute;
+  /* left: 50%; */
+  top: -140%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* 클릭 효과 */
+.bottom-nav-icon:active {
+  transform: scale(0.95);
+}
+
+/* 세로줄 (Divider) */
+.bottom-nav-divider {
+  width: 1px;
+  height: 40%;
+  background-color: var(--bottari-navy);
+}
