@@ -11,8 +11,11 @@ export default function Social() {
   useEffect(() => {
     async function getAuth() {
       try {
+        const result = await dispatch(reissueThunk()).unwrap();
+        console.log('✅ 액세스 토큰 발급 성공:', result);  // 여기!
+        console.log('액세스 토큰:', result.data?.accessToken);
         await dispatch(reissueThunk());
-        navigate('/posts', { replace: true });
+        navigate('/', { replace: true });
 
       } catch (error) {
         console.log('Social: ', error);
