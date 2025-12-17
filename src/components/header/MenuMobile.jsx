@@ -12,9 +12,11 @@ import { setMenuFlg } from "../../store/slices/menuSlice";
 
 // 아이콘 import
 import { X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function MenuMobile() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function handleMenu() {
     dispatch(setMenuFlg(false))
@@ -47,20 +49,40 @@ export default function MenuMobile() {
 
         {/* 메뉴 부분 */}
         <div className="menu-mobile-list-container">
-          <div className="menu-mobile-list-item"><h3>이용안내</h3></div>
-          <div className="menu-mobile-list-item"><h3>요금안내</h3></div>
+          <div className="menu-mobile-list-item" onClick={ () => { navigate('/guide/usage'); handleMenu(); }}>
+            <h3>이용안내</h3>
+          </div>
+          <div className="menu-mobile-list-item" onClick={ () => { navigate('/guide/price'); handleMenu(); }}>
+            <h3>요금안내</h3>
+          </div>
           <br />
-          <div className="menu-mobile-list-item"><h3>예약</h3></div>
-          <div className="menu-mobile-list-item menu-mobile-list-item-padding"><h3>보따리 옮기기</h3></div>
-          <div className="menu-mobile-list-item menu-mobile-list-item-padding"><h3>보따리 맡기기</h3></div>
+          <div className="menu-mobile-list-item" onClick={ () => { navigate('/reserve'); handleMenu(); }}>
+            <h3>예약</h3>
+          </div>
+          <div className="menu-mobile-list-item menu-mobile-list-item-padding" onClick={ () => { navigate('/reserve/delivery'); handleMenu(); }}>
+            <h3>보따리 옮기기</h3>
+          </div>
+          <div className="menu-mobile-list-item menu-mobile-list-item-padding" onClick={ () => { navigate('/reserve/storage'); handleMenu(); }}>
+            <h3>보따리 맡기기</h3>
+          </div>
           <br />
-          <div className="menu-mobile-list-item"><h3>내 보따리 확인하기</h3></div>
+          <div className="menu-mobile-list-item" onClick={ () => { navigate('/reserve/list'); handleMenu(); }}>
+            <h3>내 보따리 확인하기</h3>
+          </div>
           <br />
-          <div className="menu-mobile-list-item"><h3>보따리 후기</h3></div>
+          <div className="menu-mobile-list-item" onClick={ () => { navigate('/review'); handleMenu(); }}>
+            <h3>보따리 후기</h3>
+          </div>
           <br />
-          <div className="menu-mobile-list-item"><h3>고객센터</h3></div>
-          <div className="menu-mobile-list-item menu-mobile-list-item-padding"><h3>공지사항</h3></div>
-          <div className="menu-mobile-list-item menu-mobile-list-item-padding"><h3>자주 묻는 질문</h3></div>
+          <div className="menu-mobile-list-item" onClick={ () => { navigate('/service'); handleMenu(); }}>
+            <h3>고객센터</h3>
+          </div>
+          <div className="menu-mobile-list-item menu-mobile-list-item-padding" onClick={ () => { navigate('/service/notice'); handleMenu(); }}>
+            <h3>공지사항</h3>
+          </div>
+          <div className="menu-mobile-list-item menu-mobile-list-item-padding" onClick={ () => { navigate('/service/faq'); handleMenu(); }}>
+            <h3>자주 묻는 질문</h3>
+          </div>
         </div>
       </motion.div>
     </>

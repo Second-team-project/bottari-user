@@ -4,9 +4,10 @@
  * 251213 v1.0.0 N init
  */
 
+import "./BottomNav.css";
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import "./BottomNav.css";
+import { useNavigate } from "react-router-dom";
 
 import BottariIcon from "../logo/BottariIcon.jsx";
 
@@ -14,23 +15,34 @@ import BottariIcon from "../logo/BottariIcon.jsx";
 import { User, Languages, Menu } from 'lucide-react';
 
 export default function BottomNav() {
-  const menus = ['홈', '예약', '조회', '요금'];
-  const [clickedMenu, setClickedMenu] = useState(null);
+  const navigate = useNavigate()
 
-  const handleMenuClick = (index) => {
-    setClickedMenu(index);
+  // ===== 보따리 떨어지는 애니메이션
+  const [clickedMenu, setClickedMenu] = useState(null);
+  const menus = [
+    { label: `홈`, path: '/'},
+    { label: `예약`, path: '/reserve'},
+    { label: `조회`, path: '/reserve/list'},
+    { label: `요금`, path: '/guide'},
+  ];
+
+  const handleMenuClick = (index, path) => {
+    setClickedMenu(index);  // 애니메이션 인덱스
+    navigate(path);  // 내비게이션 path
   };
 
   return(
     <>
       <div className="bottom-nav-container">
+
+        {/* 애니메이션 작동 인덱스 */}
         {menus.map((menu, index) => (
           <React.Fragment key={index}>
             <div
               className={`bottom-nav-icon bottom-nav-click-effect ${clickedMenu === index ? 'menu-relative' : ''}`}
-              onClick={() => handleMenuClick(index)}
+              onClick={() => handleMenuClick(index, menu.path)}
             >
-              <h3>{menu}</h3>
+              <h3>{menu.label}</h3>
               {clickedMenu === index && (
                 <motion.div
                   className="bottari-drop"
@@ -51,6 +63,7 @@ export default function BottomNav() {
             {index < menus.length - 1 && <div className="bottom-nav-divider"></div>}
           </React.Fragment>
         ))}
+
       </div>
     </>
   )

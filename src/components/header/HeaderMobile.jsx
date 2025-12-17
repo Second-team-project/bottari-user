@@ -26,13 +26,6 @@ export default function HeaderMobile() {
   function handleMenu() {
     dispatch(setMenuFlg(true))
   }
-  
-  function navMain() {
-    navigate('/');
-  }
-  function navLogin() {
-    navigate('/login');
-  }
 
   // 화면 크기가 769px 이상이 되면 메뉴 자동으로 닫기
   useEffect(() => {
@@ -77,7 +70,7 @@ export default function HeaderMobile() {
 
         {/* 가운데 영역 : 로고 */}
         <div className="header-mobile-middle-container">
-          <div className="header-mobile-logo-wrapper" onClick={navMain}>
+          <div className="header-mobile-logo-wrapper" onClick={() => { navigate('/') }}>
             <BottariLogo2 width = {135}  height = {75} />
           </div>
         </div>
@@ -88,7 +81,7 @@ export default function HeaderMobile() {
             {/* <span className="header-mobile-icon-text">한국어</span> */}
             <Globe size={20} />
           </div>
-          <div className="header-mobile-icon-wrapper" onClick={navLogin}>
+          <div className="header-mobile-icon-wrapper" onClick={() => { navigate('/login') }}>
             {/* <span className="header-mobile-icon-text">로그인</span> */}
             <User size={24} />
           </div>
