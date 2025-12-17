@@ -1,0 +1,30 @@
+/* 전체 페이지 */
+.reserve-page-container {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+/* 버튼 */
+.reserve-btn-style {
+  width: 60%;
+  height: 8rem;
+  border: 1px solid var(--bottari-navy);
+  border-radius: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reserve-btn-style-blue {
+  background-color: var(--bottari-skyblue);
+}
+.reserve-btn-style-pink {
+  background-color: var(--bottari-pink);
+}
+.reserve-btn-text {
+  color: var(--bottari-navy);
+  font-weight: 600;
+  font-size: 2.5rem;
+}

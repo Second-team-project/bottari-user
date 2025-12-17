@@ -1,0 +1,12 @@
+/* 소제목 */
+.loading-title-wrapper {
+  width: 100%;
+  height: 3rem;
+  padding: 4%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}

@@ -5,13 +5,25 @@
   min-height: 100vh;
   position: relative;
 }
+/* 페이지 소제목 */
+.page-title-wrapper {
+  width: 100%;
+  height: 3rem;
+  padding: 4%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
 
 /* =========================================
    ||     Mobile First Strategy
    ||     '모바일' 기준
    ========================================= */
 
-/* 기본: 모바일 모드 (웹 헤더 숨김, 모바일 요소 보임) */
+/* 기본: 모바일 모드 (웹 헤더 숨김, 모바일 요소 보임, 소제목 크기) */
 .app-header-web-wrapper {
   display: none;
 }
@@ -20,9 +32,13 @@
   display: block;
 }
 
+h2 {
+  font-size: 1.5rem;
+}
+
 /* =========================================
-   Desktop / Tablet Styles
-   화면이 769px 이상일 때 적용됩니다.
+   ||     Desktop / Tablet Styles
+   |      화면이 769px 이상일 때 적용
    ========================================= */
 @media (min-width: 769px) {
   /* 웹 헤더 보임 */
@@ -33,6 +49,10 @@
   /* 모바일 요소 숨김 */
   .app-header-mobile-wrapper {
     display: none;
+  }
+
+  h2 {
+    font-size: 1.7rem;
   }
 }
 
