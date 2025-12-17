@@ -31,4 +31,5 @@ const slice = createSlice({
 export const {
   clearAuth,
 } = slice.actions;
+
 export default slice.reducer;

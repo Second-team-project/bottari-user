@@ -1,5 +1,5 @@
 import { createAsyncThunk  } from "@reduxjs/toolkit";
-import axiosInstance from "../../api/axiosInstance.js";
+import axiosIns from "../../api/axiosInstance.js";
 
 /**
  * 로그아웃
@@ -10,7 +10,7 @@ export const logoutThunk = createAsyncThunk(
     try {
       const url = '/api/auth/logout';
 
-      const response = await axiosInstance.post(url);
+      const response = await axiosIns.post(url);
 
       return response.data;
     } catch(error) {
@@ -28,9 +28,10 @@ export const reissueThunk = createAsyncThunk(
     try {
       const url = '/api/auth/reissue';
 
-      const response = await axiosInstance.post(url);
+      const response = await axiosIns.post(url);
 
       return response.data;
+      
     } catch(error) {
       return rejectWithValue(error);
     }
