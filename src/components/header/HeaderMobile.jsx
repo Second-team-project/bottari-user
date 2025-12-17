@@ -16,12 +16,18 @@ import MenuMobile from "./MenuMobile.jsx";
 import { setMenuFlg } from "../../store/slices/menuSlice.js";
 
 // 아이콘 import
-import { User, Globe, Menu } from 'lucide-react';
+import { User, UserRound, Globe, Menu, LogOut } from 'lucide-react';
+
 
 export default function HeaderMobile() {
+  // ===== hook
   const dispatch = useDispatch()
   const navigate = useNavigate();
+
+  // ===== 전역 state
   const menuFlg = useSelector(state => state.menu.menuFlg);
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
+
 
   function handleMenu() {
     dispatch(setMenuFlg(true))
@@ -83,7 +89,12 @@ export default function HeaderMobile() {
           </div>
           <div className="header-mobile-icon-wrapper" onClick={() => { navigate('/login') }}>
             {/* <span className="header-mobile-icon-text">로그인</span> */}
-            <User size={24} />
+            {
+              isLoggedIn 
+              ? <LogOut size={24} />
+              : <UserRound size={24} />
+            }
+            
           </div>
         </div>
 

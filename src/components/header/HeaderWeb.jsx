@@ -10,11 +10,14 @@ import { useNavigate } from "react-router-dom";
 import BottariLogo2 from "../logo/BottariLogo2.jsx";
 
 // 아이콘 import
-import { User, Globe } from 'lucide-react';
+import { User, UserRound, Globe } from 'lucide-react';
+import { useSelector } from "react-redux";
 
 export default function HeaderWeb() {
   const navigate = useNavigate()
 
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
+  console.log(isLoggedIn)
   
 
 
@@ -90,8 +93,8 @@ export default function HeaderWeb() {
                 <Globe size={20} />
               </div>
               <div className="header-web-icon-wrapper header-web-click-effect" onClick={() => {navigate('/login')}}>
-                <span className="header-web-icon-text">로그인</span>
-                <User size={20} />
+                <span className="header-web-icon-text">{isLoggedIn ? '로그아웃' : '로그인' }</span>
+                <UserRound size={20} />
               </div>
             </div>
 

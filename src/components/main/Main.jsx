@@ -1,8 +1,5 @@
 import "./Main.css";
-import banner from "../../../public/main.jpg";
-
-import BottariLogo2 from "../logo/BottariLogo2.jsx";
-
+import banner from "/main.jpg";
 
 export default function Main() {
     
