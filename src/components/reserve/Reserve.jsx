@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import "./Reserve.css";
+import { useSelector } from "react-redux";
+import ReserveLoginModal from "../login/ReserveLoginModal.jsx";
 
 export default function Reserve() {
   const navigate = useNavigate()
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
   function navReserveDelivery() {
     navigate('/Reserve/delivery');
@@ -14,6 +17,7 @@ export default function Reserve() {
 
   return(
     <>
+      {!isLoggedIn && <ReserveLoginModal /> }
       {/* 전체 컨테이너 */}
       <div className="reserve-page-container">
         {/* 페이지 제목 */}

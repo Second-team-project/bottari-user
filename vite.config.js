@@ -5,6 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    // host: '0.0.0.0', // TODO 모바일 테스트용
+    // port: 5173,      // TODO 모바일 테스트용
     proxy: {
       '/api' : {
         target: 'http://localhost:3000',

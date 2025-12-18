@@ -1,8 +1,13 @@
+import { useSelector } from "react-redux";
 import "./ReserveList.css";
+import ReserveListLoginModal from "../login/reserveListLoginModal.jsx";
 
 export default function ReserveList() {
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
   return(
     <>
+      { !isLoggedIn && <ReserveListLoginModal /> }
       {/* 전체 컨테이너 */}
       <div className="reserve-list-container">
         {/* 페이지 제목 */}

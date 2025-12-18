@@ -8,7 +8,7 @@ export const logoutThunk = createAsyncThunk(
   'auth/logoutThunk',
   async (_, {rejectWithValue}) => {
     try {
-      const url = '/api/auth/logout';
+      const url = '/api/user/auth/logout';
 
       const response = await axiosIns.post(url);
 
@@ -26,7 +26,7 @@ export const reissueThunk = createAsyncThunk(
   'auth/reissueThunk',
   async(_, { rejectWithValue }) => {
     try {
-      const url = '/api/auth/reissue';
+      const url = '/api/user/auth/reissue';
 
       const response = await axiosIns.post(url);
 

@@ -22,6 +22,7 @@ import Service from "../components/service/Service.jsx";
 import FAQ from "../components/service/FAQ.jsx";
 import Notice from "../components/service/Notice.jsx";
 import NoticeDetail from "../components/service/NoticeDetail.jsx";
+// 로그인 관련
 import Social from "../components/auth/Social.jsx";
 
 const router = createBrowserRouter([
