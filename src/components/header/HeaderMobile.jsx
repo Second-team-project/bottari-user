@@ -5,15 +5,13 @@
  */
 
 import "./HeaderMobile.css";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux"
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "motion/react"
 
 import BottariLogo2 from "../logo/BottariLogo2.jsx";
 import MenuMobile from "./MenuMobile.jsx";
-
-import { setMenuFlg } from "../../store/slices/menuSlice.js";
 
 // 아이콘 import
 import { User, UserRound, Globe, Menu, LogOut } from 'lucide-react';
@@ -21,17 +19,13 @@ import { User, UserRound, Globe, Menu, LogOut } from 'lucide-react';
 
 export default function HeaderMobile() {
   // ===== hook
-  const dispatch = useDispatch()
   const navigate = useNavigate();
 
   // ===== 전역 state
-  const menuFlg = useSelector(state => state.menu.menuFlg);
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
 
-
-  function handleMenu() {
-    dispatch(setMenuFlg(true))
-  }
+  // ===== 로컬 state
+  const [menuFlg, setMenuFlg] = useState(false)
 
   // 화면 크기가 769px 이상이 되면 메뉴 자동으로 닫기
   useEffect(() => {
@@ -39,13 +33,13 @@ export default function HeaderMobile() {
 
     const handleResize = (e) => {
       if (e.matches && menuFlg) {
-        dispatch(setMenuFlg(false));
+        setMenuFlg(false);
       }
     };
 
     // 초기 체크
     if (mediaQuery.matches && menuFlg) {
-      dispatch(setMenuFlg(false));
+      setMenuFlg(false);
     }
 
     // 리스너 추가
@@ -53,15 +47,15 @@ export default function HeaderMobile() {
 
     // 클린업
     return () => mediaQuery.removeEventListener('change', handleResize);
-  }, [dispatch, menuFlg]);
+  }, [menuFlg]);
 
-  console.log('모바일 메뉴🚩 ', menuFlg);
+  // console.log('모바일 메뉴🚩 ', menuFlg);
 
   return(
     <>
       <div className="header-mobile-menu">
         <AnimatePresence>
-          { menuFlg && <MenuMobile /> }
+          { menuFlg && <MenuMobile menuFlgFalse={() => setMenuFlg(false) } /> }
         </AnimatePresence>
       </div>
       
@@ -69,7 +63,7 @@ export default function HeaderMobile() {
 
         {/* 왼쪽 영역 : 메뉴 */}
         <div className="header-mobile-left-container">
-          <div className="header-mobile-menu-wrapper" onClick={handleMenu}>
+          <div className="header-mobile-menu-wrapper" onClick={() => setMenuFlg(true)}>
             <Menu size={30} />
           </div>
         </div>

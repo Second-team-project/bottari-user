@@ -16,7 +16,7 @@ const slice = createSlice({
   reducers: {
     setMenuFlg(state, action) {
       state.menuFlg = action.payload;
-    }
+    },
   },
 });
 

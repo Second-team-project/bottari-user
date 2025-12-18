@@ -4,27 +4,50 @@
   flex-direction: column;
 }
 
-
+/* 버튼 영역 */
+.reserve-btn-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 5%;
+}
 
 /* 버튼 */
 .reserve-btn-style {
-  width: 60%;
-  height: 8rem;
+  /* width: 60%; */
+  height: 150px;
   border: 1px solid var(--bottari-navy);
   border-radius: 10px;
+  margin: 10% 10% 0 10%;
 
   display: flex;
   justify-content: center;
   align-items: center;
+
+  position: relative;
 }
-.reserve-btn-style-blue {
+.reserve-btn-style:hover {
+  cursor: pointer;
+  border-width: 2px;
+  filter: brightness(1.05);
+}
+.reserve-btn-style:active {
+  transform: scale(0.95);
+  filter: brightness(0.95);
+}
+.reserve-btn-storage {
   background-color: var(--bottari-skyblue);
 }
-.reserve-btn-style-pink {
+.reserve-btn-delivery {
   background-color: var(--bottari-pink);
 }
 .reserve-btn-text {
   color: var(--bottari-navy);
   font-weight: 600;
   font-size: 2.5rem;
+}
+
+.reserve-btn-icon-style {
+  position: absolute;
+  top: -17%;
 }

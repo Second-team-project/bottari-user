@@ -5,18 +5,6 @@
   min-height: 100vh;
   position: relative;
 }
-/* 페이지 소제목 */
-.page-title-wrapper {
-  width: 100%;
-  height: 3rem;
-  padding: 4%;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 3rem;
-}
 
 /* =========================================
    ||     Mobile First Strategy
@@ -33,7 +21,7 @@
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 /* =========================================
@@ -55,6 +43,36 @@ h2 {
     font-size: 1.7rem;
   }
 }
+
+/* =========================================
+   ||     Page title
+   ||     '모바일' 기준
+   ========================================= */
+.page-title-wrapper {
+  width: 100%;
+  height: 3rem;
+  margin-bottom: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+@media (min-width: 769px) {
+  .page-title-wrapper {
+    width: 100%;
+    height: 3rem;
+    margin: 2.5rem auto;
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+  }
+}
+
 
 /* =========================================
    logo & Icon

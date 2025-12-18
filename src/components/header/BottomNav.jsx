@@ -11,11 +11,9 @@ import { useNavigate } from "react-router-dom";
 
 import BottariIcon from "../logo/BottariIcon.jsx";
 
-// 아이콘 import
-import { User, Languages, Menu } from 'lucide-react';
 
 export default function BottomNav() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // ===== 보따리 떨어지는 애니메이션
   const [clickedMenu, setClickedMenu] = useState(null);

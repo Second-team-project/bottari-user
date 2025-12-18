@@ -18,7 +18,7 @@
   height: 60vh;
   background-color: #fff;
   border-radius: 10px;
-  padding: 5% 3%;
+  padding: 3rem 1rem;
 
   position: fixed;
   top: 50%;
@@ -36,7 +36,7 @@
     height: 70vh;
     background-color: #fff;
     border-radius: 10px;
-    padding: 5% 3%;
+    padding: 3rem 1rem;
   
     position: fixed;
     top: 20%;
@@ -55,20 +55,18 @@
   margin: 3rem 0;
 }
 
-.reserve-login-modal-text-web {
-  display: none;
-}
-@media (min-width: 769px) {
-  /* 웹 버전 */
-  .reserve-login-modal-text-web {
-    display: inline;
-  }
-  .reserve-login-modal-text-mobile {
-    display: none;
-  }
-}
 
 /* 버튼 영역 */
+.reserve-login-modal-kakao-btn-wrapper {
+  width: 220px;
+  height: 50px;
+  border: none;
+  border-radius: 12px;
+}
+.reserve-login-modal-kakao-btn {
+  width: 220px;
+}
+
 .reserve-login-modal-btn-container {
   display: flex;
   flex-direction: column;
@@ -79,11 +77,56 @@
 .reserve-login-modal-guest-btn-wrapper {
   background-color: #fff;
   border: 1px solid var(--bottari-navy);
-  border-radius: 12px;
-
-  width: 235px;
-  height: 58px;
-
+  border-radius: 8px;
+  
+  width: 220px;
+  height: 50px;
+  
   font-weight: 600;
   font-size: 1rem;
+}
+
+/* 버튼 웹 버전 */
+@media (min-width: 769px) {
+  /* 카카오 */
+  .reserve-login-modal-kakao-btn-wrapper {
+    width: 235px;
+    height: 50px;
+    border: none;
+    border-radius: 12px;
+  }
+  .reserve-login-modal-kakao-btn {
+    width: 235px;
+  }
+  /* 비회원 */
+  .reserve-login-modal-guest-btn-wrapper {
+    background-color: #fff;
+    border: 1px solid var(--bottari-navy);
+    border-radius: 8px;
+  
+    width: 230px;
+    height: 50px;
+  
+    font-weight: 600;
+    font-size: 1rem;
+  }
+}
+
+/* 버튼 효과 : 호버, 활성화 */
+.reserve-login-modal-kakao-btn-wrapper:hover {
+  transform: scale(0.98);
+  cursor: pointer;
+}
+.reserve-login-modal-kakao-btn-wrapper:active {
+  transform: scale(0.95);
+  filter: brightness(0.95);  
+}
+.reserve-login-modal-guest-btn-wrapper:hover {
+  transform: scale(0.98);
+  cursor: pointer;
+  border-width: 2px;
+}
+.reserve-login-modal-guest-btn-wrapper:active {
+  transform: scale(0.95);
+  filter: brightness(0.95);  
 }

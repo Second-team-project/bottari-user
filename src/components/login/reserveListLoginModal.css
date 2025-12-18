@@ -6,8 +6,9 @@
   background-color: rgba(0, 0, 0, 0.5);
 
   position: fixed;
+  top: 0;
 
-  z-index: 1;  
+  z-index: 15;  
 }
 
 /* 모바일 컨테이너 */
@@ -17,14 +18,14 @@
   height: 60vh;
   background-color: #fff;
   border-radius: 10px;
-  padding: 5% 3%;
+  padding: 3rem 1rem;
 
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 
-  z-index: 2;
+  z-index: 16;
 }
 
 @media (min-width: 769px) {
@@ -35,14 +36,14 @@
     height: 70vh;
     background-color: #fff;
     border-radius: 10px;
-    padding: 5% 3%;
+    padding: 3rem 1rem;
   
     position: fixed;
     top: 20%;
     left: 50%;
     transform: translateX(-50%);
   
-    z-index: 2;
+    z-index: 16;
   }
 }
 
@@ -51,40 +52,83 @@
   text-align: center;
   font-weight: 600;
 
-  margin: 3rem 0;
-}
-
-.reserve-list-login-modal-text-web {
-  display: none;
-}
-@media (min-width: 769px) {
-  /* 웹 버전 */
-  .reserve-list-login-modal-text-web {
-    display: inline;
-  }
-  .reserve-list-login-modal-text-mobile {
-    display: none;
-  }
+  margin: 2rem 0;
 }
 
 /* 버튼 영역 */
+.reserve-list-login-modal-kakao-btn-wrapper {
+  width: 220px;
+  height: 50px;
+  border: none;
+  border-radius: 12px;
+}
+.reserve-list-login-modal-kakao-btn {
+  width: 220px;
+}
+
 .reserve-list-login-modal-btn-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 .reserve-list-login-modal-guest-btn-wrapper {
   background-color: #fff;
   border: 1px solid var(--bottari-navy);
-  border-radius: 12px;
-
-  width: 235px;
-  height: 58px;
-
+  border-radius: 8px;
+  
+  width: 220px;
+  height: 50px;
+  
   font-weight: 600;
   font-size: 1rem;
+}
+
+/* 버튼 웹 버전 */
+@media (min-width: 769px) {
+  /* 카카오 */
+  .reserve-list-login-modal-kakao-btn-wrapper {
+    width: 235px;
+    height: 50px;
+    border: none;
+    border-radius: 12px;
+  }
+  .reserve-list-login-modal-kakao-btn {
+    width: 235px;
+  }
+  /* 비회원 */
+  .reserve-list-login-modal-guest-btn-wrapper {
+    background-color: #fff;
+    border: 2px solid var(--bottari-navy);
+    color: var(--bottari-navy);
+    border-radius: 8px;
+  
+    width: 230px;
+    height: 50px;
+  
+    font-weight: 600;
+    font-size: 1rem;
+  }
+}
+
+/* 버튼 효과 : 호버, 활성화 */
+.reserve-list-login-modal-kakao-btn-wrapper:hover {
+  transform: scale(0.98);
+  cursor: pointer;
+}
+.reserve-list-login-modal-kakao-btn-wrapper:active {
+  transform: scale(0.95);
+  filter: brightness(0.95);  
+}
+.reserve-list-login-modal-guest-btn-wrapper:hover {
+  transform: scale(0.98);
+  cursor: pointer;
+  border-width: 2px;
+}
+.reserve-list-login-modal-guest-btn-wrapper:active {
+  transform: scale(0.95);
+  filter: brightness(0.95);  
 }
 
 /* 입력창 영역 */
@@ -95,12 +139,18 @@
   gap: 10px;
 }
 .reserve-list-login-modal-input {
-  width: 200px;
+  width: 190px;
   height: 40px;
   border-radius: 8px;
-  border: 1px solid var(--bottari-navy);
+  /* border: 1px solid var(--bottari-navy); */
+  border: none;
+  background-color: #EEE;
 
-  padding: 5%;
-  text-align: center;
-  font-weight: 500;
+  padding: 5% 10%;
+  /* text-align: center; */
+  font-weight: 600;
+}
+.reserve-list-login-modal-input:focus {
+  outline: none;
+  box-shadow: 0 0 3px 0 var(--bottari-navy);
 }
