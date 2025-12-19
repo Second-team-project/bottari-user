@@ -49,8 +49,6 @@ export default function HeaderMobile() {
     return () => mediaQuery.removeEventListener('change', handleResize);
   }, [menuFlg]);
 
-  // console.log('모바일 메뉴🚩 ', menuFlg);
-
   return(
     <>
       <div className="header-mobile-menu">

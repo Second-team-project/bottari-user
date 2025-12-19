@@ -1,6 +1,13 @@
 import "react-datepicker/dist/react-datepicker.css"; // 달력 기본 스타일
+import "./ReserveForm.css";  // 예약페이지 공통 스타일
 import "./ReserveDelivery.css";
 import { useState } from "react";
+
+import SearchLocationModal from "./selectModal/SearchLocationModal.jsx";
+import SelectLuggageModal from "./selectModal/SelectLuggageModal.jsx";
+
+// icon
+import { X } from 'lucide-react';
 
 // 달력 관련
 import DatePicker from "react-datepicker";
@@ -11,186 +18,209 @@ import ko from "date-fns/locale/ko";
 registerLocale("ko", ko);
 
 export default function ReserveDelivery() {
-  // 선택된 날짜 저장할 state
-  const [sendDate, setSendDate] = useState(null);    // 보낼 날짜
-  const [receiveDate, setReceiveDate] = useState(null); // 받을 날짜 
-  const [pickupTime, setPickupTime] = useState(null); // 받을 날짜 
-  const [pickupDate, setPickupDate] = useState(null); // 받을 날짜 
+  // ========================
+  // ||     주소 설정용     ||
+  // ===== state
+  const [locationModalFlg, setLocationModalFlg] = useState(false);
+  const [startLocation, setStartLocation] = useState('');
+  const [endLocation, setEndLocation] = useState(null);
+  const [locationType, setLocationType] = useState(null);
 
-  // ===== 달력 커스텀
-  // 1. 최소 선택 가능 시간을 계산하는 함수
-  const getMinTime = () => {
-    const now = new Date();  // 지금 시각
+  // 선택된 날짜 저장할 state
+  const [pickupDate, setPickupDate] = useState(null); // 픽업 날짜 
+  
+  // ========================== 
+  // ||     달력 커스텀용     || 
+  // ===== state
+  // 1. 배송용 시간 필터 (운영시간 9시~21시 + 오늘이면 현재+2시간 이후)
+  const filterDeliveryTime = (time) => {
+    const now = new Date();
+    const selectedDate = new Date(time);
+    const hour = selectedDate.getHours();
     
-    // 1-1. 운영 시작 시간 (오전 9시)
-    const minOperating = new Date();
-    minOperating.setHours(9, 0, 0, 0);
-    
-    // 2. 선택한 날짜가 "오늘"인지 확인
-    if (pickupDate && pickupDate.toDateString() === now.toDateString()) {
-      // 2-1. 오늘이면 → 지금 + 2시간
-      const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000);
-      
-      // 둘 중 더 늦은 시간 반환 : 현재시각+2시간 vs 운영시작시간
-      return twoHoursLater > minOperating ? twoHoursLater : minOperating;
+    // 1. 운영시간 체크 (9시 ~ 21시)
+    if (hour < 9 || hour >= 21) {
+      return false;
     }
     
-    // 2-2. 내일 이후면 → 그냥 9시부터
-    return minOperating;
+    // 2. 오늘인지 확인
+    if (now.toDateString() === selectedDate.toDateString()) {
+      // 오늘이면 → 현재 + 2시간 이후만 통과
+      const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+      return selectedDate.getTime() > twoHoursLater.getTime();
+    }
+    
+    // 3. 미래 날짜면 운영시간 내 전부 통과
+    return true;
   };
+  
+  // ====================== 
+  // ||     짐 설정용     ||
+  // ===== state
+  const [luggageModalFlg, setLuggageModalFlg] = useState(false)
+  const [luggageInfo, setLuggageInfo] = useState(null)
 
-  // 3. 운영 종료 시간 (오후 9시)
-  const maxTime = new Date();
-  maxTime.setHours(21, 0, 0, 0);
-
-
-
+  console.log('luggageInfo: ', luggageInfo)
   return(
     <>
       {/* 전체 컨테이너 */}
-      <div className="reserve-delivery-container">
+      <div className="reserve-form-container">
+        {/* 장소 검색 모달 */}
+        {
+          locationModalFlg &&
+          <SearchLocationModal 
+            setLocation={locationType === 'start' ? setStartLocation : setEndLocation}
+            modalFlgFalse={() => setLocationModalFlg(false)}
+            location={locationType === 'start' ? startLocation : endLocation}
+          /> 
+        }
+        {/* 짐 선택 모달 */}
+        {
+          luggageModalFlg &&
+          <SelectLuggageModal
+            modalFlgFalse={() => setLuggageModalFlg(false)}
+            setLuggageInfo={setLuggageInfo}
+          />
+        }
+
         {/* 페이지 제목 */}
-        <div className="reserve-delivery-title-wrapper page-title-wrapper">
-          <h2 className="reserve-delivery-title">보따리 옮기기</h2>
+        <div className="reserve-form-title-wrapper page-title-wrapper">
+          <h2 className="reserve-form-title">보따리 옮기기</h2>
         </div>
         {/* 페이지 내용 컨테이너 */}
-        <div className="reserve-delivery-body">
+        <div className="reserve-form-body">
 
           {/* 내 정보 입력 */}
-          <div className="reserve-delivery-content-container">
-            <div className="reserve-delivery-content-title">
+          <div className="reserve-form-content-container">
+            <div className="reserve-form-content-title">
               <h3>내 정보</h3>
             </div>
-            <div className="reserve-delivery-content-wrapper">
-              <div className="reserve-delivery-content">
-                <label htmlFor="name" className="reserve-delivery-content-name">이름 :</label>
-                <input type="text" className="reserve-delivery-content-input" />
+            <div className="reserve-form-content-wrapper">
+              {/* 이름 */}
+              <div className="reserve-form-content">
+                <label htmlFor="name" className="reserve-form-content-name">이름 :</label>
+                <input type="text" className="reserve-form-content-input" placeholder="보따리" />
               </div>
-              <div className="reserve-delivery-content">
-                <label className="reserve-delivery-content-name">이메일 :</label>
-                <input htmlFor="email" type="text" className="reserve-delivery-content-input" />
+              {/* 이메일 */}
+              <div className="reserve-form-content">
+                <label className="reserve-form-content-name">이메일 :</label>
+                <input htmlFor="email" type="text" className="reserve-form-content-input" placeholder="보따리@보따리.com" />
               </div>
-              <div className="reserve-delivery-content">
-                <label htmlFor="phone" className="reserve-delivery-content-name">휴대폰 :</label>
-                <input type="text" className="reserve-delivery-content-input" />
+              {/* 휴대폰 */}
+              <div className="reserve-form-content">
+                <label htmlFor="phone" className="reserve-form-content-name">휴대폰 :</label>
+                <input type="text" className="reserve-form-content-input" placeholder="010.보따리.보따리" />
               </div>
-              <div className="reserve-delivery-content">
-                <label htmlFor="password" className="reserve-delivery-content-name">비밀번호 :</label>
-                <input type="text" className="reserve-delivery-content-input" />
+              {/* 비밀번호 */}
+              <div className="reserve-form-content">
+                <label htmlFor="password" className="reserve-form-content-name">비밀번호 :</label>
+                <input type="text" className="reserve-form-content-input" placeholder="조회할 때 사용할 비밀번호" />
               </div>
             </div>
           </div>
 
           {/* 보따리 정보 입력 */}
-          <div className="reserve-delivery-content-container">
-            <div className="reserve-delivery-content-title">
-              <h3 className="reserve-delivery-content-name">보따리 정보</h3>
+          <div className="reserve-form-content-container">
+            <div className="reserve-form-content-title">
+              <h3 className="reserve-form-content-name">보따리 정보</h3>
             </div>
-            <div className="reserve-delivery-content-wrapper">
-              <div className="reserve-delivery-content">
-                <label htmlFor="send-date" className="reserve-delivery-content-name">보낼 날짜 :</label>
-                {/* <DatePicker
-                  locale="ko"                   // 요일 한국어
-                  selected={sendDate}           // 현재 선택된 값
-                  onChange={(date) => setSendDate(date)}  // 날짜 선택하면 state 업데이트
-                  dateFormat="yyyy년 MM월 dd일"  // 표시 형식
-                  placeholderText="보낼 날짜를 선택하세요"
-                  minDate={new Date()}          // 오늘 이전 날짜는 선택 불가
-                />
-                <DatePicker
-                  selected={pickupTime}
-                  onChange={(time) => setPickupTime(time)}
-                  showTimeSelect
-                  showTimeSelectOnly          // 시간만! 캘린더 숨김
-                  timeIntervals={30}
-                  minTime={new Date().setHours(9, 0)}   // 오전 9시부터
-                  maxTime={new Date().setHours(21, 0)}  // 오후 9시까지
-                  dateFormat="HH:mm"
-                  placeholderText="시간을 선택하세요"
-                /> */}
-                {/* <DatePicker
-                  selected={pickupDate}
-                  onChange={(date) => setPickupDate(date)}
-                  showTimeSelect              // 시간 선택 활성화!
-                  dateFormat="yyyy년 MM월 dd일 HH:mm"
-                  timeFormat="HH:mm"
-                  timeIntervals={30}          // 30분 단위로 선택 (15, 60 등 조절 가능)
-                  minTime={new Date().setHours(9, 0)}   // 오전 9시부터
-                  maxTime={new Date().setHours(21, 0)}  // 오후 9시까지
-                  placeholderText="픽업 날짜/시간 선택"
-                /> */}
+            <div className="reserve-form-content-wrapper">
+              {/* 픽업시간 */}
+              <div className="reserve-form-content">
+                <label htmlFor="send-date" className="reserve-form-content-name">픽업 시간 :</label>
                 <DatePicker
                   withPortal
                   selected={pickupDate}
-                  onChange={(date) => setPickupDate(date)}
+                  onChange={(date) => {
+                    if (!date) {
+                      setPickupDate(null);
+                      return;
+                    }
+                    const hour = date.getHours();
+                    // 9시 이전이나 21시 이후면 9시로 강제 설정
+                    if (hour < 9 || hour >= 21) {
+                      const correctedDate = new Date(date);
+                      correctedDate.setHours(9, 0, 0, 0);
+                      setPickupDate(correctedDate);
+                    } else {
+                      setPickupDate(date);
+                    }
+                  }}
                   showTimeSelect
                   dateFormat="yyyy년 MM월 dd일 HH:mm"
                   timeIntervals={30}
                   minDate={new Date()}       // 오늘부터 선택 가능
-                  minTime={getMinTime()}     // ⭐ 여기서 함수 호출
-                  maxTime={maxTime}
+                  filterTime={filterDeliveryTime}
                   placeholderText="픽업 날짜/시간 선택"
                   onCalendarOpen={() => document.body.style.overflow = 'hidden'}  //  스크롤 방지
                   onCalendarClose={() => document.body.style.overflow = 'unset'}
                 />
               </div>
-              <div className="reserve-delivery-content">
-                <label htmlFor="recieve-date" className="reserve-delivery-content-name">받을 날짜 :</label>
-                {/* <DatePicker
-                  locale="ko"
-                  selected={receiveDate}
-                  onChange={(date) => setReceiveDate(date)}
-                  dateFormat="yyyy년 MM월 dd일"
-                  placeholderText="날짜를 선택하세요"
-                  minDate={sendDate || new Date()}  // 보낼 날짜 이후만 선택 가능!
-                /> */}
+              {/* 픽업장소 */}
+              <div className="reserve-form-content">
+                <label htmlFor="send-location" className="reserve-form-content-name">픽업 장소 :</label>
+                <div className="reserve-form-content-input-wrapper">
+                  <div className="reserve-form-content-input-div"
+                    onClick={ () => { setLocationModalFlg(true); setLocationType('start'); }}
+                  >{startLocation || <span>주소를 선택하세요</span>}</div>
+                  <span className="reserve-form-content-input-x"
+                    onClick={() => setStartLocation('')}
+                  ><X size={24}/></span>
+                </div>
               </div>
-              <div className="reserve-delivery-content">
-                <label htmlFor="send-location" className="reserve-delivery-content-name">보내는 곳 :</label>
-                <input type="text" className="reserve-delivery-content-input" />
+              {/* 도착장소 */}
+              <div className="reserve-form-content">
+                <label htmlFor="recieve-location" className="reserve-form-content-name">도착 장소 :</label>
+                <div className="reserve-form-content-input-wrapper">
+                  <div className="reserve-form-content-input-div"
+                    onClick={ () => { setLocationModalFlg(true); setLocationType('end'); }}
+                  >{endLocation || <span>주소를 선택하세요</span>}</div>
+                  <span className="reserve-form-content-input-x"
+                    onClick={() => setEndLocation('')}
+                  ><X size={24}/></span>
+                </div>                  
               </div>
-              <div className="reserve-delivery-content">
-                <label htmlFor="recieve-location" className="reserve-delivery-content-name">받을 곳 :</label>
-                <input type="text" className="reserve-delivery-content-input" />
+              {/* 보따리 종류 */}
+              <div className="reserve-form-content">
+                <label htmlFor="luggage-type" className="reserve-form-content-name">보따리 종류 :</label>
+                <div className="reserve-form-content-input-wrapper">
+                  <div className="reserve-form-content-input-div"
+                    onClick={ () => { setLuggageModalFlg(true) }}
+                  >{ luggageInfo ? <span style={{color: '#000'}}>{luggageInfo.type} ({luggageInfo.size}) {luggageInfo.weight}</span> : <span>보따리 종류를 선택하세요</span> }</div>
+                  <span className="reserve-form-content-input-x"
+                    onClick={() => setLuggageInfo('')}
+                  ><X size={24}/></span>
+                </div>    
               </div>
-              <div className="reserve-delivery-content">
-                <label htmlFor="luggage-type" className="reserve-delivery-content-name">보따리 종류 :</label>
-                <input type="text" className="reserve-delivery-content-input" />
-              </div>
-              <div className="reserve-delivery-content reserve-delivery-content-textarea">
-                <label htmlFor="notes" className="reserve-delivery-content-name">요청사항 :</label>
-                <textarea className="reserve-delivery-content-input reserve-delivery-textarea" rows="2"></textarea>
+              {/* 요청사항 */}
+              <div className="reserve-form-content reserve-form-content-textarea">
+                <label htmlFor="notes" className="reserve-form-content-name">요청사항 :</label>
+                <textarea className="reserve-form-content-input reserve-form-textarea" rows="2"></textarea>
               </div>
             </div>
           </div>
-
-          {/* 요청 사항 */}
-          {/* <div className="reserve-delivery-content-container">
-            <div className="reserve-delivery-content-title">
-              <h3>요청사항</h3>
-            </div>
-            <div className="reserve-delivery-content-wrapper">
-              <div className="reserve-delivery-content">
-                <input type="text" className="reserve-delivery-content-input-notes" />
-              </div>
-            </div>
-          </div> */}
 
           {/* 결제 */}
-          <div className="reserve-delivery-content-container">
-            <div className="reserve-delivery-content-title">
+          <div className="reserve-form-content-container">
+            <div className="reserve-form-content-title">
               <h3>결제</h3>
             </div>
-            <div className="reserve-delivery-content-wrapper">
-              <div className="reserve-delivery-content">
-                <span className="reserve-delivery-content-name">결제 금액 :</span>
-                <input type="text" className="reserve-delivery-content-input" />
-              </div>
-              <div className="reserve-delivery-content">
-                <button type="button">결제하기</button>
+            <div className="reserve-form-content-wrapper">
+              {/* 결제 금액 */}
+              <div className="reserve-form-content">
+                <label className="reserve-form-content-name">결제 금액 :</label>
+                <div >
+                  <span>12000 원</span>
+                </div>
               </div>
             </div>
           </div>
+
+          {/* 완료 버튼 */}
+          <div className="reserve-form-complete-btn-wrapper">
+            <button type="button" className="reserve-form-complete-btn">배송 예약서 작성 완료</button>
+          </div>
+
         </div>
       </div>
     </>

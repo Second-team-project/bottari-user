@@ -9,7 +9,8 @@ import kakaoBtn from "../../assets/kakao_login_large_narrow.png";
 
 export default function Login() {
 
-  // 소셜 로그인 요청
+  // =============================
+  // ||     소셜 로그인 요청     ||
   function handleSocial(provider) {
     window.location.replace(`${import.meta.env.VITE_SERVER_URL}/api/user/auth/social/${provider}`)
   }

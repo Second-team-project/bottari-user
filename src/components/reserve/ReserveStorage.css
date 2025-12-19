@@ -1,0 +1,39 @@
+/* 보관소 버튼 영역 */
+.reserve-storage-store-btn-wrapper {
+  width: 100%;
+  margin: 0.5rem 0.25rem;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem;
+}
+.reserve-storage-store-btn {
+  color: #777;
+  font-weight: 500;
+  font-size: 0.9rem;
+
+  height: 30px;
+  border: 1px solid var(--bottari-blue);
+  border-radius: 10px;
+  background-color: #fff;  
+
+  padding: 2%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.reserve-storage-store-btn:hover {
+  background-color: var(--bottari-skyblue)  
+}
+.reserve-storage-store-btn:active {
+  filter: brightness(0.95);  
+}
+.reserve-storage-store-btn-active {
+  background-color: var(--bottari-skyblue);
+  color: #000;
+  font-weight: 600;
+}

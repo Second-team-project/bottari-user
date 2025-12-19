@@ -1,6 +1,8 @@
 .app-header-web-wrapper {
   position: fixed;
   top: 0;
+
+  z-index: 100;
 }
 
 /* 전체 컨테이너 */

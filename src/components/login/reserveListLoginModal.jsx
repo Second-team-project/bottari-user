@@ -1,9 +1,20 @@
 import "./ReserveListLoginModal.css";
 import kakaoBtn from "../../assets/kakao_login_large_narrow.png";
+import { useEffect } from "react";
 
 export default function ReserveListLoginModal({ modalFlgFasle }) {
+  // ========================
+  // ||     스크롤 방지     ||
+  // ========================
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
 
-  // 소셜 로그인 요청
+  // =============================
+  // ||     소셜 로그인 요청     ||
   function handleSocial(provider) {
     window.location.replace(`${import.meta.env.VITE_SERVER_URL}/api/user/auth/social/${provider}`)
   }
@@ -17,14 +28,14 @@ export default function ReserveListLoginModal({ modalFlgFasle }) {
       <div className="reserve-list-login-modal-container">
 
         {/* 페이지 제목 */}
-        {/* <div className="reserve-list-login-modal-title-wrapper page-title-wrapper">
+        <div className="reserve-list-login-modal-title-wrapper page-modal-title-wrapper">
           <h2 className="reserve-list-login-modal-title">로그인</h2>
-        </div> */}
+        </div>
 
         {/* 유도 문구 */}
-        <div className="reserve-list-login-modal-text-warpper page-title-wrapper">
+        {/* <div className="reserve-list-login-modal-text-warpper page-modal-title-wrapper">
           <p className="reserve-list-login-modal-text reserve-list-login-modal-text-web">로그인 하시면 예약 관리가 더 쉬워져요!</p>
-        </div>
+        </div> */}
 
         {/* 버튼 영역 */}
         <div className="reserve-list-login-modal-btn-container">

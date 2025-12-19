@@ -14,12 +14,10 @@ import { User, UserRound, Globe } from 'lucide-react';
 import { useSelector } from "react-redux";
 
 export default function HeaderWeb() {
+  // ===== hook
   const navigate = useNavigate()
 
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-  // console.log(isLoggedIn)
-  
-
 
   return(
     <>

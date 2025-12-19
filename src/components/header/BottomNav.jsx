@@ -13,9 +13,11 @@ import BottariIcon from "../logo/BottariIcon.jsx";
 
 
 export default function BottomNav() {
+  // ===== hook
   const navigate = useNavigate();
 
-  // ===== 보따리 떨어지는 애니메이션
+  // ====================================== 
+  // ||     보따리 떨어지는 애니메이션     ||
   const [clickedMenu, setClickedMenu] = useState(null);
   const menus = [
     { label: `홈`, path: '/'},

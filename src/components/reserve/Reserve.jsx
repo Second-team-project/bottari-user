@@ -14,6 +14,7 @@ export default function Reserve() {
   // ===== 로컬 state
   const [modalFlg, setModalFlg] = useState(false)
 
+  // ===== 로그인 모달 플래그
   useEffect(() => {
     if (!isLoggedIn) {
       setModalFlg(true);

@@ -1,13 +1,23 @@
 import "./ReserveLoginModal.css";
 import kakaoBtn from "../../assets/kakao_login_large_narrow.png";
+import { useEffect } from "react";
 
 export default function ReserveLoginModal({ modalFlgFasle }) {
+  // ========================
+  // ||     스크롤 방지     ||
+  // ========================
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);  
 
-  // 소셜 로그인 요청
+  // =============================
+  // ||     소셜 로그인 요청     ||
   function handleSocial(provider) {
     window.location.replace(`${import.meta.env.VITE_SERVER_URL}/api/user/auth/social/${provider}`)
   }
-  // 모달 플래그
   
 
   return(
@@ -19,12 +29,12 @@ export default function ReserveLoginModal({ modalFlgFasle }) {
       <div className="reserve-login-modal-container">
 
         {/* 페이지 제목 */}
-        <div className="reserve-login-modal-title-wrapper page-title-wrapper">
+        <div className="reserve-login-modal-title-wrapper page-modal-title-wrapper">
           <h2 className="reserve-login-modal-title">로그인</h2>
         </div>
 
         {/* 유도 문구 */}
-        <div className="reserve-login-modal-text-warpper page-title-wrapper">
+        <div className="reserve-login-modal-text-warpper page-modal-title-wrapper">
           <p className="reserve-login-modal-text reserve-login-modal-text-web">로그인 하시면 예약 관리가 더 쉬워져요!</p>
         </div>
 
@@ -40,7 +50,7 @@ export default function ReserveLoginModal({ modalFlgFasle }) {
           </button>
 
           {/* 비회원 예약 버튼 */}
-          <button type="button" className="reserve-login-modal-guest-btn-wrapper">
+          <button type="button" className="reserve-login-modal-guest-btn-wrapper" onClick={modalFlgFasle}>
             <span className="reserve-login-modal-gust-text">
               비회원으로 예약하기
             </span>
