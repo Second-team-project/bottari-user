@@ -1,8 +1,8 @@
 .app-container {
-  max-width: 1024px;
-  margin: 0 auto;
   background-color: white;
+  max-width: 1024px;
   min-height: 100vh;
+  margin: 0 auto;
   position: relative;
 }
 
@@ -13,10 +13,12 @@
 
 /* 기본: 모바일 모드 (웹 헤더 숨김, 모바일 요소 보임, 소제목 크기) */
 .app-header-web-wrapper {
+  width: 100%;
   display: none;
 }
 
 .app-header-mobile-wrapper {
+  width: 100%;
   display: block;
 }
 
@@ -45,10 +47,40 @@ h2 {
 }
 
 /* =========================================
-   ||     Page title
+   ||     Page title - header fixed 대응 padding-top
    ||     '모바일' 기준
    ========================================= */
 .page-title-wrapper {
+  width: 100%;
+  height: 3rem;
+  margin-top: 100px;
+  margin-bottom: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+}
+@media (min-width: 769px) {
+  .page-title-wrapper {
+    width: 100%;
+    height: 3rem;
+    margin: 0 auto ;
+    padding: 170px 0  4rem;
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+  }
+}
+/* =========================================
+   ||     Page title - modal용 
+   ||     '모바일' 기준
+   ========================================= */
+.page-modal-title-wrapper {
   width: 100%;
   height: 3rem;
   margin-bottom: 1rem;
@@ -63,7 +95,8 @@ h2 {
   .page-title-wrapper {
     width: 100%;
     height: 3rem;
-    margin: 2.5rem auto;
+    margin: 0 auto ;
+    /* padding-b: 170px 0  4rem; */
   
     display: flex;
     flex-direction: column;

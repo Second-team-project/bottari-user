@@ -17,7 +17,7 @@ export default function HeaderWeb() {
   const navigate = useNavigate()
 
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-  console.log(isLoggedIn)
+  // console.log(isLoggedIn)
   
 
 

@@ -1,6 +1,12 @@
+.app-header-web-wrapper {
+  position: fixed;
+  top: 0;
+}
+
 /* 전체 컨테이너 */
 .header-web-container {
-  width: 100%;
+  background-color: #fff;
+  max-width: 1024px;
   height: 100px;
   padding: 1% 3%;
 
