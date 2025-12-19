@@ -1,0 +1,75 @@
+/* 페이지 */
+.reserve-list-body {
+  padding: 1% 5% 30% 5%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+/* 예약 아이템 */
+.reserve-lsit-content-wrapper {
+  width: 100%;
+  border: 1px solid var(--bottari-navy);
+  border-radius: 10px;
+  padding: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 1rem;
+
+  font-weight: 500;
+}
+/* 상단 영역 */
+.reserve-list-content-header {
+  display: flex;
+  justify-content: space-between;
+}
+/* 타입 */
+.reserve-list-type-ds {
+  border-radius: 20px;
+  padding: 0.4rem 1.2rem;
+}
+.reserve-list-type-d {
+  color: var(--bottari-pink);
+  border: 1px solid var(--bottari-pink);
+}
+.reserve-list-type-s {
+  color: var(--bottari-skyblue);
+  border: 1px solid var(--bottari-skyblue);
+}
+/* 상태 */
+.reserve-list-status {
+  border-radius: 20px;
+  padding: 0.4rem 1.2rem;
+}
+.reserve-list-status-before {
+  color: var(--bottari-mint);
+  border: 1px solid var(--bottari-mint);
+}
+.reserve-list-status-now {
+  color: var(--bottari-blue);
+  border: 1px solid var(--bottari-blue);
+}
+.reserve-list-status-done {
+  color: var(--bottari-gray);
+  border: 1px solid var(--bottari-gray);
+}
+
+/* 장소 영역 */
+.reserve-list-location-info {
+  display: flex;
+  flex-direction: column;  
+}
+/* 날짜 영역 */
+.reserve-list-content-date {
+  display: flex;
+  justify-content: flex-end;
+}
+/* 날짜 */
+.reserve-list-date-info {
+  display: flex;
+  flex-direction: column;
+}
