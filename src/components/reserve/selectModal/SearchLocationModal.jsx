@@ -11,6 +11,8 @@ import { X } from 'lucide-react';
 export default function SearchLoationModal({ modalFlgFalse, setLocation, location }) {
   // ===== hook
   const dispatch = useDispatch()
+  // ===== error state
+  const [errorMsg, setErrorMsg] = useState()
 
   // ========================
   // ||     스크롤 방지     ||
@@ -27,13 +29,30 @@ export default function SearchLoationModal({ modalFlgFalse, setLocation, locatio
   // ===== local state
   const [keyword, setKeyword] = useState(location || '');
   const [page, setPage] = useState(1);
-  const [resultList, setResultList] = useState([]);
+  const [resultList, setResultList] = useState(null);
 
   // ===== 검색
   const firstSearch = async (keyword) => {
+    // 유효성 검사
+    if(!keyword || keyword.trim() === '') {
+      setErrorMsg('검색하려는 주소를 입력 해주세요');
+      return;
+    }
+    if(keyword.trim().length < 2) {
+      setErrorMsg('검색어는 최소 2글자 이상입니다');
+      return;
+    }
+    // 유효성 검사 통과
+    setErrorMsg('');
     setPage(1);  // 검색할 때마다 page 1로 초기화
 
     const result = await dispatch(searchLocationThunk({ keyword, page: 1}));
+    // 백엔드 에러 처리
+    if (result.error) {
+      setErrorMsg(result.payload?.response?.data?.message || '검색 중 오류가 발생했습니다');
+      return;
+    }
+    // 백엔드 에러 없으면 list 담기
     setResultList(result.payload.data);
 
     console.log('resultList: ', result.payload.data)
@@ -44,6 +63,7 @@ export default function SearchLoationModal({ modalFlgFalse, setLocation, locatio
     modalFlgFalse();
     setLocation(keyword);
   }
+
 
 
 
@@ -64,7 +84,11 @@ export default function SearchLoationModal({ modalFlgFalse, setLocation, locatio
             type="text" 
             className="reserve-form-content-input" 
             value={keyword}
-            onChange={e => setKeyword(e.target.value)}
+            placeholder="2글자 이상 검색해 주세요"
+            onChange={e => {
+              setKeyword(e.target.value);
+              if(errorMsg){setErrorMsg('')};  // 검색어 입력시 에러메세지 초기화
+            }}
             onKeyDown={e => { if (e.key === 'Enter') firstSearch(keyword); }}
           />
           <span className="search-location-modal-input-x"
@@ -76,7 +100,7 @@ export default function SearchLoationModal({ modalFlgFalse, setLocation, locatio
         {/* 검색 결과 영역 */}
         <div className="search-location-modal-result-container">
           {
-            resultList.length !== 0 && resultList.map((item, index) => (
+            resultList && resultList.map((item, index) => (
               <div
                 className="search-location-modal-result-wrapper"
                 key={index}
@@ -86,6 +110,11 @@ export default function SearchLoationModal({ modalFlgFalse, setLocation, locatio
                 <span>( {item.address_name} )</span>
               </div>
             ))
+          }
+          { errorMsg &&
+            <div className="search-loaction-modal-errorMsg-wrapper">
+              <span className="search-loaction-modal-errorMsg">{errorMsg}</span>
+            </div>
           }
         </div>
 

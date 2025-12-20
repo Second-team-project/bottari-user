@@ -13,11 +13,15 @@ import { X } from 'lucide-react';
 import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
 import ko from "date-fns/locale/ko";
+import { useNavigate } from "react-router-dom";
 
 // 달력 요일 한국어 적용
 registerLocale("ko", ko);
 
 export default function ReserveDelivery() {
+  // ===== hook
+  const navigate = useNavigate()
+
   // ========================
   // ||     주소 설정용     ||
   // ===== state
@@ -59,6 +63,13 @@ export default function ReserveDelivery() {
   // ===== state
   const [luggageModalFlg, setLuggageModalFlg] = useState(false)
   const [luggageInfo, setLuggageInfo] = useState(null)
+
+  // ==========================
+  // ||     결제 페이지로     ||
+  // =====
+  function handlePayPage() {
+    navigate()
+  }
 
   console.log('luggageInfo: ', luggageInfo)
   return(
@@ -162,7 +173,7 @@ export default function ReserveDelivery() {
                 <div className="reserve-form-content-input-wrapper">
                   <div className="reserve-form-content-input-div"
                     onClick={ () => { setLocationModalFlg(true); setLocationType('start'); }}
-                  >{startLocation || <span>주소를 선택하세요</span>}</div>
+                  >{startLocation ? <span style={{color: '#000'}}>{startLocation}</span> : <span>주소를 선택하세요</span>}</div>
                   <span className="reserve-form-content-input-x"
                     onClick={() => setStartLocation('')}
                   ><X size={24}/></span>
@@ -174,7 +185,7 @@ export default function ReserveDelivery() {
                 <div className="reserve-form-content-input-wrapper">
                   <div className="reserve-form-content-input-div"
                     onClick={ () => { setLocationModalFlg(true); setLocationType('end'); }}
-                  >{endLocation || <span>주소를 선택하세요</span>}</div>
+                  >{endLocation ? <span style={{color: '#000'}}>{endLocation}</span> : <span>주소를 선택하세요</span>}</div>
                   <span className="reserve-form-content-input-x"
                     onClick={() => setEndLocation('')}
                   ><X size={24}/></span>

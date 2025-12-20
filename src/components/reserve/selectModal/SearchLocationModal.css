@@ -107,3 +107,19 @@
   display: flex;
   flex-direction: column;
 }
+
+/* 에러 메세지 */
+.search-loaction-modal-errorMsg-wrapper {
+  color: var(--bottari-gray);
+  font-size: 1.1rem;
+  font-weight: 600;
+
+  width: 100%;
+  margin: 10% 0;
+  padding: 3%;
+  border-radius: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
