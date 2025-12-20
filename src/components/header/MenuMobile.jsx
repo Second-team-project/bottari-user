@@ -5,7 +5,6 @@
  */
 
 import "./MenuMobile.css";
-import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react"
 
 // 아이콘 import
@@ -17,7 +16,7 @@ export default function MenuMobile({ menuFlgFalse }) {
   const navigate = useNavigate();
 
 
-  return createPortal(
+  return (
     <>
       {/* 블러 배경 */}
       <motion.div className="menu-mobile-blur-background" onClick={menuFlgFalse} 
@@ -80,7 +79,6 @@ export default function MenuMobile({ menuFlgFalse }) {
           </div>
         </div>
       </motion.div>
-    </>,
-    document.body
+    </>
   )
 }
