@@ -7,8 +7,9 @@ import { searchLocationThunk } from "../../../store/thunks/searchThunk.js"
 
 // icon
 import { X } from 'lucide-react';
+import { toast } from "sonner";
 
-export default function SearchLoationModal({ modalFlgFalse, setLocation, location }) {
+export default function SearchLocationModal({ modalFlgFalse, setLocation, location }) {
   // ===== hook
   const dispatch = useDispatch()
   // ===== error state
@@ -35,11 +36,11 @@ export default function SearchLoationModal({ modalFlgFalse, setLocation, locatio
   const firstSearch = async (keyword) => {
     // 유효성 검사
     if(!keyword || keyword.trim() === '') {
-      setErrorMsg('검색하려는 주소를 입력 해주세요');
+      toast.error('검색하려는 주소를 입력 해주세요');
       return;
     }
     if(keyword.trim().length < 2) {
-      setErrorMsg('검색어는 최소 2글자 이상입니다');
+      toast.error('검색어는 최소 2글자 이상입니다');
       return;
     }
     // 유효성 검사 통과
@@ -48,20 +49,26 @@ export default function SearchLoationModal({ modalFlgFalse, setLocation, locatio
 
     const result = await dispatch(searchLocationThunk({ keyword, page: 1}));
     // 백엔드 에러 처리
-    if (result.error) {
-      setErrorMsg(result.payload?.response?.data?.message || '검색 중 오류가 발생했습니다');
+    if(result.error) {
+      // setErrorMsg(result.payload?.response?.data?.message || '검색 중 오류가 발생했습니다');
+      toast.error('검색 중 오류가 발생했습니다')
       return;
     }
     // 백엔드 에러 없으면 list 담기
     setResultList(result.payload.data);
-
-    console.log('resultList: ', result.payload.data)
+    if(result.payload.data < 1) {
+      toast.error('검색 결과가 없습니다')
+    }
   };
 
   // ===== 검색어 선택
   function selectSearch(keyword) {
+    if (!keyword.startsWith('대구')) {
+      toast.error(<div>서비스 지역이 아닙니다.<br />대구 지역만 선택 가능합니다.</div>);
+      return;
+    }
     modalFlgFalse();
-    setLocation(keyword);
+    setLocation(keyword.trim());
   }
 
 
@@ -110,11 +117,6 @@ export default function SearchLoationModal({ modalFlgFalse, setLocation, locatio
                 <span>( {item.address_name} )</span>
               </div>
             ))
-          }
-          { errorMsg &&
-            <div className="search-loaction-modal-errorMsg-wrapper">
-              <span className="search-loaction-modal-errorMsg">{errorMsg}</span>
-            </div>
           }
         </div>
 

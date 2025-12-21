@@ -26,7 +26,7 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageInfo}) {
 
   // ===== 최종 선택 완료
   const handleComplete = () => {
-    setLuggageInfo({type: step1, size: step2, weight: step3});
+    setLuggageInfo({itemType: step1, itemSize: step2, itemWeight: step3});
     modalFlgFalse(false);
   };
 
