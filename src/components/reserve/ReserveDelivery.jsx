@@ -32,7 +32,7 @@ export default function ReserveDelivery() {
   const savedData = useSelector(state => state.reserve.deliveryReserve);
 
   // ===== 개인 정보 설정용
-  const [name, setName] = useState(savedData?.name || '');
+  const [name, setName] = useState(savedData?.userName || '');
   const [email, setEmail] = useState(savedData?.email || '');
   const [phone, setPhone] = useState(savedData?.phone || '');
   const [password, setPassword] = useState('');
@@ -84,7 +84,7 @@ export default function ReserveDelivery() {
     return ({
       type: 'delivery',
       savedAt: new Date().toISOString(),
-      name: name.trim(),
+      userName: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
       startedAt: pickupDate ? pickupDate.toISOString() : null,
@@ -92,6 +92,7 @@ export default function ReserveDelivery() {
       endedAddr: endLocation.trim(),
       luggageInfo: luggageInfo,
       notes: notes.trim(),
+      price: 50000,
     });
   };
   // 1-2. 디바운싱 적용 함수 생성
@@ -114,7 +115,7 @@ export default function ReserveDelivery() {
     const formData = createFormData();
 
     // 2-1. 유효성 검사
-    if(!formData.name) {
+    if(!formData.userName) {
       toast.error('이름을 입력해주세요')
       return;
     }
@@ -326,7 +327,7 @@ export default function ReserveDelivery() {
                 <div className="reserve-form-content-input-wrapper">
                   <div className="reserve-form-content-input-div"
                     onClick={ () => { setLuggageModalFlg(true) }}
-                  >{ luggageInfo ? <span style={{color: '#000'}}>{luggageInfo.itemType} ({luggageInfo.itemSize}) {luggageInfo.itemWeight}</span> : <span>보따리 종류를 선택하세요</span> }</div>
+                  >{ luggageInfo ? <span style={{color: '#000'}}>{`${luggageInfo.itemType} (${luggageInfo.itemSize}) ${luggageInfo.itemWeight}`}</span> : <span>보따리 종류를 선택하세요</span> }</div>
                   <span className="reserve-form-content-input-x"
                     onClick={() => setLuggageInfo(null)}
                   ><X size={24}/></span>
@@ -338,9 +339,14 @@ export default function ReserveDelivery() {
                 <textarea className="reserve-form-content-input reserve-form-textarea" 
                   rows="2"
                   value={notes}
+                  maxLength={200}
                   onChange={e => setNotes(e.target.value)}
                   onBlur={ (e) => setNotes(e.target.value.trim()) }
                 />
+              </div>
+              {/* 안내문구  */}
+              <div className="reserve-form-content-notice">
+                <span className="reserve-form-content-notice-text">요청사항 {notes.length}/200</span>
               </div>
             </div>
           </div>

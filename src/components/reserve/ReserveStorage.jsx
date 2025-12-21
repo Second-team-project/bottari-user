@@ -30,7 +30,7 @@ export default function ReserveStorage() {
   const savedData = useSelector(state => state.reserve.storageReserve);
   
   // ===== 개인 정보 설정용
-  const [name, setName] = useState(savedData?.name || '');
+  const [name, setName] = useState(savedData?.userName || '');
   const [email, setEmail] = useState(savedData?.email || '');
   const [phone, setPhone] = useState(savedData?.phone || '');
   const [password, setPassword] = useState('');
@@ -98,7 +98,7 @@ export default function ReserveStorage() {
     return ({
       type: 'storage',
       savedAt: new Date().toISOString(),
-      name: name.trim(),
+      userName: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
       startedAt: startDate ? startDate.toISOString() : null,
@@ -106,6 +106,7 @@ export default function ReserveStorage() {
       store: storageStore.trim(),
       luggageInfo: luggageInfo,
       notes: notes.trim(),
+      price: 50000,
     });
   };
   // 1-2. 디바운싱 적용 함수 생성
@@ -128,7 +129,7 @@ export default function ReserveStorage() {
     const formData = createFormData();
 
     // 2-1. 유효성 검사
-    if(!formData.name) {
+    if(!formData.userName) {
       toast.error('이름을 입력해주세요')
       return;
     }
@@ -272,10 +273,27 @@ export default function ReserveStorage() {
                   withPortal
                   selected={startDate}
                   onChange={(date) => {
-                    // 유효한 시간인지 확인 후에만 저장
-                    if (date && filterStartTime(date)) {
-                      setStartDate(date);
+                    if (!date) {
+                      setStartDate(null);
+                      return;
                     }
+
+                    const now = new Date();
+                    // 오늘 날짜를 선택했고, 시간이 현재보다 과거인 경우 (예: 날짜 클릭 직후 00:00)
+                    if (date.toDateString() === now.toDateString() && date.getTime() < now.getTime()) {
+                      const minutes = now.getMinutes();
+                      const remainder = 30 - (minutes % 30); // 다음 30분 단위까지 남은 분
+                      
+                      const adjustedDate = new Date(now);
+                      adjustedDate.setMinutes(minutes + remainder);
+                      adjustedDate.setSeconds(0);
+                      adjustedDate.setMilliseconds(0);
+
+                      // 조정된 시간 적용
+                      date.setHours(adjustedDate.getHours());
+                      date.setMinutes(adjustedDate.getMinutes());
+                    }
+                    setStartDate(date);
                   }}
                   showTimeSelect
                   dateFormat="yyyy년 MM월 dd일 HH:mm"
@@ -324,7 +342,7 @@ export default function ReserveStorage() {
                 <div className="reserve-form-content-input-wrapper">
                   <div className="reserve-form-content-input-div"
                     onClick={ () => { setLuggageModalFlg(true) }}
-                  >{ luggageInfo ? <span style={{color: '#000'}}>{luggageInfo.itemType} ({luggageInfo.itemSize}) {luggageInfo.itemWeight}</span> : <span>보따리 종류를 선택하세요</span> }</div>
+                  >{ luggageInfo ? <span style={{color: '#000'}}>{`${luggageInfo.itemType} (${luggageInfo.itemSize}) ${luggageInfo.itemWeight}`}</span> : <span>보따리 종류를 선택하세요</span> }</div>
                   <span className="reserve-form-content-input-x"
                     onClick={() => setLuggageInfo('')}
                   ><X size={24}/></span>
@@ -336,9 +354,14 @@ export default function ReserveStorage() {
                 <textarea type="text" className="reserve-form-content-input reserve-form-textarea" 
                   rows="2"
                   value={notes}
+                  maxLength={200}
                   onChange={e => setNotes(e.target.value)}
                   onBlur={ (e) => setNotes(e.target.value.trim()) }
                 />
+              </div>
+              {/* 안내문구  */}
+              <div className="reserve-form-content-notice">
+                <span className="reserve-form-content-notice-text">요청사항 {notes.length}/200</span>
               </div>
             </div>
           </div>

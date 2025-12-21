@@ -39,7 +39,7 @@
   align-items: center;
 }
 .reserve-form-content-name {
-  min-width: 90px;
+  min-width: 98px;
 }
 
 /* 인풋 래퍼 */
@@ -112,6 +112,17 @@
 .reserve-form-textarea {
   height: auto;
   line-height: 1.5;
+}
+
+/* 안내문구 */
+.reserve-form-content-notice {
+  display: flex;
+  justify-content: end;
+  margin: 0 0.5rem 0.2rem 0;
+}
+.reserve-form-content-notice-text {
+  color: var(--bottari-gray);
+  font-size: 0.75rem;
 }
 
 /* 결제 버튼 */

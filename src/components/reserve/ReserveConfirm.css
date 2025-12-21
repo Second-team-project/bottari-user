@@ -1,0 +1,86 @@
+/* 내부 소제목 스타일 */
+.reserve-confirm-content-title {
+  color: var(--bottari-navy);
+
+  max-width: 500px;
+  margin: 0 auto 8%;
+  padding: 2% 1%;
+
+  display: flex;
+  /* justify-content: baseline; */
+}
+@media (min-width: 769px) {
+  .reserve-confirm-content-title {
+    color: var(--bottari-navy);
+    
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 5%;
+    padding: 0 1%;
+
+    display: flex;
+    justify-content: center;
+  }
+}
+.reserve-confirm-content-title-h3 {
+  width: 100%;
+}
+/* 데이터 영역*/
+.reserve-confirm-content-body {
+  font-size: 1rem;
+  font-weight: 600;
+
+  max-width: 500px;
+  margin: 0 auto;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 1rem
+}
+/* 데이터별로 */
+.reserve-confirm-content-data-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem
+}
+/* 데이터 각각 */
+.reserve-confirm-data-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+.reserve-confirm-data-key {
+  min-width: 57px;
+  color: var(--bottari-navy);
+}
+.reserve-confirm-data-value {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+/* 포인트 */
+.reserve-confirm-content-text-pont {
+  color: black;
+  min-width: 2.8rem;
+
+  background-color: var(--bottari-background);
+  border-radius: 30px;
+  padding: 2% 3%;
+}
+@media (min-width: 769px) {
+  .reserve-confirm-content-text-pont {
+    color: black;
+    min-width: 2.8rem;
+  
+    background-color: var(--bottari-background);
+    border-radius: 30px;
+    padding: 1% 2%;
+  }
+}
+.reserve-confirm-data-value-point {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+/* 회색 */
+.reserve-confirm-content-gray {
+  color: var(--bottari-gray);
+}

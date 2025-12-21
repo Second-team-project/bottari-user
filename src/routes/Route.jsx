@@ -24,6 +24,11 @@ import Notice from "../components/service/Notice.jsx";
 import NoticeDetail from "../components/service/NoticeDetail.jsx";
 // 로그인 관련
 import Social from "../components/auth/Social.jsx";
+import ReserveConfirm from "../components/reserve/ReserveConfirm.jsx";
+// 결제 관련 - 토스
+import CheckoutPage from '../components/tosspayments/TossCheckout.jsx';
+import SuccessPage from '../components/tosspayments/TossSuccess.jsx';
+import FailPage from '../components/tosspayments/TossFail.jsx';
 
 const router = createBrowserRouter([
   {
@@ -61,6 +66,26 @@ const router = createBrowserRouter([
         path: "/reserve/storage",
         element: <ReserveStorage />,
       },
+      {
+        path: "/reserve/confirm",
+        element: <ReserveConfirm />,
+      },
+      {
+        path: "/reserve/tosspayments",
+        element: <CheckoutPage />,
+      },
+      {
+        path: "/reserve/tosspayments/success",
+        element: <SuccessPage />,
+      },
+      {
+        path: "/reserve/tosspayments/fail",
+        element: <FailPage />,
+      },
+      // {
+      //   path: "/reserve/complete",
+      //   element: <ReserveComplete />,
+      // },
       {
         path: "/reserve/list",
         element: <ReserveList />,

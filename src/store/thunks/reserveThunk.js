@@ -1,13 +1,15 @@
-// import { createAsyncThunk } from "@reduxjs/toolkit";
-// import axiosIns from "../../api/axiosInstance";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axiosIns from "../../api/axiosInstance";
 
-// export const searchLocationThunk = createAsyncThunk(
-//   'reserve/reserveThunk',
-//   async (_, {rejectWithValue}) => {
-//     try {
-      
-//     } catch (error) {
-//       return rejectWithValue(error);
-//     }
-//   }
-// );
+export const createDraftReservation = createAsyncThunk(
+  'reserve/reserveThunk',
+  async ({reserveData, password}, {rejectWithValue}) => {
+    try {
+      const response = await axiosIns.post(
+        '/api/user/reserve/draft',
+      )
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
