@@ -1,6 +1,7 @@
 import './App.css'
 
 import { Outlet } from 'react-router-dom';
+import { Toaster } from 'sonner';
 // import { useEffect } from 'react';
 // import axiosIns from './api/axiosInstance.js';
 
@@ -24,16 +25,18 @@ function App() {
   return (
     <>
       <div className='app-container'>
+        {/* 토스트 */}
+        <Toaster position="top-center" />
         {/* 웹용 헤더 */}
         <div className="app-header-web-wrapper">
           <HeaderWeb />
         </div>
+
         {/* 모바일용 헤더 */}
         <div className="app-header-mobile-wrapper">
           <HeaderMobile />
           <BottomNav />
         </div>
-        
         <Outlet />
       </div>
     </>
