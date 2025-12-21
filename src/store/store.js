@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 // slice import
-import menuReducer from "./slices/menuSlice.js";
 import authReducer from "./slices/authSlice.js";
+import reserveReducer from "./slices/reserveSlice.js";
 
 export default configureStore({
   reducer: {
-    menu: menuReducer,
     auth: authReducer,
+    reserve: reserveReducer,
   }
 });

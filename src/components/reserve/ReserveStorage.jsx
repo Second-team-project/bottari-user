@@ -1,72 +1,182 @@
 import "react-datepicker/dist/react-datepicker.css"; // 달력 기본 스타일
 import "./ReserveForm.css";  // 예약페이지 공통 스타일
 import "./ReserveStorage.css";
-import { useState } from "react";
-
+// ===== hooks
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+// ===== components
 import SelectLuggageModal from "./selectModal/SelectLuggageModal.jsx";
-
-// icon
+// ===== slices
+import { setStorageReserve } from "../../store/slices/reserveSlice.js";
+// ===== utils
+import { debounce } from "../../utils/debounceUtil.js";
+// ===== icons
 import { X } from 'lucide-react';
-
-// 달력 관련
+// ===== 달력 관련
 import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
 import ko from "date-fns/locale/ko";
+import { toast } from "sonner";
 
 // 달력 요일 한국어 적용
 registerLocale("ko", ko);
 
 export default function ReserveStorage() {
-  // ========================== 
-  // ||     달력 커스텀용     || 
-  // ===== state
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  // ===== hooks
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  // ===== 전역 states
+  const savedData = useSelector(state => state.reserve.storageReserve);
+  
+  // ===== 개인 정보 설정용
+  const [name, setName] = useState(savedData?.name || '');
+  const [email, setEmail] = useState(savedData?.email || '');
+  const [phone, setPhone] = useState(savedData?.phone || '');
+  const [password, setPassword] = useState('');
+  const [passwordChk, setPasswordChk] = useState('');
+  const [notes, setNotes] = useState(savedData?.notes || '');
+  // ===== 짐종류용
+  const [luggageModalFlg, setLuggageModalFlg] = useState(false)
+  const [luggageInfo, setLuggageInfo] = useState(savedData?.luggageInfo || null)
+  // ===== 보관소용
+  const [storageStore, setStorageStore] = useState(savedData?.store || '');
+  // ===== 달력 커스텀용
+  const [startDate, setStartDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null);
+  const [endDate, setEndDate] = useState(savedData?.endedAt ? new Date(savedData.endedAt) : null);
 
-  // ===== 달력 커스텀
+  // TODO : DB 설계 이후 thunk로 보관소 받아오기
+  const stores = ['대구역', '반월당역', '동대구역', '서대구역']
+
+  // ======================== 
+  // ||     달력 커스텀     ||
+  // ======================== 
   // 1. 맡기는 시간 필터
   const filterStartTime = (time) => {
     const now = new Date();  // 지금 시각
     const selectedDate = new Date(time);
 
-    // 오늘인지 확인
+    // 1-1. 오늘인지 확인
     if (now.toDateString() === selectedDate.toDateString()) {
-      // 오늘이면 → 지금 이후만 통과
+      // 1-2. 오늘이면 → 지금 이후만 통과
       return selectedDate.getTime() > now.getTime();
     }
-    
+    // 1-3. 오늘 아니면 통과
     return true;
   };
 
   // 2. 찾는 시간 필터 (맡긴 시간 이후만 허용)
   const filterEndTime = (time) => {
     const selectedDate = new Date(time);
-    
+    console.log('비교:', selectedDate.getHours(), 'vs', startDate.getHours());
     // 맡기는 시간이 아직 선택 안 됐으면 전부 통과
     if (!startDate) return true;
+
+    // 날짜 비교를 위해 시간 초기화 (00:00:00)
+    const startDay = new Date(startDate); startDay.setHours(0,0,0,0);
+    const endDay = new Date(selectedDate); endDay.setHours(0,0,0,0);
+
+    // 1. 맡길 날보다 과거면 선택 불가
+    if (endDay < startDay) return false;
     
-    // 같은 날이면 → 맡긴 시간 이후만 통과
-    if (startDate.toDateString() === selectedDate.toDateString()) {
+    // 2. 같은 날이면 → 맡긴 시간 이후만 통과
+    if (endDay.getTime() === startDay.getTime()) {
       return selectedDate.getTime() > startDate.getTime();
     }
     
-    // 다른 날이면 전부 통과
+    // 3. 미래 날짜면 통과
     return true;
   };
 
-  // ====================== 
-  // ||     보관소 용     ||
-  // ===== state
-  const [storageStore, setStorageStore] = useState('');
+  // ==========================
+  // ||     결제 페이지로     ||
+  // ==========================
 
-  // TODO : DB 설계 이후 thunk로 보관소 받아오기
-  const stores = ['대구역', '반월당역', '동대구역', '서대구역']
+  // 1. 디바운스 redux 저장
+  // 1-1. formData 생성
+  const createFormData = () => {
+    return ({
+      type: 'storage',
+      savedAt: new Date().toISOString(),
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      startedAt: startDate ? startDate.toISOString() : null,
+      endedAt: endDate ? endDate.toISOString() : null,
+      store: storageStore.trim(),
+      luggageInfo: luggageInfo,
+      notes: notes.trim(),
+    });
+  };
+  // 1-2. 디바운싱 적용 함수 생성
+  const saveToRedux = useCallback(
+    debounce((data) => {
+      dispatch(setStorageReserve(data));
+      console.log('배송예약 - redux 저장: ', data);
+    }, 1000),   // 1초 후 저장
+    [dispatch]  // dispatch 바뀔 때만 함수 재생성 : data 변경 시엔 재생성x 
+  )
+  // 1-3. formData 변경될 때마다 saveToRedux 실행
+  useEffect(() => {
+    const formData = createFormData();
+    saveToRedux(formData);  // 디바운싱 적용!
+  }, [name, email, phone, password, startDate, endDate, storageStore, luggageInfo, notes, saveToRedux]);
 
-  // ====================== 
-  // ||     짐 설정용     ||
-  // ===== state
-  const [luggageModalFlg, setLuggageModalFlg] = useState(false)
-  const [luggageInfo, setLuggageInfo] = useState(null)
+  // 2. 결제 페이지로 넘어가기 & 유효성 검사
+  function handleNext() {
+    // formData = 로컬state 생성
+    const formData = createFormData();
+
+    // 2-1. 유효성 검사
+    if(!formData.name) {
+      toast.error('이름을 입력해주세요')
+      return;
+    }
+    if(!formData.email) {
+      toast.error('이메일을 입력해주세요');
+      return;
+    }
+    if(!password || password.trim().length < 4 ) {
+      toast.error('비밀번호를 4자리 이상 입력해주세요');
+      return;
+    }
+    if(!passwordChk || password.trim().length < 4 ) {
+      toast.error('비밀번호를 확인 해주세요');
+      return;
+    }
+    if(password !== passwordChk ) {
+      toast.error('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    if(!formData.startedAt) {
+      toast.error('맡길 시간을 선택해주세요');
+      return;
+    }
+    if(!formData.endedAt) {
+      toast.error('찾을 시간을 선택해주세요');
+      return;
+    }
+    if (new Date(formData.startedAt) >= new Date(formData.endedAt)) {
+      toast.error('찾을 시간은 맡길 시간 이후여야 합니다.');
+      return;
+    }
+    if(!formData.store) {
+      toast.error('보관소를 선택해주세요');
+      return;
+    }
+    if(!formData.luggageInfo) {
+      toast.error('보따리 종류를 선택해주세요');
+      return;
+    }
+    // 2-2. 디바운스 기다리지 않고 즉시 redux 저장
+    dispatch(setStorageReserve(formData));
+    // 2-3. 결제 페이지로 이동
+    navigate('/reserve/confirm', { state: { type: 'storage', password: password.trim(), } });
+  }
+
+
+
+
 
   return(
     <>
@@ -94,21 +204,57 @@ export default function ReserveStorage() {
               <h3>내 정보</h3>
             </div>
             <div className="reserve-form-content-wrapper">
+              {/* 이름 */}
               <div className="reserve-form-content">
                 <label className="reserve-form-content-name">이름 :</label>
-                <input type="text" className="reserve-form-content-input" placeholder="보따리" />
+                <input type="text" className="reserve-form-content-input" 
+                  placeholder="보따리" 
+                  value={name}
+                  onChange={ (e) => setName(e.target.value) }
+                  onBlur={ (e) => setName(e.target.value.trim()) }
+                />
               </div>
+              {/* 이메일 */}
               <div className="reserve-form-content">
                 <label className="reserve-form-content-name">이메일 :</label>
-                <input type="text" className="reserve-form-content-input" placeholder="보따리@보따리.com" />
+                <input type="text" className="reserve-form-content-input" 
+                  placeholder="보따리@보따리.com" 
+                  value={email}
+                  onChange={ (e) => setEmail(e.target.value) }
+                  onBlur={ (e) => setEmail(e.target.value.trim()) }
+                />
               </div>
+              {/* 휴대폰 */}
               <div className="reserve-form-content">
                 <label className="reserve-form-content-name">휴대폰 :</label>
-                <input type="text" className="reserve-form-content-input" placeholder="010.보따리.보따리" />
+                <input type="text" className="reserve-form-content-input" 
+                  placeholder="010.보따리.보따리" 
+                  value={phone}
+                  onChange={ (e) => setPhone(e.target.value) }
+                  onBlur={ (e) => setPhone(e.target.value.trim()) }
+                />
               </div>
+              {/* 비밀번호 */}
               <div className="reserve-form-content">
                 <label className="reserve-form-content-name">비밀번호 :</label>
-                <input type="text" className="reserve-form-content-input" placeholder="조회할 때 사용할 비밀번호" />
+                <input type="password" className="reserve-form-content-input" 
+                  placeholder="4글자 이상 입력 해주세요" 
+                  onChange={ (e) => setPassword(e.target.value) }
+                  onBlur={ (e) => setPassword(e.target.value.trim()) }
+                />
+              </div>
+              {/* 비밀번호 확인 */}
+              <div className="reserve-form-content">
+                <label htmlFor="password" className="reserve-form-content-name">비밀번호 확인 :</label>
+                <input type="password" className="reserve-form-content-input" 
+                  placeholder="비밀번호 한 번 더 입력" 
+                  onChange={ (e) => setPasswordChk(e.target.value) }
+                  onBlur={ (e) => setPasswordChk(e.target.value.trim()) }
+                />
+              </div>
+              {/* 안내문구  */}
+              <div className="reserve-form-content-notice">
+                <span className="reserve-form-content-notice-text">비밀번호는 예약을 조회할 때 사용됩니다</span>
               </div>
             </div>
           </div>
@@ -152,7 +298,7 @@ export default function ReserveStorage() {
                   dateFormat="yyyy년 MM월 dd일 HH:mm"
                   timeIntervals={30}
                   minDate={startDate || new Date()}
-                  filterTime={filterEndTime}  // ⭐ 여기!
+                  filterTime={filterStartTime}
                   placeholderText="찾는 날짜/시간"
                   onCalendarOpen={() => document.body.style.overflow = 'hidden'}  //  스크롤 방지
                   onCalendarClose={() => document.body.style.overflow = 'unset'}
@@ -178,7 +324,7 @@ export default function ReserveStorage() {
                 <div className="reserve-form-content-input-wrapper">
                   <div className="reserve-form-content-input-div"
                     onClick={ () => { setLuggageModalFlg(true) }}
-                  >{ luggageInfo ? <span style={{color: '#000'}}>{luggageInfo.type} ({luggageInfo.size}) {luggageInfo.weight}</span> : <span>보따리 종류를 선택하세요</span> }</div>
+                  >{ luggageInfo ? <span style={{color: '#000'}}>{luggageInfo.itemType} ({luggageInfo.itemSize}) {luggageInfo.itemWeight}</span> : <span>보따리 종류를 선택하세요</span> }</div>
                   <span className="reserve-form-content-input-x"
                     onClick={() => setLuggageInfo('')}
                   ><X size={24}/></span>
@@ -187,7 +333,12 @@ export default function ReserveStorage() {
               {/* 요청사항 */}
               <div className="reserve-form-content reserve-form-content-textarea">
                 <label className="reserve-form-content-name">요청사항 :</label>
-                <textarea type="text" className="reserve-form-content-input reserve-form-textarea" rows="2"></textarea>
+                <textarea type="text" className="reserve-form-content-input reserve-form-textarea" 
+                  rows="2"
+                  value={notes}
+                  onChange={e => setNotes(e.target.value)}
+                  onBlur={ (e) => setNotes(e.target.value.trim()) }
+                />
               </div>
             </div>
           </div>
@@ -210,7 +361,9 @@ export default function ReserveStorage() {
 
           {/* 완료 버튼 */}
           <div className="reserve-form-complete-btn-wrapper">
-            <button type="button" className="reserve-form-complete-btn">보관 예약서 작성 완료</button>
+            <button type="button" className="reserve-form-complete-btn"
+              onClick={handleNext}
+            >보관 예약서 작성 완료</button>
           </div>
 
         </div>
