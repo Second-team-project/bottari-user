@@ -20,6 +20,8 @@
   --bottari-background: #E6FAFF;
   --bottari-mint: #5EEAD4;
   --bottari-gray: #888888;
+  --bottari-input: #eeeeee;
+  --bottari-placeholder: #777777;
 }
 
 @font-face {
