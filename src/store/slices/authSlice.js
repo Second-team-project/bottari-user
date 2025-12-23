@@ -22,7 +22,7 @@ const slice = createSlice({
       .addCase(reissueThunk.fulfilled, (state, action) => {
         const { accessToken, user } = action.payload.data;
         state.accessToken = accessToken;
-        state.user = user;
+        state.user = user;  //  user model 객체 (리프레시 제외)
         state.isLoggedIn = true;
       });
   },

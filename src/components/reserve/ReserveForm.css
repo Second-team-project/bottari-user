@@ -10,7 +10,17 @@
   align-items: center;
   gap: 0.5rem;
 
-  margin-bottom: 40%;
+  padding-bottom: 40%;
+}
+@media (min-width: 769px) {
+  .reserve-form-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  
+    padding-bottom: 30%;
+  }
 }
 
 /* 내 정보 입력 컨테이너 */
@@ -103,6 +113,13 @@
   align-items: center;
   /* line-height: 1.4; */
   cursor: pointer;
+}
+
+/* 짐 선택 버튼 */
+.reserve-from-luggage-btn {
+  background-color: #fff;
+  border: 1px solid var(--bottari-blue);
+  color: var(--bottari-placeholder);
 }
 
 /* textarea 전용 스타일 */

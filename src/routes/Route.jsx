@@ -26,9 +26,9 @@ import NoticeDetail from "../components/service/NoticeDetail.jsx";
 import Social from "../components/auth/Social.jsx";
 import ReserveConfirm from "../components/reserve/ReserveConfirm.jsx";
 // 결제 관련 - 토스
-import CheckoutPage from '../components/tosspayments/TossCheckout.jsx';
-import SuccessPage from '../components/tosspayments/TossSuccess.jsx';
-import FailPage from '../components/tosspayments/TossFail.jsx';
+import CheckoutPage from '../components/reserve/tosspayments/TossCheckout.jsx';
+import SuccessPage from '../components/reserve/tosspayments/TossSuccess.jsx';
+import FailPage from '../components/reserve/tosspayments/TossFail.jsx';
 
 const router = createBrowserRouter([
   {

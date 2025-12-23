@@ -1,21 +1,19 @@
-import "../tosspayments/TossPayments.css";
+import "./tosspayments/TossPayments.css";
 import "./Reserveform.css";
 import "./ReserveConfirm.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-// ===== tossPayments
-import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
-import CheckoutPage from '../tosspayments/TossCheckout.jsx';
 import { toast } from "sonner";
-// import SuccessPage from '../tosspayments/TossSuccess.jsx';
-// import FailPage from '../tosspayments/TossFail.jsx';
+
+import CheckoutPage from './tosspayments/TossCheckout.jsx';
 
 export default function ReserveConfirm() {
   // ===== hooks
   const location = useLocation();
-  const navigate = useNavigate();
+
   // ===== redux state
   const { deliveryReserve, storageReserve } = useSelector(state => state.reserve)
+
   // ===== navigate state
   const reserveData = location.state || {};
   const {type, password} = reserveData
@@ -42,7 +40,9 @@ export default function ReserveConfirm() {
 
         <div className="reserve-form-content-container reserve-confirm-content-container">
           <div className="reserve-confirm-content-title">
-            <h3 className="reserve-confirm-content-title-h3"><span className="reserve-confirm-content-text-pont">{thisData?.userName}</span>님의 <span className="reserve-confirm-content-text-pont">{thisData?.type === 'delivery' ? "배송" : "보관"}</span>내용</h3>
+            <h3 className="reserve-confirm-content-title-h3">
+              <span className="reserve-confirm-content-text-pont">{thisData?.userName}</span>
+              님의 <span className="reserve-confirm-content-text-pont">{thisData?.type === 'DELIVERY' ? "배송" : "보관"}</span>내용</h3>
           </div>
 
           <div className="reserve-confirm-content-body">
@@ -81,7 +81,7 @@ export default function ReserveConfirm() {
               </div>
 
               {/* ===== 배송 전용 항목 ===== */}
-              {thisData?.type === 'delivery' && (
+              {thisData?.type === 'DELIVERY' && (
                 <>
                   {/* 픽업 일시 */}
                   <div className="reserve-confirm-data-wrapper">
@@ -105,7 +105,7 @@ export default function ReserveConfirm() {
               )}
                   
               {/* ===== 보관 전용 항목 ===== */}
-              {thisData?.type === 'storage' && (
+              {thisData?.type === 'STORAGE' && (
                 <>
 
                   {/* 보관 날짜 */}

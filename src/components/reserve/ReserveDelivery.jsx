@@ -2,7 +2,7 @@ import "react-datepicker/dist/react-datepicker.css"; // 달력 기본 스타일
 import "./ReserveForm.css";  // 예약페이지 공통 스타일
 import "./ReserveDelivery.css";
 // ===== hooks
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 // ===== components
@@ -28,13 +28,14 @@ export default function ReserveDelivery() {
   // ===== hooks
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  // ===== 전역 states
+  // ===== redux states
   const savedData = useSelector(state => state.reserve.deliveryReserve);
+  const user = useSelector(state => state.auth.user);
 
   // ===== 개인 정보 설정용
-  const [name, setName] = useState(savedData?.userName || '');
-  const [email, setEmail] = useState(savedData?.email || '');
-  const [phone, setPhone] = useState(savedData?.phone || '');
+  const [name, setName] = useState(savedData?.userName || user?.userName || '');
+  const [email, setEmail] = useState(savedData?.email || user?.email || '');
+  const [phone, setPhone] = useState(savedData?.phone || user?.phone || '');
   const [password, setPassword] = useState('');
   const [passwordChk, setPasswordChk] = useState('');
   const [notes, setNotes] = useState(savedData?.notes || '');
@@ -48,6 +49,24 @@ export default function ReserveDelivery() {
   const [luggageInfo, setLuggageInfo] = useState(savedData?.luggageInfo || null)
   // ===== 달력 커스텀용 & 픽업 일시
   const [pickupDate, setPickupDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null); // 픽업 날짜 
+
+  // ===== reudux 에서 데이터 불러오는데 시간이 걸릴 경우 대비
+  // useEffect(() => {
+  //   if(!savedData && user) {
+  //     // 작성&저장한 데이터가 없고, user 가 있을 경우
+  //     if(!name && user.userName) setName(user.userName || '');
+  //     if (!email && user.email) setEmail(user.email || '');
+  //     if (!phone && user.phone) setPhone(user.phone || '');
+  //   }
+  // }, [user, savedData]);
+
+  // ===== input : 숫자 입력 용
+  const handlerNumber = e => {
+    const value = e.target.value;
+    const onlyNumbers = value.replace(/[^0-9]/g, '')
+
+    setPhone(onlyNumbers);
+  }
 
   // ========================
   // ||     달력 커스텀     || 
@@ -82,7 +101,9 @@ export default function ReserveDelivery() {
   // 1-1. formData 생성
   const createFormData = () => {
     return ({
-      type: 'delivery',
+      type: 'DELIVERY',
+      userId: user?.id || null,
+      userType: user ? 'MEMBER' : 'GUEST',
       savedAt: new Date().toISOString(),
       userName: name.trim(),
       email: email.trim(),
@@ -92,17 +113,21 @@ export default function ReserveDelivery() {
       endedAddr: endLocation.trim(),
       luggageInfo: luggageInfo,
       notes: notes.trim(),
-      price: 50000,
+      price: 1,
     });
   };
-  // 1-2. 디바운싱 적용 함수 생성
-  const saveToRedux = useCallback(
+
+  // 1-2. 디바운싱 적용 함수 생성 : useCallback -> useMemo 로 변경
+  const saveToRedux = useMemo(() => {
+    const debounceFunc =
     debounce((data) => {
       dispatch(setDeliveryReserve(data));
       console.log('배송예약 - redux 저장: ', data);
-    }, 1000),   // 1초 후 저장
-    [dispatch]  // dispatch 바뀔 때만 함수 재생성 : data 변경 시엔 재생성x 
-  )
+    }, 1000);   // 1초 후 저장
+
+    return debounceFunc;
+  }, [dispatch] ) // dispatch 바뀔 때만 재생성 : data 변경 시엔 재생성x 
+
   // 1-3. formData 변경될 때마다 saveToRedux 실행
   useEffect(() => {
     const formData = createFormData();
@@ -162,7 +187,7 @@ export default function ReserveDelivery() {
     // 2-2. 디바운스 기다리지 않고 즉시 redux 저장
     dispatch(setDeliveryReserve(formData));
     // 2-3. 결제 페이지로 이동
-    navigate('/reserve/confirm', { state: { type: 'delivery', password: password.trim(), } });
+    navigate('/reserve/confirm', { state: { type: 'DELIVERY', password: password.trim(), } });
   }
   
 
@@ -225,9 +250,9 @@ export default function ReserveDelivery() {
               <div className="reserve-form-content">
                 <label htmlFor="phone" className="reserve-form-content-name">휴대폰 :</label>
                 <input type="text" className="reserve-form-content-input" 
-                  placeholder="010.보따리.보따리" 
+                  placeholder="숫자만 입력 해주세요" 
                   value={phone}
-                  onChange={ (e) => setPhone(e.target.value) }
+                  onChange={ (e) => handlerNumber(e) }
                   onBlur={ (e) => setPhone(e.target.value.trim()) }
                 />
               </div>
@@ -325,6 +350,14 @@ export default function ReserveDelivery() {
               <div className="reserve-form-content">
                 <label htmlFor="luggage-type" className="reserve-form-content-name">보따리 종류 :</label>
                 <div className="reserve-form-content-input-wrapper">
+                  <div className="reserve-form-content-input-div reserve-from-luggage-btn">
+                    <span>보따리 종류 선택하기</span>
+                  </div>
+                  <div className="reserve-form-luggage-wrapper">
+
+                  </div>
+
+                  {/* TODO */}
                   <div className="reserve-form-content-input-div"
                     onClick={ () => { setLuggageModalFlg(true) }}
                   >{ luggageInfo ? <span style={{color: '#000'}}>{`${luggageInfo.itemType} (${luggageInfo.itemSize}) ${luggageInfo.itemWeight}`}</span> : <span>보따리 종류를 선택하세요</span> }</div>

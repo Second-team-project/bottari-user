@@ -3,17 +3,13 @@ import axiosIns from "../../api/axiosInstance";
 
 export const tossPaymentsThunk = createAsyncThunk(
   'tossPayments/tossPaymentsThunk',
-  async ({keyword, page}, {rejectWithValue}) => {
+  async (data, {rejectWithValue}) => {
     try {
-      const response = await axiosIns.get(
-        '/api/user/search/location', 
-        {
-          params: { 
-            keyword: keyword,
-            page: page
-          }
-        }
-      )
+
+      const url = `/api/user/search/location`;
+
+      const response = await axiosIns.post(url, data)
+
       
       console.log('response: ', response.data)
 

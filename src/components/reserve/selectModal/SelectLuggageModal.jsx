@@ -1,6 +1,7 @@
 import "./SelectLuggageModal.css";
 
 import { useEffect, useState } from "react";
+import { ChevronUp, ChevronDown  } from 'lucide-react';
 
 export default function SelectLuggageModal({modalFlgFalse, setLuggageInfo}) {
   // ========================
@@ -19,6 +20,7 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageInfo}) {
   const [step1, setStep1] = useState(null); // 종류
   const [step2, setStep2] = useState(null); // 사이즈
   const [step3, setStep3] = useState(null); // 무게
+  const [count, setCount] = useState(1); // 개수
 
   const step1List = ['캐리어', '가방', '골프 가방', '상자']
   const step2List = (step1 === '캐리어') ? ['21', '24', '32', '초과'] : ['S', 'M', 'L', 'XL']
@@ -98,6 +100,26 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageInfo}) {
                       >{item}</button>
                     ))
                   }
+                </div>
+              </div>
+            )
+          }
+
+          {/* 개수 */}
+          {
+            step3 && (
+              <div className="select-luggage-modal-input-wrapper">
+                <div className="select-luggage-modal-input-title-wrapper">
+                  <h3>보따리 개수</h3>
+                </div>
+                <div className="select-luggage-modal-input-type-btn-wrapper">
+                  <div className="select-luggage-modal-luggage-count-btn"
+                    onClick={() => setCount(count + 1)}
+                  ><ChevronUp /></div>
+                  <div className="select-luggage-modal-luggage-count">{count}</div>
+                  <div className="select-luggage-modal-luggage-count-btn"
+                    onClick={() => setCount(count -1)}
+                  ><ChevronDown /></div>
                 </div>
               </div>
             )
