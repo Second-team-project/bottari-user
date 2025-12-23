@@ -46,7 +46,7 @@ export default function ReserveDelivery() {
   const [locationType, setLocationType] = useState(null);
   // ===== 짐 설정용 
   const [luggageModalFlg, setLuggageModalFlg] = useState(false)
-  const [luggageInfo, setLuggageInfo] = useState(savedData?.luggageInfo || null)
+  const [luggageList, setLuggageList] = useState(savedData?.luggageList || [])
   // ===== 달력 커스텀용 & 픽업 일시
   const [pickupDate, setPickupDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null); // 픽업 날짜 
 
@@ -111,7 +111,7 @@ export default function ReserveDelivery() {
       startedAt: pickupDate ? pickupDate.toISOString() : null,
       startedAddr: startLocation.trim(),
       endedAddr: endLocation.trim(),
-      luggageInfo: luggageInfo,
+      luggageList: luggageList,
       notes: notes.trim(),
       price: 1,
     });
@@ -132,7 +132,7 @@ export default function ReserveDelivery() {
   useEffect(() => {
     const formData = createFormData();
     saveToRedux(formData);  // 디바운싱 적용!
-  }, [name, email, phone, password, pickupDate, startLocation, endLocation, luggageInfo, notes, saveToRedux]);
+  }, [name, email, phone, password, pickupDate, startLocation, endLocation, luggageList, notes, saveToRedux]);
   
   // 2. 결제 페이지로 넘어가기 & 유효성 검사
   function handleNext() {
@@ -148,17 +148,19 @@ export default function ReserveDelivery() {
       toast.error('이메일을 입력해주세요');
       return;
     }
-    if(!password || password.trim().length < 4 ) {
-      toast.error('비밀번호를 4자리 이상 입력해주세요');
-      return;
-    }
-    if(!passwordChk || password.trim().length < 4 ) {
-      toast.error('비밀번호를 확인 해주세요');
-      return;
-    }
-    if(password !== passwordChk ) {
-      toast.error('비밀번호가 일치하지 않습니다.');
-      return;
+    if(!user) {
+      if(!password || password.trim().length < 4 ) {
+        toast.error('비밀번호를 4자리 이상 입력해주세요');
+        return;
+      }
+      if(!passwordChk || passwordChk.trim().length < 4 ) {
+        toast.error('비밀번호를 확인 해주세요');
+        return;
+      }
+      if(password !== passwordChk ) {
+        toast.error('비밀번호가 일치하지 않습니다.');
+        return;
+      }
     }
     if(!formData.startedAt) {
       toast.error('픽업 시간을 선택해주세요');
@@ -180,14 +182,14 @@ export default function ReserveDelivery() {
       toast.error('도착 장소는 대구 지역만 선택 가능합니다');
       return;
     }
-    if(!formData.luggageInfo) {
+    if(!formData.luggageList || formData.luggageList.length === 0) {
       toast.error('보따리 종류를 선택해주세요');
       return;
     }
     // 2-2. 디바운스 기다리지 않고 즉시 redux 저장
     dispatch(setDeliveryReserve(formData));
     // 2-3. 결제 페이지로 이동
-    navigate('/reserve/confirm', { state: { type: 'DELIVERY', password: password.trim(), } });
+    navigate('/reserve/confirm', { state: { type: 'DELIVERY', password: user ? null : password.trim(), } });
   }
   
 
@@ -209,7 +211,9 @@ export default function ReserveDelivery() {
           luggageModalFlg &&
           <SelectLuggageModal
             modalFlgFalse={() => setLuggageModalFlg(false)}
-            setLuggageInfo={setLuggageInfo}
+            setLuggageList={(item) => {
+              setLuggageList(prev => [...prev, {...item, id: Date.now()}])
+            }}
           />
         }
 
@@ -256,28 +260,34 @@ export default function ReserveDelivery() {
                   onBlur={ (e) => setPhone(e.target.value.trim()) }
                 />
               </div>
-              {/* 비밀번호 */}
-              <div className="reserve-form-content">
-                <label htmlFor="password" className="reserve-form-content-name">비밀번호 :</label>
-                <input type="password" className="reserve-form-content-input" 
-                  placeholder="4글자 이상 입력 해주세요" 
-                  onChange={ (e) => setPassword(e.target.value) }
-                  onBlur={ (e) => setPassword(e.target.value.trim()) }
-                />
-              </div>
-              {/* 비밀번호 확인 */}
-              <div className="reserve-form-content">
-                <label htmlFor="password" className="reserve-form-content-name">비밀번호 확인 :</label>
-                <input type="password" className="reserve-form-content-input" 
-                  placeholder="비밀번호 한 번 더 입력" 
-                  onChange={ (e) => setPasswordChk(e.target.value) }
-                  onBlur={ (e) => setPasswordChk(e.target.value.trim()) }
-                />
-              </div>
-              {/* 안내문구  */}
-              <div className="reserve-form-content-notice">
-                <span className="reserve-form-content-notice-text">비밀번호는 예약을 조회할 때 사용됩니다</span>
-              </div>
+              {
+                !user && (
+                  <>
+                    {/* 비밀번호 */}
+                    <div className="reserve-form-content">
+                      <label htmlFor="password" className="reserve-form-content-name">비밀번호 :</label>
+                      <input type="password" className="reserve-form-content-input" 
+                        placeholder="4글자 이상 입력 해주세요" 
+                        onChange={ (e) => setPassword(e.target.value) }
+                        onBlur={ (e) => setPassword(e.target.value.trim()) }
+                      />
+                    </div>
+                    {/* 비밀번호 확인 */}
+                    <div className="reserve-form-content">
+                      <label htmlFor="password" className="reserve-form-content-name">비밀번호 확인 :</label>
+                      <input type="password" className="reserve-form-content-input" 
+                        placeholder="비밀번호 한 번 더 입력" 
+                        onChange={ (e) => setPasswordChk(e.target.value) }
+                        onBlur={ (e) => setPasswordChk(e.target.value.trim()) }
+                      />
+                    </div>
+                    {/* 안내문구  */}
+                    <div className="reserve-form-content-notice">
+                      <span className="reserve-form-content-notice-text">비밀번호는 예약을 조회할 때 사용됩니다</span>
+                    </div>
+                  </>
+                )
+              }
             </div>
           </div>
 
@@ -290,33 +300,35 @@ export default function ReserveDelivery() {
               {/* 픽업시간 */}
               <div className="reserve-form-content">
                 <label htmlFor="send-date" className="reserve-form-content-name">픽업 시간 :</label>
-                <DatePicker
-                  withPortal
-                  selected={pickupDate}
-                  onChange={(date) => {
-                    if (!date) {
-                      setPickupDate(null);
-                      return;
-                    }
-                    const hour = date.getHours();
-                    // 9시 이전이나 21시 이후면 9시로 강제 설정
-                    if (hour < 9 || hour >= 21) {
-                      const correctedDate = new Date(date);
-                      correctedDate.setHours(9, 0, 0, 0);
-                      setPickupDate(correctedDate);
-                    } else {
-                      setPickupDate(date);
-                    }
-                  }}
-                  showTimeSelect
-                  dateFormat="yyyy년 MM월 dd일 HH:mm"
-                  timeIntervals={30}
-                  minDate={new Date()}       // 오늘부터 선택 가능
-                  filterTime={filterDeliveryTime}
-                  placeholderText="픽업 날짜/시간 선택"
-                  onCalendarOpen={() => document.body.style.overflow = 'hidden'}  //  스크롤 방지
-                  onCalendarClose={() => document.body.style.overflow = 'unset'}
-                />
+                <div className="reserve-form-daypicker-wrapper">
+                  <DatePicker
+                    withPortal
+                    selected={pickupDate}
+                    onChange={(date) => {
+                      if (!date) {
+                        setPickupDate(null);
+                        return;
+                      }
+                      const hour = date.getHours();
+                      // 9시 이전이나 21시 이후면 9시로 강제 설정
+                      if (hour < 9 || hour >= 21) {
+                        const correctedDate = new Date(date);
+                        correctedDate.setHours(9, 0, 0, 0);
+                        setPickupDate(correctedDate);
+                      } else {
+                        setPickupDate(date);
+                      }
+                    }}
+                    showTimeSelect
+                    dateFormat="yyyy년 MM월 dd일 HH:mm"
+                    timeIntervals={30}
+                    minDate={new Date()}       // 오늘부터 선택 가능
+                    filterTime={filterDeliveryTime}
+                    placeholderText="픽업 날짜/시간 선택"
+                    onCalendarOpen={() => document.body.style.overflow = 'hidden'}  //  스크롤 방지
+                    onCalendarClose={() => document.body.style.overflow = 'unset'}
+                  />
+                </div>
               </div>
               {/* 안내문구  */}
               <div className="reserve-form-content-notice">
@@ -350,22 +362,43 @@ export default function ReserveDelivery() {
               <div className="reserve-form-content">
                 <label htmlFor="luggage-type" className="reserve-form-content-name">보따리 종류 :</label>
                 <div className="reserve-form-content-input-wrapper">
-                  <div className="reserve-form-content-input-div reserve-from-luggage-btn">
-                    <span>보따리 종류 선택하기</span>
-                  </div>
-                  <div className="reserve-form-luggage-wrapper">
-
-                  </div>
-
-                  {/* TODO */}
-                  <div className="reserve-form-content-input-div"
+                  <div className="reserve-form-content-input-div reserve-form-daypicker-wrapper"
                     onClick={ () => { setLuggageModalFlg(true) }}
-                  >{ luggageInfo ? <span style={{color: '#000'}}>{`${luggageInfo.itemType} (${luggageInfo.itemSize}) ${luggageInfo.itemWeight}`}</span> : <span>보따리 종류를 선택하세요</span> }</div>
-                  <span className="reserve-form-content-input-x"
-                    onClick={() => setLuggageInfo(null)}
-                  ><X size={24}/></span>
+                  >
+                    <span>보따리 종류 선택</span>
+                  </div>
                 </div>    
               </div>
+              {/* 선택된 보따리 */}
+              {
+                luggageList.length >= 1 &&
+                <div className="reserve-form-content">
+                    <label htmlFor="luggage-list" className="reserve-form-content-name"></label>
+                    <div className="reserve-form-luggage-container">
+                    
+                    {
+                      luggageList.map((luggage) => (
+                        <div className="reserve-form-content-luggage-wrapper" key={luggage.id}>
+                        <div className="reserve-form-luggage-item">
+                          <span style={{color: '#000'}}>{`${luggage.itemType} (${luggage.itemSize}) ${luggage.itemWeight} ${luggage.count}개`}</span>
+                        </div>
+                        <span className="reserve-form-luggage-btn-x"
+                          onClick={() => setLuggageList(prev => prev.filter(item => item.id !== luggage.id))}
+                          ><X size={24}/></span>
+                      </div>
+                      ))
+
+                    }
+                      
+                    </div>
+                  </div>
+
+              }
+                  {/* <div className="reserve-form-luggage-wrapper">
+
+                  </div> */}
+
+                  {/* TODO */}
               {/* 요청사항 */}
               <div className="reserve-form-content reserve-form-content-textarea">
                 <label htmlFor="notes" className="reserve-form-content-name">요청사항 :</label>

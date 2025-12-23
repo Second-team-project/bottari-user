@@ -294,58 +294,62 @@ export default function ReserveStorage() {
               {/* 맡길 날짜 */}
               <div className="reserve-form-content">
                 <label className="reserve-form-content-name">맡길 날짜 :</label>
-                <DatePicker
-                  withPortal
-                  selected={startDate}
-                  onChange={(date) => {
-                    if (!date) {
-                      setStartDate(null);
-                      return;
-                    }
+                <div className="reserve-form-daypicker-wrapper">
+                  <DatePicker
+                    withPortal
+                    selected={startDate}
+                    onChange={(date) => {
+                      if (!date) {
+                        setStartDate(null);
+                        return;
+                      }
 
-                    const now = new Date();
-                    // 오늘 날짜를 선택했고, 시간이 현재보다 과거인 경우 (예: 날짜 클릭 직후 00:00)
-                    if (date.toDateString() === now.toDateString() && date.getTime() < now.getTime()) {
-                      const minutes = now.getMinutes();
-                      const remainder = 30 - (minutes % 30); // 다음 30분 단위까지 남은 분
-                      
-                      const adjustedDate = new Date(now);
-                      adjustedDate.setMinutes(minutes + remainder);
-                      adjustedDate.setSeconds(0);
-                      adjustedDate.setMilliseconds(0);
+                      const now = new Date();
+                      // 오늘 날짜를 선택했고, 시간이 현재보다 과거인 경우 (예: 날짜 클릭 직후 00:00)
+                      if (date.toDateString() === now.toDateString() && date.getTime() < now.getTime()) {
+                        const minutes = now.getMinutes();
+                        const remainder = 30 - (minutes % 30); // 다음 30분 단위까지 남은 분
+                        
+                        const adjustedDate = new Date(now);
+                        adjustedDate.setMinutes(minutes + remainder);
+                        adjustedDate.setSeconds(0);
+                        adjustedDate.setMilliseconds(0);
 
-                      // 조정된 시간 적용
-                      date.setHours(adjustedDate.getHours());
-                      date.setMinutes(adjustedDate.getMinutes());
-                    }
-                    setStartDate(date);
-                  }}
-                  showTimeSelect
-                  dateFormat="yyyy년 MM월 dd일 HH:mm"
-                  timeIntervals={30}
-                  minDate={new Date()} // 오늘부터 가능
-                  filterTime={filterStartTime}
-                  placeholderText="맡길 날짜/시간 선택"
-                  onCalendarOpen={() => document.body.style.overflow = 'hidden'}  //  스크롤 방지
-                  onCalendarClose={() => document.body.style.overflow = 'unset'}
-                />
+                        // 조정된 시간 적용
+                        date.setHours(adjustedDate.getHours());
+                        date.setMinutes(adjustedDate.getMinutes());
+                      }
+                      setStartDate(date);
+                    }}
+                    showTimeSelect
+                    dateFormat="yyyy년 MM월 dd일 HH:mm"
+                    timeIntervals={30}
+                    minDate={new Date()} // 오늘부터 가능
+                    filterTime={filterStartTime}
+                    placeholderText="맡길 날짜/시간 선택"
+                    onCalendarOpen={() => document.body.style.overflow = 'hidden'}  //  스크롤 방지
+                    onCalendarClose={() => document.body.style.overflow = 'unset'}
+                  />
+                </div>
               </div>
               {/* 찾을 날짜 */}
               <div className="reserve-form-content">
                 <label className="reserve-form-content-name">찾을 날짜 :</label>
-                <DatePicker
-                  withPortal
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  showTimeSelect
-                  dateFormat="yyyy년 MM월 dd일 HH:mm"
-                  timeIntervals={30}
-                  minDate={startDate || new Date()}
-                  filterTime={filterStartTime}
-                  placeholderText="찾는 날짜/시간"
-                  onCalendarOpen={() => document.body.style.overflow = 'hidden'}  //  스크롤 방지
-                  onCalendarClose={() => document.body.style.overflow = 'unset'}
-                />
+                <div className="reserve-form-daypicker-wrapper">
+                  <DatePicker
+                    withPortal
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    showTimeSelect
+                    dateFormat="yyyy년 MM월 dd일 HH:mm"
+                    timeIntervals={30}
+                    minDate={startDate || new Date()}
+                    filterTime={filterStartTime}
+                    placeholderText="찾는 날짜/시간 선택"
+                    onCalendarOpen={() => document.body.style.overflow = 'hidden'}  //  스크롤 방지
+                    onCalendarClose={() => document.body.style.overflow = 'unset'}
+                  />
+                </div>
               </div>
               {/* 보관소 */}
               <div className="reserve-form-content">
@@ -367,13 +371,18 @@ export default function ReserveStorage() {
               {/* 보따리 종류 */}
               <div className="reserve-form-content">
                 <label htmlFor="luggage-type" className="reserve-form-content-name">보따리 종류 :</label>
-                <div className="reserve-form-content-input-wrapper">
-                  <div className="reserve-form-content-input-div"
+                <div className="reserve-form-content-input-wrapper reserve-from-luggage-btn-wrapper">
+                  <div className="reserve-form-content-input-div reserve-form-daypicker-wrapper"
+                    onClick={ () => { setLuggageModalFlg(true) }}
+                  >
+                    <span>보따리 종류 선택</span>
+                  </div>
+                  {/* <div className="reserve-form-content-input-div"
                     onClick={ () => { setLuggageModalFlg(true) }}
                   >{ luggageInfo ? <span style={{color: '#000'}}>{`${luggageInfo.itemType} (${luggageInfo.itemSize}) ${luggageInfo.itemWeight}`}</span> : <span>보따리 종류를 선택하세요</span> }</div>
                   <span className="reserve-form-content-input-x"
                     onClick={() => setLuggageInfo('')}
-                  ><X size={24}/></span>
+                  ><X size={24}/></span> */}
                 </div>    
               </div>
               {/* 요청사항 */}

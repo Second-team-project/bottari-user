@@ -3,7 +3,7 @@ import "./SelectLuggageModal.css";
 import { useEffect, useState } from "react";
 import { ChevronUp, ChevronDown  } from 'lucide-react';
 
-export default function SelectLuggageModal({modalFlgFalse, setLuggageInfo}) {
+export default function SelectLuggageModal({modalFlgFalse, setLuggageList}) {
   // ========================
   // ||     스크롤 방지     ||
   // ========================
@@ -23,12 +23,19 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageInfo}) {
   const [count, setCount] = useState(1); // 개수
 
   const step1List = ['캐리어', '가방', '골프 가방', '상자']
-  const step2List = (step1 === '캐리어') ? ['21', '24', '32', '초과'] : ['S', 'M', 'L', 'XL']
+  const step2List = (step1 === '캐리어') ? ['21', '24', '32', '초과']
+                  : (step1 === '골프 가방') ? ['L']
+                  : ['S', 'M', 'L', 'XL']
   const step3List = ['~10kg', '~20kg', '~30kg', '초과']
 
   // ===== 최종 선택 완료
   const handleComplete = () => {
-    setLuggageInfo({itemType: step1, itemSize: step2, itemWeight: step3});
+    setLuggageList({
+      itemType: step1,
+      itemSize: step2,
+      itemWeight: step3,
+      count: count,
+    });
     modalFlgFalse(false);
   };
 
@@ -44,12 +51,12 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageInfo}) {
         </div>
 
         {/* 보따리 영역 */}
-        <div className="select-luggage-modal-input-container">
+        <div className="select-luggage-modal-body">
 
           {/* 종류 */}
           <div className="select-luggage-modal-input-wrapper">
             <div className="select-luggage-modal-input-title-wrapper">
-              <h3>보따리 종류</h3>
+              <span>보따리 종류</span>
             </div>
             <div className="select-luggage-modal-input-type-btn-wrapper">
               {
@@ -68,7 +75,7 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageInfo}) {
             step1 && (
               <div className="select-luggage-modal-input-wrapper">
                 <div className="select-luggage-modal-input-title-wrapper">
-                  <h3>보따리 크기</h3>
+                  <span>보따리 크기</span>
                 </div>
                 <div className="select-luggage-modal-input-type-btn-wrapper">
                   {
@@ -89,7 +96,7 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageInfo}) {
             step2 && (
               <div className="select-luggage-modal-input-wrapper">
                 <div className="select-luggage-modal-input-title-wrapper">
-                  <h3>보따리 무게</h3>
+                  <span>보따리 무게</span>
                 </div>
                 <div className="select-luggage-modal-input-type-btn-wrapper">
                   {
@@ -110,15 +117,15 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageInfo}) {
             step3 && (
               <div className="select-luggage-modal-input-wrapper">
                 <div className="select-luggage-modal-input-title-wrapper">
-                  <h3>보따리 개수</h3>
+                  <span>보따리 개수</span>
                 </div>
-                <div className="select-luggage-modal-input-type-btn-wrapper">
+                <div className="select-luggage-modal-input-type-btn-wrapper-center">
                   <div className="select-luggage-modal-luggage-count-btn"
-                    onClick={() => setCount(count + 1)}
+                    onClick={() => setCount(prev => Math.min(prev + 1, 9))}
                   ><ChevronUp /></div>
                   <div className="select-luggage-modal-luggage-count">{count}</div>
                   <div className="select-luggage-modal-luggage-count-btn"
-                    onClick={() => setCount(count -1)}
+                    onClick={() => setCount(prev => Math.max(prev - 1, 1))}
                   ><ChevronDown /></div>
                 </div>
               </div>

@@ -9,11 +9,11 @@
   z-index: 15;
 }
 
-/* 컨텐츠 영역 */
+/* 소제목 제외 영역 */
 .select-luggage-modal-container {
   width: 85%;
   max-width: 400px;
-  height: 60vh;
+  /* height: 60vh; */
   background-color: #fff;
 
   border-radius: 10px;
@@ -24,11 +24,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
+    /* 드래그 방지 */
+  user-select: none;
+  -webkit-user-select: none;
+
   z-index: 16;
 }
 
 /* 입력 영역 */
-.select-luggage-modal-input-container {
+.select-luggage-modal-body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -36,13 +40,15 @@
 /* 아이템 */
 .select-luggage-modal-input-wrapper {
   width: 100%;
-  border: 1px solid var(--bottari-navy);
+  border: 1px solid #777;
   border-radius: 10px;
-  padding: 5%;
+  padding: 3%;
 }
 /* 소제목 */
 .select-luggage-modal-input-title-wrapper {
   color: var(--bottari-navy);
+  font-size: 1rem;
+  font-weight: 600;
   width: 100%;
   margin: 0 3% 3% 0;
 }
@@ -52,15 +58,22 @@
   justify-content: space-around;
   gap: 0.2rem;
 }
+.select-luggage-modal-input-type-btn-wrapper-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
 /* 입력 버튼 */
 .select-luggage-modal-input-type-btn {
-  color: var(--bottari-gray);
+  color: var(--bottari-placeholder);
   font-size: 0.9rem;
   font-weight: 500;
 
   min-width: 20%;
   background-color: #fff;
-  border: 1px solid var(--bottari-blue);
+  border: 1px solid var(--bottari-navy);
   border-radius: 20px;
   padding: 2% 3%;
 
@@ -73,13 +86,41 @@
   filter: brightness(0.95);  
 }
 .select-luggage-modal-input-type-btn:hover {
-  background-color: var(--bottari-blue);
+  background-color: var(--bottari-pink);
 }
 .select-luggage-modal-input-type-btn-active {
   color: #000;
-  background-color: var(--bottari-blue);
+  background-color: var(--bottari-pink);
   font-weight: 600;
 }
+
+/* 카운트 버튼 */
+.select-luggage-modal-luggage-count-btn {
+  color: var(--bottari-placeholder);
+  min-width: 15%;
+
+  border: 1px solid var(--bottari-navy);
+  border-radius: 50px;
+  padding: 1% 1%;
+
+  display: flex;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.select-luggage-modal-luggage-count-btn:active {
+  transform: scale(0.95);
+  filter: brightness(0.95);  
+}
+.select-luggage-modal-luggage-count-btn:hover {
+  background-color: var(--bottari-pink);
+}
+/* 카운트 */
+.select-luggage-modal-luggage-count {
+  font-weight: 600;
+}
+
 
 /* 결정 버튼 영역 */
 .select-luggage-modal-complete-btn-wrapper {
