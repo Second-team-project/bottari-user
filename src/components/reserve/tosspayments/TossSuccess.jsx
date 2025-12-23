@@ -16,7 +16,7 @@ export default function TossSuccessPage() {
     };
 
     // thunk
-    async function confirm() {
+    async function confirm(requestData) {
       const response = await fetch("/confirm", {
         method: "POST",
         headers: {
@@ -40,8 +40,8 @@ export default function TossSuccessPage() {
   }, []);
 
   return (
-    <div className="result wrapper">
-      <div className="box_section">
+    <div className="result toss-wrapper">
+      <div className="toss-box-section">
         <h2>
           결제 성공
         </h2>

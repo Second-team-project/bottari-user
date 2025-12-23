@@ -1,0 +1,138 @@
+.toss-w-100 {
+  width: 100%;
+}
+
+.toss-h-100 {
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+  text-align: center;
+}
+
+.toss-wrapper {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  overflow: auto;
+}
+
+.toss-max-w-540 {
+  max-width: 540px;
+}
+
+.toss-box-section {
+  /* 디자인 요소 제거하고 기본만 남김 */
+  width: 100%;
+}
+
+.toss-btn-wrapper {
+  padding: 0 24px;
+}
+
+.toss-btn {
+  padding: 11px 22px;
+  border: none;
+  border-radius:  8px;
+  background-color: #f2f4f6;
+  color: #4e5968;
+  font-weight: 600;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.toss-btn-primary {
+  background-color: #3282f6;
+  color: #f9fcff;
+}
+
+.toss-text-center {
+  text-align: center;
+}
+
+.toss-flex {
+  display: flex;
+}
+
+.toss-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.toss-justify-center {
+  justify-content: center;
+}
+
+.toss-justify-between {
+  justify-content: space-between;
+}
+
+.toss-align-center {
+  align-items: center;
+}
+
+.toss-confirm-loading {
+  margin-top: 72px;
+  height: 400px;
+  justify-content: space-between;
+}
+
+
+.toss-confirm-success {
+  display: none;
+  margin-top: 72px;
+}
+
+.toss-button-group {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+}
+
+.toss-title {
+  margin-top: 32px;
+  margin-bottom: 0;
+  color: #191f28;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.toss-description {
+  margin-top: 8px;
+  color: #4e5968;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.toss-response-section {
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 20px;
+}
+
+.toss-response-section .toss-response-label {
+  font-weight: 600;
+  color: #333d48;
+  font-size: 17px;
+}
+
+.toss-response-section .toss-response-text {
+  font-weight: 500;
+  color: #4e5968;
+  font-size: 17px;
+  padding-left: 16px;
+  word-break: break-word;
+  text-align: right;
+}
+
+.toss-color-grey {
+  color: #b0b8c1;
+}

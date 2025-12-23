@@ -1,30 +1,36 @@
 import "./TossPayments.css";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
-import { createDraftReservation } from "../../store/thunks/reserveThunk";
+import { createDeliveryDraft, createStorageDraft } from "../../../store/thunks/reserveThunk";
+import { Navigate, useNavigate } from "react-router-dom";
 
-const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-const customerKey = "D92-snC-QuCnLXSxDBK_p";
 
 export default function TossCheckoutPage({ payData, password }) {
   // ===== hooks
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   // ===== states
   // === 결제버튼 디바운싱
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  
+  const clientKey = import.meta.env.VITE_TOSS_CLIENT_KEY;
+  const customerKey = import.meta.env.VITE_TOSS_CUSTOMER_KEY;
   // ===== 결제용 
-  const [amount, setAmount] = useState({
+  const [amount] = useState({
     currency: "KRW",
     value: Number(payData.price),
   });
   const [ready, setReady] = useState(false);
   const [widgets, setWidgets] = useState(null);
 
-  console.log('체크아웃: ', payData)
+  // ===== 임시 저장용
+  // console.log('체크아웃: ', payData)
+  console.log('임시 저장 값: ', {...payData, password})
+  const draftReservation = {...payData, password}
+
 
   // 1. 클라이언트키로 위젯 설정
   useEffect(() => {
@@ -104,8 +110,8 @@ export default function TossCheckoutPage({ payData, password }) {
 
 
   return (
-    <div className="wrapper">
-      <div className="box_section">
+    <div className="toss-wrapper">
+      <div className="toss-box-section">
         {/* 결제 UI */}
         <div id="payment-method" />
         {/* 이용약관 UI */}
@@ -131,16 +137,20 @@ export default function TossCheckoutPage({ payData, password }) {
 
         {/* 결제하기 버튼 */}
         <button
-          className="button"
+          className="toss-btn toss-btn-primary toss-w-100"
           disabled={!ready || isSubmitting}  // <- 저장 중에는 버튼 비활성화
           onClick={async () => {
             setIsSubmitting(true);  // <- 클릭 시작
             try {
               // 1. 예약 데이터 임시 저장 함수 호출
-              const resultCraft = await dispatch(createDraftReservation({...payData, password})).unwrap();
-              
-              alert('password: ', password)
-              alert('임시 저장 완료, reserveCode: ', resultCraft.reserveCode);
+              if(draftReservation.type !== 'DELIVERY' && draftReservation.type !== 'STORAGE') {
+                toast.error('에러가 발생했습니다. 다시 시도해 주세요.');
+                navigate(-1);
+              } else if(draftReservation.type === 'DELIVERY') {
+                await dispatch(createDeliveryDraft(draftReservation)).unwrap();
+              } else if(draftReservation.type === 'STORAGE') {
+                await dispatch(createStorageDraft(draftReservation)).unwrap();
+              }
 
               // 2. '결제하기' 버튼 누르면 결제창 띄우기
               // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.

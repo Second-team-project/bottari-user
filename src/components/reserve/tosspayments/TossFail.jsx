@@ -4,8 +4,8 @@ export default function TossFailPage() {
   const [searchParams] = useSearchParams();
 
   return (
-    <div className="result wrapper">
-      <div className="box_section">
+    <div className="result toss-wrapper">
+      <div className="toss-box-section">
         <h2>
           결제 실패
         </h2>
