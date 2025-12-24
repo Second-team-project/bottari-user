@@ -142,21 +142,31 @@ export default function TossCheckoutPage({ payData, password }) {
           onClick={async () => {
             setIsSubmitting(true);  // <- 클릭 시작
             try {
-              // 1. 예약 데이터 임시 저장 함수 호출
-              if(draftReservation.type !== 'DELIVERY' && draftReservation.type !== 'STORAGE') {
+              // 1. 예약 코드 담을 변수 선언
+              let reserveCode = '';
+              // 2. 예약 데이터 임시 저장 함수 호출
+                // 2-1. 보관인 경우
+              if(draftReservation.type === 'STORAGE') {
+                const draftResult = await dispatch(createStorageDraft(draftReservation)).unwrap();
+                reserveCode = draftResult.data.reserveCode;
+
+                // 2-2. 배송인 경우
+              } else if(draftReservation.type === 'DELIVERY') {
+                const draftResult = await dispatch(createDeliveryDraft(draftReservation)).unwrap();
+                reserveCode = draftResult.data.reserveCode;
+              
+                // 2-3. 둘 다 아닌 경우
+              } else {
                 toast.error('에러가 발생했습니다. 다시 시도해 주세요.');
                 navigate(-1);
-              } else if(draftReservation.type === 'DELIVERY') {
-                await dispatch(createDeliveryDraft(draftReservation)).unwrap();
-              } else if(draftReservation.type === 'STORAGE') {
-                await dispatch(createStorageDraft(draftReservation)).unwrap();
+                return;
               }
 
-              // 2. '결제하기' 버튼 누르면 결제창 띄우기
+              // 3. '결제하기' 버튼 누르면 결제창 띄우기
               // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
               // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
               await widgets.requestPayment({
-                orderId: "uIppuZDuMmVIinchy7zfP",  // TODO: resultCraft.reserveCode
+                orderId: reserveCode,  // TODO: resultCraft.reserveCode
                 orderName: payData.type === 'storage' ? '보따리 보관' : '보따리 배송',
                 successUrl: window.location.origin + "/reserve/tosspayments/success",
                 failUrl: window.location.origin + "/reserve/tosspayments/fail",

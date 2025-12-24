@@ -76,9 +76,13 @@ export default function ReserveConfirm() {
               <div className="reserve-confirm-data-wrapper">
                 <span className="reserve-confirm-data-key">보따리</span>
               </div>
-              <div className="reserve-confirm-data-value">
-                <span>{thisData && `${thisData?.luggageInfo?.itemType} (${thisData?.luggageInfo?.itemSize}) ${thisData?.luggageInfo?.itemWeight}`}</span>
-              </div>
+              {
+                thisData?.luggageList.map((luggage) => (
+                  <div className="reserve-confirm-data-value">
+                    <span>{luggage.itemType} ({luggage.itemSize}) {luggage.itemWeight} {luggage.count}개</span>
+                  </div>
+                ))
+              }
 
               {/* ===== 배송 전용 항목 ===== */}
               {thisData?.type === 'DELIVERY' && (

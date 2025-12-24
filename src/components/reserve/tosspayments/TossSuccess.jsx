@@ -1,8 +1,13 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { tossPaymentsThunk } from "../../../store/thunks/tossPaymentsThunk.js";
+import { useDispatch } from "react-redux";
 
 export default function TossSuccessPage() {
+  // ===== hooks
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -15,27 +20,40 @@ export default function TossSuccessPage() {
       paymentKey: searchParams.get("paymentKey"),
     };
 
-    // thunk
-    async function confirm(requestData) {
-      const response = await fetch("/confirm", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-      });
-
-      const json = await response.json();
-
-      if (!response.ok) {
-        // 결제 실패 비즈니스 로직을 구현하세요.
-        navigate(`/fail?message=${json.message}&code=${json.code}`);
-        return;
+    
+    const confirm = async() => {
+      try {
+        // 성공 시
+        dispatch(tossPaymentsThunk(requestData)).unwrap();
+        navigate('/reserve/complete');
+      
+      } catch (error) {
+        navigate(`/reserve/tosspayments/fail?message=${error.message}`);
+        
       }
-
-      // 결제 성공 비즈니스 로직을 구현하세요.
     }
     confirm();
+
+    // async function confirm(requestData) {
+    //   const response = await fetch("/confirm", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(requestData),
+    //   });
+
+    //   const json = await response.json();
+
+    //   if (!response.ok) {
+    //     // 결제 실패 비즈니스 로직을 구현하세요.
+    //     navigate(`/fail?message=${json.message}&code=${json.code}`);
+    //     return;
+    //   }
+
+    //   // 결제 성공 비즈니스 로직을 구현하세요.
+    // }
+    // confirm();
 
   }, []);
 

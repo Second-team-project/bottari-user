@@ -148,6 +148,7 @@ export default function ReserveDelivery() {
       toast.error('이메일을 입력해주세요');
       return;
     }
+      // 2-1-1. 유저가 아닌 경우만 비밀번호 체크
     if(!user) {
       if(!password || password.trim().length < 4 ) {
         toast.error('비밀번호를 4자리 이상 입력해주세요');
@@ -394,11 +395,6 @@ export default function ReserveDelivery() {
                   </div>
 
               }
-                  {/* <div className="reserve-form-luggage-wrapper">
-
-                  </div> */}
-
-                  {/* TODO */}
               {/* 요청사항 */}
               <div className="reserve-form-content reserve-form-content-textarea">
                 <label htmlFor="notes" className="reserve-form-content-name">요청사항 :</label>

@@ -39,7 +39,7 @@ export default function ReserveStorage() {
   const [notes, setNotes] = useState(savedData?.notes || '');
   // ===== 짐종류용
   const [luggageModalFlg, setLuggageModalFlg] = useState(false)
-  const [luggageInfo, setLuggageInfo] = useState(savedData?.luggageInfo || null)
+  const [luggageList, setLuggageList] = useState(savedData?.luggageList || [])
   // ===== 보관소용
   const [storageStore, setStorageStore] = useState(savedData?.store || '');
   const [storageStoreId, setStorageStoreId] = useState(savedData?.storeId || null);
@@ -123,7 +123,7 @@ export default function ReserveStorage() {
       endedAt: endDate ? endDate.toISOString() : null,
       store: storageStore.trim(),
       storeId: storageStoreId,
-      luggageInfo: luggageInfo,
+      luggageList: luggageList,
       notes: notes.trim(),
       price: 1,
     });
@@ -142,7 +142,7 @@ export default function ReserveStorage() {
   useEffect(() => {
     const formData = createFormData();
     saveToRedux(formData);  // 디바운싱 적용!
-  }, [name, email, phone, password, startDate, endDate, storageStore, luggageInfo, notes, saveToRedux]);
+  }, [name, email, phone, password, startDate, endDate, storageStore, luggageList, notes, saveToRedux]);
 
   // 2. 결제 페이지로 넘어가기 & 유효성 검사
   function handleNext() {
@@ -158,17 +158,20 @@ export default function ReserveStorage() {
       toast.error('이메일을 입력해주세요');
       return;
     }
-    if(!password || password.trim().length < 4 ) {
-      toast.error('비밀번호를 4자리 이상 입력해주세요');
-      return;
-    }
-    if(!passwordChk || password.trim().length < 4 ) {
-      toast.error('비밀번호를 확인 해주세요');
-      return;
-    }
-    if(password !== passwordChk ) {
-      toast.error('비밀번호가 일치하지 않습니다.');
-      return;
+      // 2-1-1. 유저가 아닌 경우만 비밀번호 체크
+    if(!user) {
+      if(!password || password.trim().length < 4 ) {
+        toast.error('비밀번호를 4자리 이상 입력해주세요');
+        return;
+      }
+      if(!passwordChk || password.trim().length < 4 ) {
+        toast.error('비밀번호를 확인 해주세요');
+        return;
+      }
+      if(password !== passwordChk ) {
+        toast.error('비밀번호가 일치하지 않습니다.');
+        return;
+      }
     }
     if(formData.phone && !/^\d+$/.test(phone.trim()) ) {
       toast.error('전화번호는 숫자만 입력 가능합니다');
@@ -190,7 +193,7 @@ export default function ReserveStorage() {
       toast.error('보관소를 선택해주세요');
       return;
     }
-    if(!formData.luggageInfo) {
+    if(!formData.luggageList || formData.luggageList.length === 0) {
       toast.error('보따리 종류를 선택해주세요');
       return;
     }
@@ -213,7 +216,9 @@ export default function ReserveStorage() {
           luggageModalFlg &&
           <SelectLuggageModal
             modalFlgFalse={() => setLuggageModalFlg(false)}
-            setLuggageInfo={setLuggageInfo}
+            setLuggageList={(item) => {
+              setLuggageList(prev => [...prev, {...item, id: Date.now()}])
+            }}
           />
         }
 
@@ -371,20 +376,39 @@ export default function ReserveStorage() {
               {/* 보따리 종류 */}
               <div className="reserve-form-content">
                 <label htmlFor="luggage-type" className="reserve-form-content-name">보따리 종류 :</label>
-                <div className="reserve-form-content-input-wrapper reserve-from-luggage-btn-wrapper">
+                <div className="reserve-form-content-input-wrapper">
                   <div className="reserve-form-content-input-div reserve-form-daypicker-wrapper"
                     onClick={ () => { setLuggageModalFlg(true) }}
                   >
                     <span>보따리 종류 선택</span>
                   </div>
-                  {/* <div className="reserve-form-content-input-div"
-                    onClick={ () => { setLuggageModalFlg(true) }}
-                  >{ luggageInfo ? <span style={{color: '#000'}}>{`${luggageInfo.itemType} (${luggageInfo.itemSize}) ${luggageInfo.itemWeight}`}</span> : <span>보따리 종류를 선택하세요</span> }</div>
-                  <span className="reserve-form-content-input-x"
-                    onClick={() => setLuggageInfo('')}
-                  ><X size={24}/></span> */}
                 </div>    
               </div>
+              {/* 선택된 보따리 */}
+              {
+                luggageList.length >= 1 &&
+                <div className="reserve-form-content">
+                    <label htmlFor="luggage-list" className="reserve-form-content-name"></label>
+                    <div className="reserve-form-luggage-container">
+                    
+                    {
+                      luggageList.map((luggage) => (
+                        <div className="reserve-form-content-luggage-wrapper" key={luggage.id}>
+                        <div className="reserve-form-luggage-item">
+                          <span style={{color: '#000'}}>{`${luggage.itemType} (${luggage.itemSize}) ${luggage.itemWeight} ${luggage.count}개`}</span>
+                        </div>
+                        <span className="reserve-form-luggage-btn-x"
+                          onClick={() => setLuggageList(prev => prev.filter(item => item.id !== luggage.id))}
+                          ><X size={24}/></span>
+                      </div>
+                      ))
+
+                    }
+                      
+                    </div>
+                  </div>
+
+              }
               {/* 요청사항 */}
               <div className="reserve-form-content reserve-form-content-textarea">
                 <label className="reserve-form-content-name">요청사항 :</label>

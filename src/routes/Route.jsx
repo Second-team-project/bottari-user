@@ -9,6 +9,7 @@ import Reserve from "../components/reserve/Reserve.jsx";
 import ReserveDelivery from "../components/reserve/ReserveDelivery.jsx";
 import ReserveStorage from "../components/reserve/ReserveStorage.jsx";
 import ReserveList from "../components/reserveList/ReserveList.jsx";
+import ReserveComplete from "../components/reserveComplete/ReserveComplete.jsx";
 // 가이드
 import Guide from "../components/guide/Guide.jsx";
 import GuideUsage from "../components/guide/GuideUsage.jsx";
@@ -82,10 +83,10 @@ const router = createBrowserRouter([
         path: "/reserve/tosspayments/fail",
         element: <FailPage />,
       },
-      // {
-      //   path: "/reserve/complete",
-      //   element: <ReserveComplete />,
-      // },
+      {
+        path: "/reserve/complete",
+        element: <ReserveComplete />,
+      },
       {
         path: "/reserve/list",
         element: <ReserveList />,

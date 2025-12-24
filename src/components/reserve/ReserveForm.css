@@ -223,6 +223,12 @@
 }
 
 /* ===== 달력 ===== */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.react-datepicker__input-container {
+  width: 100%;
+}
 /* 인풋 래퍼 */
 .reserve-form-daypicker-wrapper {
   color: #777;
@@ -246,9 +252,9 @@
   align-items: center;
   cursor: pointer;
 }
-.reserve-form-daypicker-wrapper:active {
+/* .reserve-form-daypicker-wrapper:active {
   transform: scale(0.95);
-}
+} */
 
 /* 인풋 */
 .react-datepicker__input-container input {

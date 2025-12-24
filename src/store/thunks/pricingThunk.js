@@ -1,17 +1,17 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosIns from "../../api/axiosInstance";
 
-export const tossPaymentsThunk = createAsyncThunk(
-  'tossPayments/tossPaymentsThunk',
+export const getPricing = createAsyncThunk(
+  'pricing/getPricingThunk',
   async (data, {rejectWithValue}) => {
     try {
 
-      const url = `/api/user/reserve/confirm/payment`;
+      const url = `/api/common/pricing`;
 
-      const response = await axiosIns.post(url, data)
+      const response = await axiosIns.get(url, data)
 
       
-      console.log('response: ', response.data)
+      console.log('pricing: ', response.data)
 
       return response.data;
       
