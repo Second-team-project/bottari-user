@@ -12,6 +12,8 @@ import SelectLuggageModal from "./selectModal/SelectLuggageModal.jsx";
 import { setDeliveryReserve } from "../../store/slices/reserveSlice.js";
 // ===== utils
 import { debounce } from "../../utils/debounceUtil.js";
+import { handlePhone } from "../../utils/handlePhone.js";
+import { handleEmail } from "../../utils/handleEmail.js";
 // ===== icons
 import { X } from 'lucide-react';
 // ===== 달력 관련
@@ -34,19 +36,33 @@ export default function ReserveDelivery() {
 
   // ===== 개인 정보 설정용
   const [name, setName] = useState(savedData?.userName || user?.userName || '');
-  const [email, setEmail] = useState(savedData?.email || user?.email || '');
-  const [phone, setPhone] = useState(savedData?.phone || user?.phone || '');
+  
+  const { p1, p2, p3 } = handlePhone(savedData?.phone || user?.phone);
+  const [phone1, setPhone1] = useState(p1);
+  const [phone2, setPhone2] = useState(p2);
+  const [phone3, setPhone3] = useState(p3);
+  
   const [password, setPassword] = useState('');
   const [passwordChk, setPasswordChk] = useState('');
+  
   const [notes, setNotes] = useState(savedData?.notes || '');
+  
+  // ===== 이메일 설정용
+  const { id: initEmailId, domain: initEmailDomain } = handleEmail(savedData?.email || user?.email);
+  const [emailId, setEmailId] = useState(initEmailId);
+  const [emailDomain, setEmailDomain] = useState(initEmailDomain);
+  const [isDomainInput, setIsDomainInput] = useState(false);
+
   // =====  주소 설정용
   const [locationModalFlg, setLocationModalFlg] = useState(false);
   const [startLocation, setStartLocation] = useState(savedData?.startedAddr || '');
   const [endLocation, setEndLocation] = useState(savedData?.endedAddr || '');
   const [locationType, setLocationType] = useState(null);
+
   // ===== 짐 설정용 
   const [luggageModalFlg, setLuggageModalFlg] = useState(false)
   const [luggageList, setLuggageList] = useState(savedData?.luggageList || [])
+
   // ===== 달력 커스텀용 & 픽업 일시
   const [pickupDate, setPickupDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null); // 픽업 날짜 
 
@@ -60,12 +76,34 @@ export default function ReserveDelivery() {
   //   }
   // }, [user, savedData]);
 
-  // ===== input : 숫자 입력 용
-  const handlerNumber = e => {
-    const value = e.target.value;
-    const onlyNumbers = value.replace(/[^0-9]/g, '')
+  // ========================
+  // ||     휴대폰 번호     || 
+  // ========================
+  const handlePhone2 = e => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    if (value.length <= 4) {
+      setPhone2(value)
+    };
+  }
+  const handlePhone3 = e => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    if (value.length <= 4) {
+      setPhone3(value)
+    };
+  }
 
-    setPhone(onlyNumbers);
+  // ===================
+  // ||     이메일     || 
+  // ===================
+  const handleDomainSelect = e => {
+    const value = e.target.value;
+    if(value === 'type') {
+      setEmailDomain('');
+      setIsDomainInput(true);
+    } else {
+      setIsDomainInput(false);
+      setEmailDomain(value);
+    }
   }
 
   // ========================
@@ -106,8 +144,8 @@ export default function ReserveDelivery() {
       userType: user ? 'MEMBER' : 'GUEST',
       savedAt: new Date().toISOString(),
       userName: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
+      email: `${emailId}@${emailDomain}`.trim(),
+      phone: `${phone1}${phone2}${phone3}`.trim(),
       startedAt: pickupDate ? pickupDate.toISOString() : null,
       startedAddr: startLocation.trim(),
       endedAddr: endLocation.trim(),
@@ -132,9 +170,12 @@ export default function ReserveDelivery() {
   useEffect(() => {
     const formData = createFormData();
     saveToRedux(formData);  // 디바운싱 적용!
-  }, [name, email, phone, password, pickupDate, startLocation, endLocation, luggageList, notes, saveToRedux]);
+  }, [name, emailId, emailDomain, phone1, phone2, phone3, password, pickupDate, startLocation, endLocation, luggageList, notes, saveToRedux]);
   
   // 2. 결제 페이지로 넘어가기 & 유효성 검사
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const fullEmail = `${emailId}@${emailDomain}`.trim();
+
   function handleNext() {
     // formData = 로컬state 생성
     const formData = createFormData();
@@ -144,8 +185,12 @@ export default function ReserveDelivery() {
       toast.error('이름을 입력해주세요')
       return;
     }
-    if(!formData.email) {
-      toast.error('이메일을 입력해주세요');
+    if(!emailId || !emailDomain) {
+      toast.error('이메일 주소를 모두 입력해주세요');
+      return;
+    }
+    if(!emailRegex.test(fullEmail)) {
+      toast.error('올바른 이메일 형식이 아닙니다');
       return;
     }
       // 2-1-1. 유저가 아닌 경우만 비밀번호 체크
@@ -244,22 +289,67 @@ export default function ReserveDelivery() {
               {/* 이메일 */}
               <div className="reserve-form-content">
                 <label className="reserve-form-content-name">이메일 :</label>
-                <input htmlFor="email" type="text" className="reserve-form-content-input"
+                <div className="reserve-form-email-input-wrapper">
+                  <input type="text" className="reserve-form-email-input" 
+                    placeholder="아이디"
+                    value={emailId}
+                    onChange={e => setEmailId(e.target.value)}
+                  />
+                  <span className="reserve-form-email-at">@</span>
+                  {
+                    !isDomainInput ? (
+                      <select name="email-domain" id="email-domain" className="reserve-form-email-input"
+                      value={emailDomain}
+                      onChange={handleDomainSelect}
+                      >
+                        <option value="naver.com">naver.com</option>
+                        <option value="gmail.com">gmail.com</option>
+                        <option value="daum.net">daum.net</option>
+                        <option value="type">직접 입력</option>
+                      </select>
+                    ) : (
+                      <input type="text" className="reserve-form-email-input" 
+                        placeholder="도메인"
+                        value={emailDomain}
+                        onChange={e => setEmailDomain(e.target.value)}
+                      />
+                    )
+                  }
+                </div>
+                {/* <input htmlFor="email" type="text" className="reserve-form-content-input"
                   placeholder="보따리@보따리.com"
                   value={email}
                   onChange={ (e) => setEmail(e.target.value) }
                   onBlur={ (e) => setEmail(e.target.value.trim()) }
-                />
+                /> */}
               </div>
               {/* 휴대폰 */}
               <div className="reserve-form-content">
                 <label htmlFor="phone" className="reserve-form-content-name">휴대폰 :</label>
-                <input type="text" className="reserve-form-content-input" 
-                  placeholder="숫자만 입력 해주세요" 
-                  value={phone}
-                  onChange={ (e) => handlerNumber(e) }
-                  onBlur={ (e) => setPhone(e.target.value.trim()) }
-                />
+                <div className="reserve-form-phone-input-wrapper">
+                  <select name="phone1" id="phone1" className="reserve-form-phone-input" 
+                    value={phone1}
+                    onChange={(e) => setPhone1(e.target.value)}
+                  >
+                    <option value={'010'}>010</option>
+                    <option value={'011'}>011</option>
+                    <option value={'016'}>016</option>
+                  </select>
+                  <span className="reserve-form-phone-dash">-</span>
+                  <input type="text" className="reserve-form-phone-input" 
+                    value={phone2}
+                    onChange={handlePhone2}
+                    placeholder="0000"
+                    inputMode="numeric"
+                  />
+                  <span className="reserve-form-phone-dash">-</span>
+                  <input type="text" className="reserve-form-phone-input" 
+                    value={phone3}
+                    onChange={handlePhone3}
+                    placeholder="0000"
+                    inputMode="numeric"
+                  />
+                </div>
               </div>
               {
                 !user && (
@@ -295,7 +385,7 @@ export default function ReserveDelivery() {
           {/* 보따리 정보 입력 */}
           <div className="reserve-form-content-container">
             <div className="reserve-form-content-title">
-              <h3 className="reserve-form-content-name">보따리 정보</h3>
+              <h3>보따리 정보</h3>
             </div>
             <div className="reserve-form-content-wrapper">
               {/* 픽업시간 */}
@@ -373,26 +463,25 @@ export default function ReserveDelivery() {
               {/* 선택된 보따리 */}
               {
                 luggageList.length >= 1 &&
-                <div className="reserve-form-content">
-                    <label htmlFor="luggage-list" className="reserve-form-content-name"></label>
+                // <div className="reserve-form-content">
                     <div className="reserve-form-luggage-container">
                     
                     {
                       luggageList.map((luggage) => (
                         <div className="reserve-form-content-luggage-wrapper" key={luggage.id}>
-                        <div className="reserve-form-luggage-item">
-                          <span style={{color: '#000'}}>{`${luggage.itemType} (${luggage.itemSize}) ${luggage.itemWeight} ${luggage.count}개`}</span>
+                          <div className="reserve-form-luggage-item">
+                            <span style={{color: '#000'}}>{`${luggage.itemType} (${luggage.itemSize}) ${luggage.itemWeight} ${luggage.count}개`}</span>
+                          </div>
+                          <span className="reserve-form-luggage-btn-x"
+                            onClick={() => setLuggageList(prev => prev.filter(item => item.id !== luggage.id))}
+                            ><X size={24}/></span>
                         </div>
-                        <span className="reserve-form-luggage-btn-x"
-                          onClick={() => setLuggageList(prev => prev.filter(item => item.id !== luggage.id))}
-                          ><X size={24}/></span>
-                      </div>
                       ))
 
                     }
                       
                     </div>
-                  </div>
+                  // </div>
 
               }
               {/* 요청사항 */}
