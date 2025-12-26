@@ -148,6 +148,7 @@ export default function TossCheckoutPage({ payData, password }) {
                 // 2-1. 보관인 경우
               if(draftReservation.type === 'STORAGE') {
                 const draftResult = await dispatch(createStorageDraft(draftReservation)).unwrap();
+                console.log('checkout-draftResult: ', draftResult.response);
                 reserveCode = draftResult.data.reserveCode;
 
                 // 2-2. 배송인 경우
@@ -176,11 +177,12 @@ export default function TossCheckoutPage({ payData, password }) {
               });
 
             } catch (error) {
+
               // 3. 에러 발생 시 처리
               if (error.type === 'DRAFT_SAVE_ERROR') {
                 console.error('예약 정보 저장 실패');
               } else {
-                toast.error(`결제를 시작할 수 없습니다: ${error.message || '알 수 없는 오류'}`);
+                toast.error(`error: ${error.data.data || '알 수 없는 오류'}`);
               } 
             } finally {
               setIsSubmitting(false);  // <- 성공/실패 상관없이 버튼 다시 활성화

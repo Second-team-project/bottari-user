@@ -50,7 +50,7 @@ export default function ReserveDelivery() {
   // ===== 이메일 설정용
   const { id: initEmailId, domain: initEmailDomain } = handleEmail(savedData?.email || user?.email);
   const [emailId, setEmailId] = useState(initEmailId);
-  const [emailDomain, setEmailDomain] = useState(initEmailDomain);
+  const [emailDomain, setEmailDomain] = useState(initEmailDomain || 'naver.com');
   const [isDomainInput, setIsDomainInput] = useState(false);
 
   // =====  주소 설정용
@@ -138,6 +138,8 @@ export default function ReserveDelivery() {
   // 1. 디바운스 redux 저장
   // 1-1. formData 생성
   const createFormData = () => {
+    const phone = (phone2 && phone3) ? `${phone1}${phone2}${phone3}`.trim() : '';
+
     return ({
       type: 'DELIVERY',
       userId: user?.id || null,
@@ -145,7 +147,7 @@ export default function ReserveDelivery() {
       savedAt: new Date().toISOString(),
       userName: name.trim(),
       email: `${emailId}@${emailDomain}`.trim(),
-      phone: `${phone1}${phone2}${phone3}`.trim(),
+      phone: phone,
       startedAt: pickupDate ? pickupDate.toISOString() : null,
       startedAddr: startLocation.trim(),
       endedAddr: endLocation.trim(),
@@ -228,6 +230,10 @@ export default function ReserveDelivery() {
       toast.error('도착 장소는 대구 지역만 선택 가능합니다');
       return;
     }
+    if(formData.startedAddr === formData.endedAddr) {
+      toast.error('픽업 장소와 도착 장소는 달라야합니다');
+      return;
+    }
     if(!formData.luggageList || formData.luggageList.length === 0) {
       toast.error('보따리 종류를 선택해주세요');
       return;
@@ -278,7 +284,8 @@ export default function ReserveDelivery() {
             <div className="reserve-form-content-wrapper">
               {/* 이름 */}
               <div className="reserve-form-content">
-                <label htmlFor="name" className="reserve-form-content-name">이름 :</label>
+                <span className="reserve-form-essential">*</span>
+                <label htmlFor="name" className="reserve-form-content-name">이름:</label>
                 <input type="text" className="reserve-form-content-input" 
                   placeholder="보따리"
                   value={name}
@@ -288,6 +295,7 @@ export default function ReserveDelivery() {
               </div>
               {/* 이메일 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">*</span>
                 <label className="reserve-form-content-name">이메일 :</label>
                 <div className="reserve-form-email-input-wrapper">
                   <input type="text" className="reserve-form-email-input" 
@@ -316,15 +324,10 @@ export default function ReserveDelivery() {
                     )
                   }
                 </div>
-                {/* <input htmlFor="email" type="text" className="reserve-form-content-input"
-                  placeholder="보따리@보따리.com"
-                  value={email}
-                  onChange={ (e) => setEmail(e.target.value) }
-                  onBlur={ (e) => setEmail(e.target.value.trim()) }
-                /> */}
               </div>
               {/* 휴대폰 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">{' '}</span>
                 <label htmlFor="phone" className="reserve-form-content-name">휴대폰 :</label>
                 <div className="reserve-form-phone-input-wrapper">
                   <select name="phone1" id="phone1" className="reserve-form-phone-input" 
@@ -356,6 +359,7 @@ export default function ReserveDelivery() {
                   <>
                     {/* 비밀번호 */}
                     <div className="reserve-form-content">
+                      <span className="reserve-form-essential">*</span>
                       <label htmlFor="password" className="reserve-form-content-name">비밀번호 :</label>
                       <input type="password" className="reserve-form-content-input" 
                         placeholder="4글자 이상 입력 해주세요" 
@@ -365,6 +369,7 @@ export default function ReserveDelivery() {
                     </div>
                     {/* 비밀번호 확인 */}
                     <div className="reserve-form-content">
+                      <span className="reserve-form-essential">*</span>
                       <label htmlFor="password" className="reserve-form-content-name">비밀번호 확인 :</label>
                       <input type="password" className="reserve-form-content-input" 
                         placeholder="비밀번호 한 번 더 입력" 
@@ -374,6 +379,7 @@ export default function ReserveDelivery() {
                     </div>
                     {/* 안내문구  */}
                     <div className="reserve-form-content-notice">
+                      <span className="reserve-form-essential">*</span>
                       <span className="reserve-form-content-notice-text">비밀번호는 예약을 조회할 때 사용됩니다</span>
                     </div>
                   </>
@@ -390,6 +396,7 @@ export default function ReserveDelivery() {
             <div className="reserve-form-content-wrapper">
               {/* 픽업시간 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">*</span>
                 <label htmlFor="send-date" className="reserve-form-content-name">픽업 시간 :</label>
                 <div className="reserve-form-daypicker-wrapper">
                   <DatePicker
@@ -423,10 +430,12 @@ export default function ReserveDelivery() {
               </div>
               {/* 안내문구  */}
               <div className="reserve-form-content-notice">
+                <span className="reserve-form-essential">*</span>
                 <span className="reserve-form-content-notice-text">보따리 운영시간 : 09시 ~ 21시</span>
               </div>
               {/* 픽업장소 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">*</span>
                 <label htmlFor="send-location" className="reserve-form-content-name">픽업 장소 :</label>
                 <div className="reserve-form-content-input-wrapper">
                   <div className="reserve-form-content-input-div"
@@ -439,6 +448,7 @@ export default function ReserveDelivery() {
               </div>
               {/* 도착장소 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">*</span>
                 <label htmlFor="recieve-location" className="reserve-form-content-name">도착 장소 :</label>
                 <div className="reserve-form-content-input-wrapper">
                   <div className="reserve-form-content-input-div"
@@ -451,6 +461,7 @@ export default function ReserveDelivery() {
               </div>
               {/* 보따리 종류 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">*</span>
                 <label htmlFor="luggage-type" className="reserve-form-content-name">보따리 종류 :</label>
                 <div className="reserve-form-content-input-wrapper">
                   <div className="reserve-form-content-input-div reserve-form-daypicker-wrapper"
@@ -486,6 +497,7 @@ export default function ReserveDelivery() {
               }
               {/* 요청사항 */}
               <div className="reserve-form-content reserve-form-content-textarea">
+                <span className="reserve-form-essential">{' '}</span>
                 <label htmlFor="notes" className="reserve-form-content-name">요청사항 :</label>
                 <textarea className="reserve-form-content-input reserve-form-textarea" 
                   rows="2"

@@ -84,7 +84,7 @@ const router = createBrowserRouter([
         element: <FailPage />,
       },
       {
-        path: "/reserve/complete",
+        path: "/reserve/complete/:reserveCode",
         element: <ReserveComplete />,
       },
       {

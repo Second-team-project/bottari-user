@@ -2,7 +2,7 @@ export function handleEmail(email) {
   if(!email || !email.includes('@')) {
     return {
       id: email || '',
-      domain: ''
+      domain: 'naver.com'
     };
   }
   const [id, ...rest] = email.split('@');

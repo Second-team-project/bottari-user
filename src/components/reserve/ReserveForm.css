@@ -28,7 +28,7 @@
   width: 90%;
   border: 1px solid var(--bottari-navy);
   border-radius: 10px;
-  padding: 3% 5% 3% 4%;
+  padding: 3% 2% 3% 2%;
 }
 .reserve-form-content-title {
   color: var(--bottari-navy);
@@ -64,6 +64,10 @@
     min-width: 100px;
     font-size: 1rem;
   }
+}
+.reserve-form-essential {
+  color: var(--bottari-deeppink);
+  width: 7px;
 }
 
 /* 인풋 래퍼 */

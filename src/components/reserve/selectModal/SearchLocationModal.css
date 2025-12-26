@@ -1,6 +1,7 @@
 /* 불투명 배경 */
 .search-location-modal-backgound {
   width: 100%;
+  max-width: 1024px;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
 

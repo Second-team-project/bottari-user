@@ -28,7 +28,6 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageList}) {
   useEffect(() => {
     dispatch(getPricing()).unwrap().then(res => setPricingList(res.data));
   }, []);
-  console.log('pricingList: ', pricingList && pricingList)
 
   // ========================
   // ||     짐 선택하기     ||
@@ -41,39 +40,36 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageList}) {
   const step1List = pricingList?.length > 0
     ? [...new Set(pricingList.map(item => item.itemType))]
     : [];
-  console.log('step1List: ', step1List)
 
   const step2List = 
     pricingList && pricingList
     .filter(item => item.itemType === step1) // step1에 해당하는 타입 중
     .map(item => item.itemSize)              // 사이즈 뽑아내고
     .filter((value, index, self) => self.indexOf(value) === index); // 중복 제거
-  console.log('step2List: ', step2List)
   
   const step3List =
     pricingList && pricingList
     .filter(item => item.itemType === step1 && item.itemSize === step2) // step1 타입의 step2 사이즈의
     .map(item => item.itemWeight)                                       // 무게만 뽑아냄
     .filter((value, index, self) => self.indexOf(value) === index);     // 중복 제거
-  console.log('step3List: ', step3List)
 
   // ===== size=null 대비 -> step1의 클릭 이벤트에 추가 로직
-  const handleStep1Click = (type) => {
-    setStep1(type);
+  // const handleStep1Click = (type) => {
+  //   setStep1(type);
 
-    // 해당 type의 모든 사이즈 조회
-    const sizes = 
-      pricingList
-      .filter(item => item.itemType === type)  // 해당 타입의
-      .map(item => item.itemSize);             // size들 뽑아냄
-    // 사이즈가 null 이라면
-    if(sizes.length === 1 && sizes[0] === null) {
-      setStep2(null);
-    } else {
-      setStep2(null);
-    }
+  //   // 해당 type의 모든 사이즈 조회
+  //   const sizes = 
+  //     pricingList
+  //     .filter(item => item.itemType === type)  // 해당 타입의
+  //     .map(item => item.itemSize);             // size들 뽑아냄
+  //   // 사이즈가 null 이라면
+  //   if(sizes.length === 1 && sizes[0] === null) {
+  //     setStep2(null);
+  //   } else {
+  //     setStep2(null);
+  //   }
 
-  }
+  // }
 
   // ===== 최종 선택 완료
   const handleComplete = () => {

@@ -36,13 +36,10 @@ export const createStorageDraft = createAsyncThunk(
 
       const response = await axiosIns.post(url, data)
 
-      
-      console.log('response: ', response.data)
-
       return response.data;
 
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response);
     }
   }
 );
@@ -58,13 +55,31 @@ export const tossPaymentsConfirm = createAsyncThunk(
       const url = `/api/user/reserve/confirm/payment`;
       const response = await axiosIns.post(url, data);
 
-      console.log('response-결제승인요청 결과 : ', response.data)
-
       return response.data;
       
     } catch (error) {
       return rejectWithValue(error);
       
     }
+  }
+)
+
+/**
+ * 예약이 완료된 후, 정보 조회용
+ * 클라이언트 -> 백엔드
+ */
+export const reserveComplete = createAsyncThunk(
+  'reserve/reserveComplete',
+  async (reserveCode, {rejectWithValue}) => {
+    try {
+      const url = `/api/user/reserve/complete/${reserveCode}`;
+      const response = await axiosIns.get(url);
+
+      console.log('thunk-response: ', response);
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    } 
   }
 )

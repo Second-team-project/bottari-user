@@ -18,6 +18,8 @@ import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
 import ko from "date-fns/locale/ko";
 import { toast } from "sonner";
+import { handlePhone } from "../../utils/handlePhone.js";
+import { handleEmail } from "../../utils/handleEmail.js";
 
 // 달력 요일 한국어 적용
 registerLocale("ko", ko);
@@ -32,17 +34,31 @@ export default function ReserveStorage() {
   
   // ===== 개인 정보 설정용
   const [name, setName] = useState(savedData?.userName || user?.userName || '');
-  const [email, setEmail] = useState(savedData?.email || user?.email || '');
-  const [phone, setPhone] = useState(savedData?.phone || user?.phone || '');
+  
+  const { p1, p2, p3 } = handlePhone(savedData?.phone || user?.phone);
+  const [phone1, setPhone1] = useState(p1);
+  const [phone2, setPhone2] = useState(p2);
+  const [phone3, setPhone3] = useState(p3);
+  
   const [password, setPassword] = useState('');
   const [passwordChk, setPasswordChk] = useState('');
+
   const [notes, setNotes] = useState(savedData?.notes || '');
+
+  // ===== 이메일 설정용
+  const { id: initEmailId, domain: initEmailDomain } = handleEmail(savedData?.email || user?.email);
+  const [emailId, setEmailId] = useState(initEmailId);
+  const [emailDomain, setEmailDomain] = useState(initEmailDomain || 'naver.com');
+  const [isDomainInput, setIsDomainInput] = useState(false);
+
   // ===== 짐종류용
   const [luggageModalFlg, setLuggageModalFlg] = useState(false)
   const [luggageList, setLuggageList] = useState(savedData?.luggageList || [])
+
   // ===== 보관소용
   const [storageStore, setStorageStore] = useState(savedData?.store || '');
   const [storageStoreId, setStorageStoreId] = useState(savedData?.storeId || null);
+
   // ===== 달력 커스텀용
   const [startDate, setStartDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null);
   const [endDate, setEndDate] = useState(savedData?.endedAt ? new Date(savedData.endedAt) : null);
@@ -55,14 +71,35 @@ export default function ReserveStorage() {
     { id: 4, name: '서대구역'},
   ]
 
-  // ===== input : 숫자 입력 용
-  const handlerNumber = e => {
-    const value = e.target.value;
-    const onlyNumbers = value.replace(/[^0-9]/g, '')
-
-    setPhone(onlyNumbers);
+  // ========================
+  // ||     휴대폰 번호     || 
+  // ========================
+  const handlePhone2 = e => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    if (value.length <= 4) {
+      setPhone2(value)
+    };
+  }
+  const handlePhone3 = e => {
+    const value = e.target.value.replace(/[^0-9]/g, "");
+    if (value.length <= 4) {
+      setPhone3(value)
+    };
   }
 
+  // ===================
+  // ||     이메일     || 
+  // ===================
+  const handleDomainSelect = e => {
+    const value = e.target.value;
+    if(value === 'type') {
+      setEmailDomain('');
+      setIsDomainInput(true);
+    } else {
+      setIsDomainInput(false);
+      setEmailDomain(value);
+    }
+  }
 
   // ======================== 
   // ||     달력 커스텀     ||
@@ -111,14 +148,16 @@ export default function ReserveStorage() {
   // 1. 디바운스 redux 저장
   // 1-1. formData 생성
   const createFormData = () => {
+    const phone = (phone2 && phone3) ? `${phone1}${phone2}${phone3}`.trim() : '';
+
     return ({
       type: 'STORAGE',
       userId: user?.id || null,
       userType: user ? 'MEMBER' : 'GUEST',
       savedAt: new Date().toISOString(),
       userName: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
+      email: `${emailId}@${emailDomain}`.trim(),
+      phone: phone,
       startedAt: startDate ? startDate.toISOString() : null,
       endedAt: endDate ? endDate.toISOString() : null,
       store: storageStore.trim(),
@@ -138,13 +177,17 @@ export default function ReserveStorage() {
     
       return debounceFunc;
     }, [dispatch] ) // dispatch 바뀔 때만 재생성 : data 변경 시엔 재생성x 
+
   // 1-3. formData 변경될 때마다 saveToRedux 실행
   useEffect(() => {
     const formData = createFormData();
     saveToRedux(formData);  // 디바운싱 적용!
-  }, [name, email, phone, password, startDate, endDate, storageStore, luggageList, notes, saveToRedux]);
+  }, [name, emailId, emailDomain, phone1, phone2, phone3, password, startDate, endDate, storageStore, luggageList, notes, saveToRedux]);
 
   // 2. 결제 페이지로 넘어가기 & 유효성 검사
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const fullEmail = `${emailId}@${emailDomain}`.trim();
+
   function handleNext() {
     // formData = 로컬state 생성
     const formData = createFormData();
@@ -154,8 +197,12 @@ export default function ReserveStorage() {
       toast.error('이름을 입력해주세요')
       return;
     }
-    if(!formData.email) {
-      toast.error('이메일을 입력해주세요');
+    if(!emailId || !emailDomain) {
+      toast.error('이메일 주소를 모두 입력해주세요');
+      return;
+    }
+    if(!emailRegex.test(fullEmail)) {
+      toast.error('올바른 이메일 형식이 아닙니다');
       return;
     }
       // 2-1-1. 유저가 아닌 경우만 비밀번호 체크
@@ -172,10 +219,6 @@ export default function ReserveStorage() {
         toast.error('비밀번호가 일치하지 않습니다.');
         return;
       }
-    }
-    if(formData.phone && !/^\d+$/.test(phone.trim()) ) {
-      toast.error('전화번호는 숫자만 입력 가능합니다');
-      return;
     }
     if(!formData.startedAt) {
       toast.error('맡길 시간을 선택해주세요');
@@ -237,6 +280,7 @@ export default function ReserveStorage() {
             <div className="reserve-form-content-wrapper">
               {/* 이름 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">*</span>
                 <label className="reserve-form-content-name">이름 :</label>
                 <input type="text" className="reserve-form-content-input" 
                   placeholder="보따리" 
@@ -247,46 +291,95 @@ export default function ReserveStorage() {
               </div>
               {/* 이메일 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">*</span>
                 <label className="reserve-form-content-name">이메일 :</label>
-                <input type="text" className="reserve-form-content-input" 
-                  placeholder="보따리@보따리.com" 
-                  value={email}
-                  onChange={ (e) => setEmail(e.target.value) }
-                  onBlur={ (e) => setEmail(e.target.value.trim()) }
-                />
+                <div className="reserve-form-email-input-wrapper">
+                  <input type="text" className="reserve-form-email-input" 
+                    placeholder="아이디"
+                    value={emailId}
+                    onChange={e => setEmailId(e.target.value)}
+                  />
+                  <span className="reserve-form-email-at">@</span>
+                  {
+                    !isDomainInput ? (
+                      <select name="email-domain" id="email-domain" className="reserve-form-email-input"
+                      value={emailDomain}
+                      onChange={handleDomainSelect}
+                      >
+                        <option value="naver.com">naver.com</option>
+                        <option value="gmail.com">gmail.com</option>
+                        <option value="daum.net">daum.net</option>
+                        <option value="type">직접 입력</option>
+                      </select>
+                    ) : (
+                      <input type="text" className="reserve-form-email-input" 
+                        placeholder="도메인"
+                        value={emailDomain}
+                        onChange={e => setEmailDomain(e.target.value)}
+                      />
+                    )
+                  }
+                </div>
               </div>
               {/* 휴대폰 */}
               <div className="reserve-form-content">
-                <label className="reserve-form-content-name">휴대폰 :</label>
-                <input type="text" className="reserve-form-content-input" 
-                  placeholder="숫자만 입력 해주세요" 
-                  value={phone}
-                  onChange={ (e) => handlerNumber(e) }
-                  onBlur={ (e) => setPhone(e.target.value.trim()) }
-                />
+                <span className="reserve-form-essential">{' '}</span>
+                <label htmlFor="phone" className="reserve-form-content-name">휴대폰 :</label>
+                <div className="reserve-form-phone-input-wrapper">
+                  <select name="phone1" id="phone1" className="reserve-form-phone-input" 
+                    value={phone1}
+                    onChange={(e) => setPhone1(e.target.value)}
+                  >
+                    <option value={'010'}>010</option>
+                    <option value={'011'}>011</option>
+                    <option value={'016'}>016</option>
+                  </select>
+                  <span className="reserve-form-phone-dash">-</span>
+                  <input type="text" className="reserve-form-phone-input" 
+                    value={phone2}
+                    onChange={handlePhone2}
+                    placeholder="0000"
+                    inputMode="numeric"
+                  />
+                  <span className="reserve-form-phone-dash">-</span>
+                  <input type="text" className="reserve-form-phone-input" 
+                    value={phone3}
+                    onChange={handlePhone3}
+                    placeholder="0000"
+                    inputMode="numeric"
+                  />
+                </div>
               </div>
-              {/* 비밀번호 */}
-              <div className="reserve-form-content">
-                <label className="reserve-form-content-name">비밀번호 :</label>
-                <input type="password" className="reserve-form-content-input" 
-                  placeholder="4글자 이상 입력 해주세요" 
-                  onChange={ (e) => setPassword(e.target.value) }
-                  onBlur={ (e) => setPassword(e.target.value.trim()) }
-                />
-              </div>
-              {/* 비밀번호 확인 */}
-              <div className="reserve-form-content">
-                <label htmlFor="password" className="reserve-form-content-name">비밀번호 확인 :</label>
-                <input type="password" className="reserve-form-content-input" 
-                  placeholder="비밀번호 한 번 더 입력" 
-                  onChange={ (e) => setPasswordChk(e.target.value) }
-                  onBlur={ (e) => setPasswordChk(e.target.value.trim()) }
-                />
-              </div>
-              {/* 안내문구  */}
-              <div className="reserve-form-content-notice">
-                <span className="reserve-form-content-notice-text">비밀번호는 예약을 조회할 때 사용됩니다</span>
-              </div>
+              {
+                !user && (
+                  <>
+                    {/* 비밀번호 */}
+                    <div className="reserve-form-content">
+                      <span className="reserve-form-essential">*</span>
+                      <label className="reserve-form-content-name">비밀번호 :</label>
+                      <input type="password" className="reserve-form-content-input" 
+                        placeholder="4글자 이상 입력 해주세요" 
+                        onChange={ (e) => setPassword(e.target.value) }
+                        onBlur={ (e) => setPassword(e.target.value.trim()) }
+                      />
+                    </div>
+                    {/* 비밀번호 확인 */}
+                    <div className="reserve-form-content">
+                      <span className="reserve-form-essential">*</span>
+                      <label htmlFor="password" className="reserve-form-content-name">비밀번호 확인 :</label>
+                      <input type="password" className="reserve-form-content-input" 
+                        placeholder="비밀번호 한 번 더 입력" 
+                        onChange={ (e) => setPasswordChk(e.target.value) }
+                        onBlur={ (e) => setPasswordChk(e.target.value.trim()) }
+                      />
+                    </div>
+                    {/* 안내문구  */}
+                    <div className="reserve-form-content-notice">
+                      <span className="reserve-form-content-notice-text"><span className="reserve-form-essential">*</span>비밀번호는 예약을 조회할 때 사용됩니다</span>
+                    </div>
+                  </>
+                )
+              }
             </div>
           </div>
 
@@ -298,6 +391,7 @@ export default function ReserveStorage() {
             <div className="reserve-form-content-wrapper">
               {/* 맡길 날짜 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">*</span>
                 <label className="reserve-form-content-name">맡길 날짜 :</label>
                 <div className="reserve-form-daypicker-wrapper">
                   <DatePicker
@@ -339,6 +433,7 @@ export default function ReserveStorage() {
               </div>
               {/* 찾을 날짜 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">*</span>
                 <label className="reserve-form-content-name">찾을 날짜 :</label>
                 <div className="reserve-form-daypicker-wrapper">
                   <DatePicker
@@ -358,6 +453,7 @@ export default function ReserveStorage() {
               </div>
               {/* 보관소 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">*</span>
                 <label className="reserve-form-content-name">보관할 곳 :</label>
                 <div className="reserve-storage-store-btn-wrapper">
                   {
@@ -375,6 +471,7 @@ export default function ReserveStorage() {
               </div>
               {/* 보따리 종류 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">*</span>
                 <label htmlFor="luggage-type" className="reserve-form-content-name">보따리 종류 :</label>
                 <div className="reserve-form-content-input-wrapper">
                   <div className="reserve-form-content-input-div reserve-form-daypicker-wrapper"
@@ -411,6 +508,7 @@ export default function ReserveStorage() {
               }
               {/* 요청사항 */}
               <div className="reserve-form-content reserve-form-content-textarea">
+                <span className="reserve-form-essential">{' '}</span>
                 <label className="reserve-form-content-name">요청사항 :</label>
                 <textarea type="text" className="reserve-form-content-input reserve-form-textarea" 
                   rows="2"
