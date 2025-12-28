@@ -18,7 +18,7 @@
   height: 60vh;
   background-color: #fff;
   border-radius: 10px;
-  padding: 3rem 1rem;
+  padding: 1.3rem 1.3rem;
 
   position: fixed;
   top: 50%;
@@ -36,7 +36,7 @@
     height: 70vh;
     background-color: #fff;
     border-radius: 10px;
-    padding: 3rem 1rem;
+    padding: 1.3rem 1.3rem;
   
     position: fixed;
     top: 20%;
@@ -45,6 +45,14 @@
   
     z-index: 16;
   }
+}
+
+/* 닫기 버튼 */
+.reserve-list-login-modal-x {
+  color: var(--bottari-gray);
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* 유도 문구 */
@@ -67,6 +75,8 @@
 }
 
 .reserve-list-login-modal-btn-container {
+  padding: 6%;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -74,8 +84,9 @@
 }
 
 .reserve-list-login-modal-guest-btn-wrapper {
-  background-color: #fff;
-  border: 1px solid var(--bottari-navy);
+  color: #fff;
+  background-color: var(--bottari-navy);
+  border: 2px solid var(--bottari-navy);
   border-radius: 8px;
   
   width: 220px;
@@ -99,9 +110,9 @@
   }
   /* 비회원 */
   .reserve-list-login-modal-guest-btn-wrapper {
-    background-color: #fff;
+    color: #fff;
+    background-color: var(--bottari-navy);
     border: 2px solid var(--bottari-navy);
-    color: var(--bottari-navy);
     border-radius: 8px;
   
     width: 230px;
@@ -133,9 +144,11 @@
 
 /* 입력창 영역 */
 .reserve-list-login-modal-input-container {
+  margin: 1rem 0;
+
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
+  align-items: center;
   gap: 10px;
 }
 .reserve-list-login-modal-input {

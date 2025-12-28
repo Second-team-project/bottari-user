@@ -7,7 +7,7 @@
 }
 
 #root {
-  background-color: var(--bottari-background);
+  background-color: var(--bottari-offwhite);
 }
 
 :root {
@@ -18,10 +18,17 @@
   --bottari-blue: #60A5FA;
   --bottari-lightgray: #FBEFEF;
   --bottari-background: #E6FAFF;
-  --bottari-mint: #5EEAD4;
+
   --bottari-gray: #888888;
   --bottari-input: #eeeeee;
   --bottari-placeholder: #777777;
+
+  --bottari-offwhite: #F9FAFB;
+  --bottari-coolgray: #E5E7EB;
+  --bottari-grayfont: #6B7280;
+  --bottari-slateblue: #5D75A6;
+  --bottari-softblue: #6A9DED;
+  --bottari-darkslate: #111827;
 }
 
 @font-face {

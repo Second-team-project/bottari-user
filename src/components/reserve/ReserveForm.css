@@ -267,6 +267,19 @@
   line-height: 1.5;
 }
 
+/* 결제 */
+/* 오른쪽 배열 */
+.reserve-form-flex-rignt {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 15%;
+}
+.reserve-form-price {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
 /* 안내문구 */
 .reserve-form-content-notice {
   display: flex;

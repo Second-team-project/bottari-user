@@ -5,21 +5,23 @@ import "./ReserveStorage.css";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 // ===== components
 import SelectLuggageModal from "./selectModal/SelectLuggageModal.jsx";
 // ===== slices
 import { setStorageReserve } from "../../store/slices/reserveSlice.js";
 // ===== utils
 import { debounce } from "../../utils/debounceUtil.js";
+import { handlePhone } from "../../utils/handlePhone.js";
+import { handleEmail } from "../../utils/handleEmail.js";
+import { saveReserveSession } from "../../utils/sessionStorageUtil.js";
+import { getStores } from "../../store/thunks/storeThunk.js";
 // ===== icons
 import { X } from 'lucide-react';
 // ===== 달력 관련
 import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
 import ko from "date-fns/locale/ko";
-import { toast } from "sonner";
-import { handlePhone } from "../../utils/handlePhone.js";
-import { handleEmail } from "../../utils/handleEmail.js";
 
 // 달력 요일 한국어 적용
 registerLocale("ko", ko);
@@ -58,19 +60,13 @@ export default function ReserveStorage() {
   // ===== 보관소용
   const [storageStore, setStorageStore] = useState(savedData?.store || '');
   const [storageStoreId, setStorageStoreId] = useState(savedData?.storeId || null);
+  const [storeList, setStoreList] = useState([])
 
   // ===== 달력 커스텀용
   const [startDate, setStartDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null);
   const [endDate, setEndDate] = useState(savedData?.endedAt ? new Date(savedData.endedAt) : null);
 
-  // TODO : DB 설계 이후 thunk로 보관소 받아오기
-  const stores = [
-    { id: 1, name: '대구역'},
-    { id: 2, name: '동대구역'},
-    { id: 3, name: '반월당역'},
-    { id: 4, name: '서대구역'},
-  ]
-
+  
   // ========================
   // ||     휴대폰 번호     || 
   // ========================
@@ -86,7 +82,7 @@ export default function ReserveStorage() {
       setPhone3(value)
     };
   }
-
+  
   // ===================
   // ||     이메일     || 
   // ===================
@@ -100,6 +96,46 @@ export default function ReserveStorage() {
       setEmailDomain(value);
     }
   }
+  
+  // ===================
+  // ||     보관소     || 
+  // ===================
+  useEffect(() => {
+    dispatch(getStores()).unwrap()
+    .then((res) => {
+      setStoreList(res.data);
+      console.log('ReserveStorage-store: ', res.data)
+    })
+      .catch(err => {
+        console.log('ReserveStorage-store: ', err);
+      })
+    }, [])
+    
+    // TODO : DB 설계 이후 thunk로 보관소 받아오기
+    const stores = [
+      { id: 1, name: '대구역'},
+      { id: 2, name: '동대구역'},
+      { id: 3, name: '반월당역'},
+      { id: 4, name: '서대구역'},
+    ]
+  // ====================
+  // ||     짐 요금     || 
+  // ====================
+  const diffDays = useMemo(() => {
+    if (!startDate || !endDate) return 0;
+    
+    const diffTime = endDate.getTime() - startDate.getTime();
+    if (diffTime <= 0) return 0;
+    
+    // 24시간(86400000ms)으로 나누고 올림!
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  }, [startDate, endDate]);
+  
+  const totalPrice = useMemo(() => {
+    const luggagePrice = luggageList.reduce((accumulator, current) => accumulator + (current.price || 0), 0)
+
+    return luggagePrice * diffDays;
+  }, [luggageList, diffDays]); 
 
   // ======================== 
   // ||     달력 커스텀     ||
@@ -164,7 +200,7 @@ export default function ReserveStorage() {
       storeId: storageStoreId,
       luggageList: luggageList,
       notes: notes.trim(),
-      price: 1,
+      price: totalPrice,
     });
   };
   // 1-2. 디바운싱 적용 함수 생성 : useCallback -> useMemo 로 변경
@@ -242,7 +278,9 @@ export default function ReserveStorage() {
     }
     // 2-2. 디바운스 기다리지 않고 즉시 redux 저장
     dispatch(setStorageReserve(formData));
-    // 2-3. 결제 페이지로 이동
+    // 2-3. sessionStorage에도 저장 (새로고침 대비, password는 보안상 저장 안함)
+    saveReserveSession({ data: formData, type: 'STORAGE' });
+    // 2-4. 결제 페이지로 이동
     navigate('/reserve/confirm', { state: { type: 'STORAGE', password: password.trim(), } });
   }
 
@@ -259,6 +297,7 @@ export default function ReserveStorage() {
           luggageModalFlg &&
           <SelectLuggageModal
             modalFlgFalse={() => setLuggageModalFlg(false)}
+            serviceType={'S'}
             setLuggageList={(item) => {
               setLuggageList(prev => [...prev, {...item, id: Date.now()}])
             }}
@@ -456,16 +495,16 @@ export default function ReserveStorage() {
                 <span className="reserve-form-essential">*</span>
                 <label className="reserve-form-content-name">보관할 곳 :</label>
                 <div className="reserve-storage-store-btn-wrapper">
-                  {
-                    stores.map((store) => {
-                      return (
-                        <div type="button" key={store.id} 
-                          className={`reserve-storage-store-btn reserve-storage-store-btn-${storageStoreId === store.id ? 'active' : ''}`}
-                          onClick={() => {setStorageStore(store.name); setStorageStoreId(store.id);}}
-                        ><span>{store.name}</span></div>
-                      )
-
-                    })
+                  { 
+                    storeList.length >= 1 &&
+                      storeList.map((store) => {
+                        return (
+                          <div type="button" key={store.id} 
+                            className={`reserve-storage-store-btn reserve-storage-store-btn-${storageStoreId === store.id ? 'active' : ''}`}
+                            onClick={() => {setStorageStore(store.storeName); setStorageStoreId(store.id);}}
+                          ><span>{store.storeName}</span></div>
+                        )
+                      })
                   }
                 </div>
               </div>
@@ -533,9 +572,10 @@ export default function ReserveStorage() {
             <div className="reserve-form-content-wrapper">
               {/* 결제 금액 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">{' '}</span>
                 <label className="reserve-form-content-name">결제 금액 :</label>
-                <div>
-                  <span>12000 원</span>
+                <div className="reserve-form-flex-rignt">
+                  <span><span className="reserve-form-price">{totalPrice.toLocaleString()}</span> 원</span>
                 </div>
               </div>
             </div>

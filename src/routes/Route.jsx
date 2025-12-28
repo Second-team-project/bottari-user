@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 
 // 컴포넌트
 import App from "../App.jsx";
@@ -33,91 +33,34 @@ import FailPage from '../components/reserve/tosspayments/TossFail.jsx';
 
 const router = createBrowserRouter([
   {
-    element: <App />,
+    element: <App />,  // 레이아웃 (Toaster 포함)
     children: [
-      {
-        path: "/",
-        element: <Main />,
-      },
-      {
-        path: "/login",
-        element: <SocialLoginPage />,
-      },
-      {
-        path: "/guide",
-        element: <Guide />,
-      },
-      {
-        path: "/guide/usage",
-        element: <GuideUsage />,
-      },
-      {
-        path: "/guide/price",
-        element: <GuidePrice />,
-      },
-      {
-        path: "/reserve",
-        element: <Reserve />,
-      },
-      {
-        path: "/reserve/delivery",
-        element: <ReserveDelivery />,
-      },
-      {
-        path: "/reserve/storage",
-        element: <ReserveStorage />,
-      },
-      {
-        path: "/reserve/confirm",
-        element: <ReserveConfirm />,
-      },
-      {
-        path: "/reserve/tosspayments",
-        element: <CheckoutPage />,
-      },
-      {
-        path: "/reserve/tosspayments/success",
-        element: <SuccessPage />,
-      },
-      {
-        path: "/reserve/tosspayments/fail",
-        element: <FailPage />,
-      },
-      {
-        path: "/reserve/complete/:reserveCode",
-        element: <ReserveComplete />,
-      },
-      {
-        path: "/reserve/list",
-        element: <ReserveList />,
-      },
-      {
-        path: "/review",
-        element: <Review />,
-      },
-      {
-        path: "/review/detail",
-        element: <ReviewDetail />,
-      },
-      {
-        path: "/review/create",
-        element: <ReviewCreate />,
-      },
+      { path: "/", element: <Main /> },
+      { path: "/login", element: <SocialLoginPage /> },
+      { path: "/guide", element: <Guide /> },
+      { path: "/guide/usage", element: <GuideUsage /> },
+      { path: "/guide/price", element: <GuidePrice /> },
+      { path: "/reserve", element: <Reserve /> },
+      { path: "/reserve/delivery", element: <ReserveDelivery /> },
+      { path: "/reserve/storage", element: <ReserveStorage /> },
+      { path: "/reserve/confirm", element: <ReserveConfirm /> },
+      { path: "/reserve/tosspayments", element: <CheckoutPage /> },
+      { path: "/reserve/tosspayments/success", element: <SuccessPage /> },
+      { path: "/reserve/tosspayments/fail", element: <FailPage /> },
+      { path: "/reserve/complete/:reserveCode", element: <ReserveComplete /> },
+      { path: "/reserve/list", element: <ReserveList /> },
+      { path: "/review", element: <Review /> },
+      { path: "/review/detail", element: <ReviewDetail /> },
+      { path: "/review/create", element: <ReviewCreate /> },
       {
         path: "/service",
         element: <Service />,
-      },
-      {
-        path: "/service/notice",
-        element: <Notice />,
-      },
-      {
-        path: "/service/notice/:id",
-        element: <NoticeDetail />,
-      },
-      {
-        path: "/service/faq",
-        element: <FAQ />,
+        children: [
+          { index: true, element: <Navigate to="notice" replace /> },
+          { path: "notice", element: <Notice /> },
+          { path: "notice/:id", element: <NoticeDetail /> },
+          { path: "faq", element: <FAQ /> },
+        ],
       },
     ],
   },

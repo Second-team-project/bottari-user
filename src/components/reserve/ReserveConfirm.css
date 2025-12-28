@@ -84,3 +84,10 @@
 .reserve-confirm-content-gray {
   color: var(--bottari-gray);
 }
+
+/* 새로고침 주의 문구 */
+.reserve-confirm-notice {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}

@@ -1,0 +1,123 @@
+/* 전체 컨테이너 */
+.review-container {
+  width: 100%;
+  max-width: 1024px;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+/* 후기 목록 */
+.review-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+/* 후기 카드 */
+.review-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* 카드 이미지 */
+.review-card-image {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+}
+
+.review-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 카드 내용 */
+.review-card-content {
+  padding: 1rem;
+}
+
+.review-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.review-card-nickname {
+  font-weight: 600;
+  color: #333;
+}
+
+.review-card-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.review-card-text {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 0.8rem;
+
+  /* 3줄 제한 */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.review-card-date {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+/* 작성 버튼 (FAB) */
+.review-write-btn {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--bottari-navy, #2c3e50);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  z-index: 50;
+}
+
+.review-write-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+.review-write-btn:active {
+  transform: scale(0.95);
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .review-list {
+    grid-template-columns: 1fr;
+  }
+
+  .review-write-btn {
+    bottom: 80px;
+    right: 16px;
+  }
+}

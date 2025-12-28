@@ -5,9 +5,9 @@
  */
 
 import "./BottomNav.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import BottariIcon from "../logo/BottariIcon.jsx";
 
@@ -15,8 +15,9 @@ import BottariIcon from "../logo/BottariIcon.jsx";
 export default function BottomNav() {
   // ===== hook
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // ====================================== 
+  // ======================================
   // ||     보따리 떨어지는 애니메이션     ||
   const [clickedMenu, setClickedMenu] = useState(null);
   const menus = [
@@ -25,6 +26,31 @@ export default function BottomNav() {
     { label: `조회`, path: '/reserve/list'},
     { label: `요금`, path: '/guide'},
   ];
+
+  // 경로 변경 감지해서 활성 메뉴 설정
+  useEffect(() => {
+    const currentPath = location.pathname;
+
+    // 가장 길게 매칭되는 경로 찾기 (더 구체적인 경로 우선)
+    let matchedIndex = -1;
+    let longestMatch = 0;
+
+    menus.forEach((menu, index) => {
+      if (menu.path === '/' && currentPath === '/') {
+        matchedIndex = index;
+        longestMatch = 1;
+      } else if (menu.path !== '/' && currentPath.startsWith(menu.path)) {
+        if (menu.path.length > longestMatch) {
+          longestMatch = menu.path.length;
+          matchedIndex = index;
+        }
+      }
+    });
+
+    if (matchedIndex !== -1 && matchedIndex !== clickedMenu) {
+      setClickedMenu(matchedIndex);
+    }
+  }, [location.pathname]);
 
   const handleMenuClick = (index, path) => {
     setClickedMenu(index);  // 애니메이션 인덱스

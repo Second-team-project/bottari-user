@@ -1,28 +1,41 @@
-/* 페이지 전체 */
-/* .social-login-page-container {
+/* 소제목 제외페이지 전체 */
+.social-login-page-body {
   width: 100%;
-  height: 60vh;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-} */
-
-/* 로그인 버튼 컨테이너 */
-.social-login-page-btn-container {
-  margin: 6rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* 로그인 안내문구 */
-.login-page-text-warpper {
-  padding-top: 10rem 0;
+/* 유도문구 */
+.social-login-page-text-warpper {
+  margin: 25% 0 15% 0;
+}
+@media (min-width: 769px) {
+  .social-login-page-text-warpper {
+    margin: 5% 0;
+  }
 }
 .social-login-page-text {
   font-weight: 600;
   font-size: 1rem;
+}
+
+/* 로그인 버튼 컨테이너 */
+.social-login-page-btn-container {
+  margin: 5% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media (min-width: 769px) {
+  .social-login-page-btn-container {
+    margin: 2% 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
 }
 
 /* 카카오 로그인 버튼 */
@@ -40,10 +53,7 @@
 .social-login-page-kakao-text {
   visibility: hidden;
 }
-
-/* 버튼 웹 버전 */
 @media (min-width: 769px) {
-  /* 카카오 */
   .social-login-page-kakao-btn-wrapper {
     width: 235px;
     height: 50px;

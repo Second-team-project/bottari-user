@@ -1,12 +1,13 @@
 import "./SelectLuggageModal.css";
 
 import { useEffect, useState } from "react";
-import { ChevronUp, ChevronDown  } from 'lucide-react';
 import { useDispatch } from "react-redux";
 
 import { getPricing } from "../../../store/thunks/pricingThunk.js";
+import { Minus, Plus  } from 'lucide-react';
+import { toast } from "sonner";
 
-export default function SelectLuggageModal({modalFlgFalse, setLuggageList}) {
+export default function SelectLuggageModal({ serviceType, modalFlgFalse, setLuggageList}) {
   // ===== hooks
   const dispatch = useDispatch();
 
@@ -26,8 +27,17 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageList}) {
   const [pricingList, setPricingList] = useState([])
 
   useEffect(() => {
-    dispatch(getPricing()).unwrap().then(res => setPricingList(res.data));
-  }, []);
+    dispatch(getPricing()).unwrap()
+    .then(res => {
+      if(serviceType) {
+        const typeFiltered = res.data.filter(item => item.serviceType === serviceType);
+        setPricingList(typeFiltered);
+      } else {
+        toast.error('오류가 발생했습니다. 재시도 해주세요.');
+        modalFlgFalse();
+      }
+    });
+  }, [dispatch, serviceType]);
 
   // ========================
   // ||     짐 선택하기     ||
@@ -53,23 +63,14 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageList}) {
     .map(item => item.itemWeight)                                       // 무게만 뽑아냄
     .filter((value, index, self) => self.indexOf(value) === index);     // 중복 제거
 
-  // ===== size=null 대비 -> step1의 클릭 이벤트에 추가 로직
-  // const handleStep1Click = (type) => {
-  //   setStep1(type);
+  const selectedItem =
+    (step1 && step2 && step3) 
+    ? pricingList.find(item => item.itemType === step1 && item.itemSize === step2 && item.itemWeight === step3)
+    : null;
 
-  //   // 해당 type의 모든 사이즈 조회
-  //   const sizes = 
-  //     pricingList
-  //     .filter(item => item.itemType === type)  // 해당 타입의
-  //     .map(item => item.itemSize);             // size들 뽑아냄
-  //   // 사이즈가 null 이라면
-  //   if(sizes.length === 1 && sizes[0] === null) {
-  //     setStep2(null);
-  //   } else {
-  //     setStep2(null);
-  //   }
+   const unitPrice = selectedItem ? Number(selectedItem.basePrice) : 0;
+   const totalPrice = unitPrice * count;
 
-  // }
 
   // ===== 최종 선택 완료
   const handleComplete = () => {
@@ -78,6 +79,7 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageList}) {
       itemSize: step2,
       itemWeight: step3,
       count: count,
+      price: totalPrice,
     });
     modalFlgFalse(false);
   };
@@ -104,17 +106,20 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageList}) {
         {/* 보따리 영역 */}
         <div className="select-luggage-modal-body">
 
+          {/* 선택 영역 */}
+          <div className="select-luggage-modal-select-container">
+
           {/* 종류 */}
           <div className="select-luggage-modal-input-wrapper">
             <div className="select-luggage-modal-input-title-wrapper">
-              <span>보따리 종류</span>
+              <span>종류</span>
             </div>
             <div className="select-luggage-modal-input-type-btn-wrapper">
               {
                 step1List.map(item => (
                   <button key={item} 
-                    className={`select-luggage-modal-input-type-btn select-luggage-modal-input-type-btn-${step1 === item ? 'active' : '' }`}
-                    onClick={() => { setStep1(item); setStep2(null); setStep3(null); }}
+                  className={`select-luggage-modal-input-type-btn select-luggage-modal-input-type-btn-${step1 === item ? 'active' : '' }`}
+                  onClick={() => { setStep1(item); setStep2(null); setStep3(null); }}
                   >{TYPE_LABELS[item]}</button>
                 ))
               }
@@ -126,14 +131,14 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageList}) {
             step1 && (
               <div className="select-luggage-modal-input-wrapper">
                 <div className="select-luggage-modal-input-title-wrapper">
-                  <span>보따리 크기</span>
+                  <span>크기</span>
                 </div>
                 <div className="select-luggage-modal-input-type-btn-wrapper">
                   {
                     step2List.map(item => (
                       <button key={item} 
-                        className={`select-luggage-modal-input-type-btn select-luggage-modal-input-type-btn-${step2 === item ? 'active' : '' }`}
-                        onClick={() => { setStep2(item); setStep3(null); }}
+                      className={`select-luggage-modal-input-type-btn select-luggage-modal-input-type-btn-${step2 === item ? 'active' : '' }`}
+                      onClick={() => { setStep2(item); setStep3(null); }}
                       >{item}</button>
                     ))
                   }
@@ -147,14 +152,14 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageList}) {
             ( step2 || step2List.length === 0 ) && (
               <div className="select-luggage-modal-input-wrapper">
                 <div className="select-luggage-modal-input-title-wrapper">
-                  <span>보따리 무게</span>
+                  <span>무게</span>
                 </div>
                 <div className="select-luggage-modal-input-type-btn-wrapper">
                   {
                     step3List.map(item => (
                       <button key={item} 
-                        className={`select-luggage-modal-input-type-btn select-luggage-modal-input-type-btn-${step3 === item ? 'active' : '' }`}
-                        onClick={() => { setStep3(item); }}
+                      className={`select-luggage-modal-input-type-btn select-luggage-modal-input-type-btn-${step3 === item ? 'active' : '' }`}
+                      onClick={() => { setStep3(item); }}
                       >{item}</button>
                     ))
                   }
@@ -168,27 +173,44 @@ export default function SelectLuggageModal({modalFlgFalse, setLuggageList}) {
             step3 && (
               <div className="select-luggage-modal-input-wrapper">
                 <div className="select-luggage-modal-input-title-wrapper">
-                  <span>보따리 개수</span>
+                  <span>개수</span>
                 </div>
                 <div className="select-luggage-modal-input-type-btn-wrapper-center">
                   <div className="select-luggage-modal-luggage-count-btn"
-                    onClick={() => setCount(prev => Math.min(prev + 1, 9))}
-                  ><ChevronUp /></div>
+                    onClick={() => setCount(prev => Math.max(prev - 1, 1))}
+                    ><Minus /></div>
                   <div className="select-luggage-modal-luggage-count">{count}</div>
                   <div className="select-luggage-modal-luggage-count-btn"
-                    onClick={() => setCount(prev => Math.max(prev - 1, 1))}
-                  ><ChevronDown /></div>
+                    onClick={() => setCount(prev => Math.min(prev + 1, 9))}
+                    ><Plus /></div>
                 </div>
               </div>
             )
           }
+
+          {/* 가격 */}
+          {
+            step3 && (
+              <div className="select-luggage-modal-input-wrapper">
+                <div className="select-luggage-modal-input-title-wrapper">
+                  <span>가격</span>
+                </div>
+                <div className="select-luggage-modal-input-type-btn-wrapper-center">
+                  <div className="select-luggage-modal-luggage-price">{totalPrice}</div>
+                  <div className="select-luggage-modal-luggage-count">원</div>
+                </div>
+              </div>
+            )
+          }
+          
+          </div>
 
           {/* 버튼 영역 */}
           <div className="select-luggage-modal-complete-btn-wrapper">
             {/* 취소 */}
             <button className="select-luggage-modal-complete-btn select-luggage-modal-complete-btn-cancel"
               onClick={() => { modalFlgFalse() }}
-            >취소</button>
+              >취소</button>
 
             {/* 완료 */}
           {

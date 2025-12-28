@@ -1,33 +1,25 @@
 import './App.css'
 
-import { Outlet } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { Toaster } from 'sonner';
-// import { useEffect } from 'react';
-// import axiosIns from './api/axiosInstance.js';
 
 // 컴포넌트 import
 import HeaderWeb from "./components/header/HeaderWeb.jsx";
 import HeaderMobile from "./components/header/HeaderMobile.jsx";
 import BottomNav from './components/header/BottomNav.jsx';
+import ProtectedRouter from './routes/ProtectedRouter.jsx';
 
 function App() {
-
-  // 백엔드 연결 테스트
-  // useEffect(() => {
-  //   console.log('API URL:', import.meta.env.VITE_SERVER_URL);
-  //   const test = async () => {
-  //     const res = await axiosIns.get('/api/test/success');
-  //     console.log(res.data);
-  //   };
-  //   test();
-  // }, []);
+  // ===== hooks
+  const location = useLocation()
 
   return (
     <>
       <div className='app-container'>
         {/* 토스트 */}
         <Toaster position="top-center" />
-        
+
         {/* 웹용 헤더 */}
         <div className="app-header-web-wrapper">
           <HeaderWeb />
@@ -38,7 +30,9 @@ function App() {
           <HeaderMobile />
           <BottomNav />
         </div>
-        <Outlet />
+        <AnimatePresence mode="wait">
+          <ProtectedRouter key={location.pathname} />
+        </AnimatePresence>
       </div>
     </>
   )

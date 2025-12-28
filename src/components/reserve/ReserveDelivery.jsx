@@ -14,6 +14,7 @@ import { setDeliveryReserve } from "../../store/slices/reserveSlice.js";
 import { debounce } from "../../utils/debounceUtil.js";
 import { handlePhone } from "../../utils/handlePhone.js";
 import { handleEmail } from "../../utils/handleEmail.js";
+import { saveReserveSession } from "../../utils/sessionStorageUtil.js";
 // ===== icons
 import { X } from 'lucide-react';
 // ===== 달력 관련
@@ -67,14 +68,23 @@ export default function ReserveDelivery() {
   const [pickupDate, setPickupDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null); // 픽업 날짜 
 
   // ===== reudux 에서 데이터 불러오는데 시간이 걸릴 경우 대비
-  // useEffect(() => {
-  //   if(!savedData && user) {
-  //     // 작성&저장한 데이터가 없고, user 가 있을 경우
-  //     if(!name && user.userName) setName(user.userName || '');
-  //     if (!email && user.email) setEmail(user.email || '');
-  //     if (!phone && user.phone) setPhone(user.phone || '');
-  //   }
-  // }, [user, savedData]);
+  useEffect(() => {
+    if(!savedData && user) {
+      // 작성&저장한 데이터가 없고, user 가 있을 경우
+      if(!name && user.userName) setName(user.userName || '');
+      if (!emailId && user.email) {
+        const { id, domain } = handleEmail(user.email || '');
+        if(id) setEmailId(id);
+        if(domain) setEmailDomain(domain);
+      }
+      if (!phone2 && !phone3 && user.phone) {
+        const { p1, p2, p3 } = handlePhone(user.phone || '');
+        if(p1) setPhone1(p1);
+        if(p2) setPhone2(p2);
+        if(p3) setPhone3(p3);
+      }
+    }
+  }, [user, savedData]);
 
   // ========================
   // ||     휴대폰 번호     || 
@@ -105,6 +115,13 @@ export default function ReserveDelivery() {
       setEmailDomain(value);
     }
   }
+
+  // ====================
+  // ||     짐 요금     || 
+  // ====================
+  const totalPrice = useMemo(() => {
+    return luggageList.reduce((accumulator, current) => accumulator + (current.price || 0), 0)
+  }, [luggageList]);
 
   // ========================
   // ||     달력 커스텀     || 
@@ -153,7 +170,7 @@ export default function ReserveDelivery() {
       endedAddr: endLocation.trim(),
       luggageList: luggageList,
       notes: notes.trim(),
-      price: 1,
+      price: totalPrice,
     });
   };
 
@@ -240,7 +257,9 @@ export default function ReserveDelivery() {
     }
     // 2-2. 디바운스 기다리지 않고 즉시 redux 저장
     dispatch(setDeliveryReserve(formData));
-    // 2-3. 결제 페이지로 이동
+    // 2-3. sessionStorage에도 저장 (새로고침 대비, password는 보안상 저장 안함)
+    saveReserveSession({ data: formData, type: 'DELIVERY' });
+    // 2-4. 결제 페이지로 이동
     navigate('/reserve/confirm', { state: { type: 'DELIVERY', password: user ? null : password.trim(), } });
   }
   
@@ -262,6 +281,7 @@ export default function ReserveDelivery() {
         {
           luggageModalFlg &&
           <SelectLuggageModal
+            serviceType={'D'}
             modalFlgFalse={() => setLuggageModalFlg(false)}
             setLuggageList={(item) => {
               setLuggageList(prev => [...prev, {...item, id: Date.now()}])
@@ -522,9 +542,10 @@ export default function ReserveDelivery() {
             <div className="reserve-form-content-wrapper">
               {/* 결제 금액 */}
               <div className="reserve-form-content">
+                <span className="reserve-form-essential">{' '}</span>
                 <label className="reserve-form-content-name">결제 금액 :</label>
-                <div >
-                  <span>12000 원</span>
+                <div className="reserve-form-flex-rignt">
+                  <span><span className="reserve-form-price">{totalPrice.toLocaleString()}</span> 원</span>
                 </div>
               </div>
             </div>

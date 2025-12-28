@@ -1,8 +1,14 @@
 import "./ReserveLoginModal.css";
 import kakaoBtn from "../../assets/kakao_login_large_narrow.png";
+
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { X } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function ReserveLoginModal({ modalFlgFasle }) {
+  // ===== hooks
+  const navigate = useNavigate();
   // ========================
   // ||     스크롤 방지     ||
   // ========================
@@ -18,15 +24,39 @@ export default function ReserveLoginModal({ modalFlgFasle }) {
   function handleSocial(provider) {
     window.location.replace(`${import.meta.env.VITE_SERVER_URL}/api/user/auth/social/${provider}`)
   }
+
+  // ========================
+  // ||     로그인 닫기     ||
+  function handleClose() {
+    modalFlgFasle()
+    navigate('/')
+  }
   
 
   return(
     <>
       {/* 불투명 배경 */}
-      <div className="reserve-login-modal-background" onClick={modalFlgFasle}></div>
+      <motion.div
+        className="reserve-login-modal-background"
+        initial={{ opacity: 0.8, backdropFilter: "blur(4px)" }}
+        animate={{ opacity: 1, backdropFilter: "blur(5px)" }}
+        exit={{ opacity: 0.8, backdropFilter: "blur(4px)" }}
+        transition={{ duration: 0.3 }}
+      />
 
       {/* 전체 컨테이너 */}
-      <div className="reserve-login-modal-container">
+      <motion.div
+        className="reserve-login-modal-container"
+        initial={{ opacity: 0.9, filter: "blur(2px)" }}
+        animate={{ opacity: 1, filter: "blur(0px)" }}
+        exit={{ opacity: 0.9, filter: "blur(2px)" }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="reserve-login-modal-x"
+          onClick={handleClose}
+        >
+          <X size={30} />
+        </div>
 
         {/* 페이지 제목 */}
         <div className="reserve-login-modal-title-wrapper page-modal-title-wrapper">
@@ -59,7 +89,7 @@ export default function ReserveLoginModal({ modalFlgFasle }) {
         </div>
 
 
-      </div>
+      </motion.div>
     </>
   )
 };

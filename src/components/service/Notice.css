@@ -1,0 +1,57 @@
+/* 공지사항 컨테이너 */
+.notice-container {
+  width: 100%;
+}
+
+/* 공지사항 목록 */
+.notice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* 공지사항 아이템 */
+.notice-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.notice-item:hover {
+  background-color: #f9f9f9;
+}
+
+.notice-item:last-child {
+  border-bottom: none;
+}
+
+/* 제목 */
+.notice-item-title {
+  font-size: 1rem;
+  color: #333;
+  flex: 1;
+}
+
+/* 날짜 */
+.notice-item-date {
+  font-size: 0.85rem;
+  color: #999;
+  margin-left: 1rem;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .notice-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .notice-item-date {
+    margin-left: 0;
+  }
+}

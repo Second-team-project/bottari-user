@@ -1,0 +1,86 @@
+/* 전체 컨테이너 */
+.service-container {
+  width: 100%;
+  max-width: 1024px;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+/* 폴더 탭 래퍼 */
+.service-tab-wrapper {
+
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* 폴더 탭 스타일 */
+.service-tab {
+  color: var(--bottari-grayfont);
+  font-size: 1rem;
+  font-weight: 600;
+
+  background-color: var(--bottari-coolgray);
+  border-radius: 12px 12px 0 0;
+  padding: 0.8rem 1.5rem;
+  
+  position: relative;
+  top: 2px;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.service-tab:hover {
+  filter: brightness(0.95);  
+}
+/* 활성화된 탭 */
+.service-tab.active {
+  color: var(--bottari-navy);
+  font-size: 1rem;
+  font-weight: 600;
+
+  background-color: #fff;
+  border: 2px solid var(--bottari-coolgray);
+  border-bottom: none;
+
+  top: 2px;
+  z-index: 1;
+}
+
+/* 탭 콘텐츠 영역 */
+.service-content {
+  min-height: 400px;
+  background-color: #fff;
+  border: 2px solid var(--bottari-coolgray);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+@media (min-width: 769px) {
+  .service-content {
+    max-width: 600px;
+    min-height: 400px;
+    background-color: #fff;
+    border: 2px solid var(--bottari-coolgray);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 0 auto;
+
+    display: flex;
+    justify-content: center;
+
+  }
+
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .service-tab {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .service-content {
+    padding: 1rem;
+    min-height: 300px;
+  }
+}

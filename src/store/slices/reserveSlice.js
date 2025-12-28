@@ -1,8 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { guestReservation, userReservation } from "../thunks/reserveThunk";
 
 const initialState = {
   deliveryReserve: null,
   storageReserve: null,
+  reservationList: [],
+  reservation: null,
   loading: false,
   error: null,
 }
@@ -27,7 +30,29 @@ const slice = createSlice({
       state.deliveryReserve = null;
       state.storageReserve = null;
     },
+
+    setReservationList(state, action) {
+      state.reservationList = action.payload;
+    },
+    clearReservationList(state) {
+      state.reservationList = [];
+    },
+    setReservation(state, action) {
+      state.reservation = action.payload;
+    },
+    clearReservation(state) {
+      state.reservation = [];
+    },
   },
+  extraReducers: builder => {
+    builder
+      .addCase(userReservation.fulfilled, (state, action) => {
+        state.reservationList = action.payload.data;
+      })
+      .addCase(guestReservation.fulfilled, (state, action) => {
+        state.reservation = action.payload.data;
+      })
+  }
 })
 
 export const {
@@ -36,6 +61,11 @@ export const {
   clearDeliveryReserve,
   clearStorageReserve,
   clearAllReserve,
+
+  setReservationList,
+  clearReservationList,
+  setReservation,
+  clearReservation,
 } = slice.actions;
 
 export default slice.reducer;

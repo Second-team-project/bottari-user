@@ -1,0 +1,56 @@
+/* FAQ 컨테이너 */
+.faq-container {
+  width: 100%;
+}
+
+/* FAQ 목록 */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* FAQ 아이템 */
+.faq-item {
+  border-bottom: 1px solid #eee;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+}
+
+/* 질문 */
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: #333;
+  transition: background-color 0.2s ease;
+}
+
+.faq-question:hover {
+  background-color: #f9f9f9;
+}
+
+/* 답변 */
+.faq-answer {
+  padding: 1rem 0.5rem 1.5rem;
+  color: #666;
+  background-color: #fafafa;
+  border-radius: 0 0 8px 8px;
+  line-height: 1.6;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .faq-question {
+    font-size: 0.95rem;
+  }
+
+  .faq-answer {
+    font-size: 0.9rem;
+  }
+}

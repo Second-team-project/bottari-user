@@ -11,13 +11,34 @@ import BottariLogo2 from "../logo/BottariLogo2.jsx";
 
 // 아이콘 import
 import { User, UserRound, Globe } from 'lucide-react';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutThunk } from "../../store/thunks/authThunk.js";
+import { toast } from "sonner";
 
 export default function HeaderWeb() {
-  // ===== hook
-  const navigate = useNavigate()
-
+  // ===== hooks
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // ===== redux States
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
+
+  // ============================
+  // ||     로그인 로그아웃     ||
+  // ============================
+  const handleAccount = () => {
+    if(isLoggedIn) {
+      dispatch(logoutThunk()).unwrap()
+        .then(() => {
+          toast.success('로그아웃 되었습니다.');
+          navigate("/");
+        })
+        .catch((error) => {
+          toast.error("로그아웃 중 오류가 발생했습니다.")
+        })
+    } else {
+      navigate("/login");
+    }
+  }
 
   return(
     <>
@@ -90,7 +111,9 @@ export default function HeaderWeb() {
                 <span className="header-web-icon-text">한국어</span>
                 <Globe size={20} />
               </div>
-              <div className="header-web-icon-wrapper header-web-click-effect" onClick={() => {navigate('/login')}}>
+              <div className="header-web-icon-wrapper header-web-click-effect" 
+                onClick={() => handleAccount()}
+              >
                 <span className="header-web-icon-text">{isLoggedIn ? '로그아웃' : '로그인' }</span>
                 <UserRound size={20} />
               </div>

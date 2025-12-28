@@ -16,8 +16,9 @@
 .reserve-btn-style {
   /* width: 60%; */
   height: 145px;
-  border: 1px solid var(--bottari-navy);
+  border: 1px solid var(--bottari-slateblue);
   border-radius: 10px;
+  box-shadow: 0 0 5px 2px var(--coolgray-input);
   margin: 10% 10% 0 10%;
 
   display: flex;

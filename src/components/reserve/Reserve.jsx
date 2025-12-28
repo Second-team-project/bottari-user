@@ -2,6 +2,7 @@ import "./Reserve.css";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import ReserveLoginModal from "../login/ReserveLoginModal.jsx";
 import BottariIcon from "../logo/BottariIcon.jsx";
 
@@ -23,7 +24,9 @@ export default function Reserve() {
 
   return(
     <>
-      { modalFlg && <ReserveLoginModal modalFlgFasle={() => setModalFlg(false)} /> }
+      <AnimatePresence>
+        { modalFlg && <ReserveLoginModal modalFlgFasle={() => setModalFlg(false)} /> }
+      </AnimatePresence>
       {/* 전체 컨테이너 */}
       <div className="reserve-page-container">
         {/* 페이지 제목 */}

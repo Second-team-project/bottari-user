@@ -1,0 +1,137 @@
+/* 전체 컨테이너 */
+.review-create-container {
+  width: 100%;
+  max-width: 600px;
+  min-height: 100vh;
+  padding: 1rem;
+  margin: 0 auto;
+}
+
+/* 폼 */
+.review-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+/* 섹션 */
+.review-create-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.review-create-label {
+  font-weight: 600;
+  color: #333;
+}
+
+/* 별점 */
+.review-create-stars {
+  display: flex;
+  gap: 4px;
+}
+
+/* 내용 */
+.review-create-textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  resize: none;
+  font-family: inherit;
+}
+
+.review-create-textarea:focus {
+  outline: none;
+  border-color: var(--bottari-navy, #2c3e50);
+}
+
+/* 이미지 업로드 */
+.review-create-image-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  height: 150px;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  color: #999;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.review-create-image-upload:hover {
+  border-color: var(--bottari-navy, #2c3e50);
+  color: var(--bottari-navy, #2c3e50);
+}
+
+/* 이미지 미리보기 */
+.review-create-image-preview {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+}
+
+.review-create-image-preview img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.review-create-image-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* 버튼 */
+.review-create-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.review-create-btn {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.review-create-btn.cancel {
+  background-color: #f1f1f1;
+  border: none;
+  color: #666;
+}
+
+.review-create-btn.submit {
+  background-color: var(--bottari-navy, #2c3e50);
+  border: none;
+  color: #fff;
+}
+
+.review-create-btn.submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.review-create-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}

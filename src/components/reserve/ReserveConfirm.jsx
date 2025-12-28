@@ -1,31 +1,71 @@
 import "./tosspayments/TossPayments.css";
 import "./Reserveform.css";
 import "./ReserveConfirm.css";
-import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "sonner";
 
 import CheckoutPage from './tosspayments/TossCheckout.jsx';
+import { getReserveSession } from "../../utils/sessionStorageUtil.js";
+import { setDeliveryReserve, setStorageReserve } from "../../store/slices/reserveSlice.js";
 
 export default function ReserveConfirm() {
   // ===== hooks
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // ===== redux state
   const { deliveryReserve, storageReserve } = useSelector(state => state.reserve)
 
-  // ===== navigate state
+  // ===== navigate state (새로고침 시 없을 수 있음)
   const reserveData = location.state || {};
-  const {type, password} = reserveData
 
-  // ===== 데이터 고르기 : 최근 저장 데이터
+  // ===== sessionStorage에서 복구 시도
+  const sessionData = getReserveSession();
+
+  // ===== 데이터 결정: Redux > sessionStorage
+  const type = reserveData.type || sessionData?.type;
+  const password = reserveData.password; // password는 sessionStorage에 저장 안함 (보안)
+
+  // Redux에서 데이터 가져오기
   const deliveryTime = deliveryReserve?.savedAt ? new Date(deliveryReserve.savedAt).getTime() : 0;
   const storageTime = storageReserve?.savedAt ? new Date(storageReserve.savedAt).getTime() : 0;
-  const thisData = (deliveryTime >= storageTime) ? deliveryReserve : storageReserve;
+  let thisData = (deliveryTime >= storageTime) ? deliveryReserve : storageReserve;
 
-  if (thisData?.type !== type) {
-    toast.error('잘못된 접근입니다.')
-    // TODO : 뒤로 가는 로직
+  // Redux에 없으면 sessionStorage에서 복구
+  if (!thisData && sessionData?.data) {
+    thisData = sessionData.data;
+    // Redux에도 복구해두기
+    if (sessionData.type === 'DELIVERY') {
+      dispatch(setDeliveryReserve(sessionData.data));
+    } else if (sessionData.type === 'STORAGE') {
+      dispatch(setStorageReserve(sessionData.data));
+    }
+  }
+
+  // ===== 데이터 유효성 검사 및 리다이렉트
+  useEffect(() => {
+    // 1. 데이터가 없거나 타입이 맞지 않으면 리다이렉트
+    if (!thisData || thisData.type !== type) {
+      toast.error('오류가 발생했습니다. 다시 예약해주세요.');
+      navigate(-1, { replace: true });
+      return;
+    }
+    // 2. 비회원인데 비밀번호가 없으면 리다이렉트 (새로고침으로 날아간 경우)
+    if (thisData.userType === 'GUEST' && !password) {
+      toast.error('비밀번호 정보가 없습니다. 다시 입력해주세요.');
+      navigate(-1, { replace: true });
+    }
+  }, [thisData, type, password, navigate]);
+
+  // 데이터가 없거나 비회원인데 비밀번호가 없으면 렌더링하지 않음
+  if (!thisData || thisData.type !== type) {
+    return null;
+  }
+  if (thisData.userType === 'GUEST' && !password) {
+    return null;
   }
 
 
@@ -36,6 +76,10 @@ export default function ReserveConfirm() {
         {/* 페이지 제목 */}
         <div className="reserve-confirm-title-wrapper page-title-wrapper">
           <h2 className="reserve-confirm-title">결제하기</h2>
+          {/* 비회원 새로고침 주의 문구 */}
+          {thisData.userType === 'GUEST' && (
+            <p className="reserve-confirm-notice">* 새로고침 시 이전 페이지로 돌아갑니다.</p>
+          )}
         </div>
 
         <div className="reserve-form-content-container reserve-confirm-content-container">
@@ -133,23 +177,20 @@ export default function ReserveConfirm() {
 
                 </>
               )}
-            </div>
-          </div>
-        </div>
-
-        {/* 결제 금액 */}
-        <div className="reserve-form-content-container reserve-confirm-content-container">
-          <div className="reserve-confirm-content-title">
-            <h3 className="reserve-confirm-content-title-h3">결제 금액</h3>
-          </div>
-          <div className="reserve-confirm-content-data-container">
-            <div className="reserve-confirm-data-wrapper">
-              <div className="reserve-confirm-data-value reserve-confirm-data-value-point">
-                <span className="reserve-confirm-content-data reserve-confirm-content-text-pont">{thisData?.price}<span className="reserve-confirm-content-gray"> 원</span></span>
+              {/* 결제 금액 */}
+              <hr className="reserve-confirm-line" />
+              <div className="reserve-confirm-content-title">
+                <h3 className="reserve-confirm-content-title-h3">결제 금액</h3>
+              </div>
+              <div className="reserve-confirm-content-data-container">
+                <div className="reserve-confirm-data-value reserve-confirm-data-value-point">
+                  <span className="reserve-confirm-content-data">{thisData?.price}<span className="reserve-confirm-content-gray"> 원</span></span>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
 
 
 

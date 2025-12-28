@@ -1,6 +1,7 @@
 /* 불투명 배경 */
 .select-luggage-modal-backgound {
   width: 100%;
+  max-width: 1024px;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
 
@@ -9,7 +10,7 @@
   z-index: 15;
 }
 
-/* 소제목 제외 영역 */
+/* 흰 영역 */
 .select-luggage-modal-container {
   width: 85%;
   max-width: 400px;
@@ -31,22 +32,33 @@
   z-index: 16;
 }
 
-/* 입력 영역 */
+/* 소제목 제외 영역 */
 .select-luggage-modal-body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
+/* 선택 영역 */
+.select-luggage-modal-select-container {
+  border: 1px solid var(--bottari-coolgray);
+  border-radius: 10px;
+
+  padding: 1%;
+  
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 /* 아이템 */
 .select-luggage-modal-input-wrapper {
   width: 100%;
-  border: 1px solid #777;
   border-radius: 10px;
   padding: 3%;
 }
 /* 소제목 */
 .select-luggage-modal-input-title-wrapper {
-  color: var(--bottari-navy);
+  color: var(--bottari-darkslate);
   font-size: 1rem;
   font-weight: 600;
   width: 100%;
@@ -73,7 +85,7 @@
 
   min-width: 20%;
   background-color: #fff;
-  border: 1px solid var(--bottari-navy);
+  border: 1px solid var(--bottari-coolgray);
   border-radius: 20px;
   padding: 2% 3%;
 
@@ -86,20 +98,20 @@
   filter: brightness(0.95);  
 }
 .select-luggage-modal-input-type-btn:hover {
-  background-color: var(--bottari-pink);
+  color: #000;
 }
 .select-luggage-modal-input-type-btn-active {
   color: #000;
-  background-color: var(--bottari-pink);
+  background-color: var(--bottari-coolgray);
   font-weight: 600;
 }
 
 /* 카운트 버튼 */
 .select-luggage-modal-luggage-count-btn {
   color: var(--bottari-placeholder);
-  min-width: 15%;
+  min-width: 13%;
 
-  border: 1px solid var(--bottari-navy);
+  border: 1px solid var(--bottari-coolgray);
   border-radius: 50px;
   padding: 1% 1%;
 
@@ -114,13 +126,20 @@
   filter: brightness(0.95);  
 }
 .select-luggage-modal-luggage-count-btn:hover {
-  background-color: var(--bottari-pink);
+  color: #000;
 }
 /* 카운트 */
 .select-luggage-modal-luggage-count {
-  font-weight: 600;
+  font-weight: 700;
 }
 
+/* 금액 출력 */
+.select-luggage-modal-luggage-price {
+  font-size: 1.2rem;
+  font-weight: 800;
+
+  padding-left: 5%;
+}
 
 /* 결정 버튼 영역 */
 .select-luggage-modal-complete-btn-wrapper {
@@ -134,14 +153,14 @@
 
   width: 45%;
   height: 35px;
-  border: 1px solid var(--bottari-navy);
+  border: none;
   border-radius: 10px;
 
   cursor: pointer;
 }
 .select-luggage-modal-complete-btn-cancel {
-  color: var(--bottari-navy);
-  background-color: #fff;
+  color: var(--bottari-darkslate);
+  background-color: var(--bottari-coolgray);
 }
 .select-luggage-modal-complete-btn-save {
   color: #fff;

@@ -18,7 +18,7 @@
   height: 60vh;
   background-color: #fff;
   border-radius: 10px;
-  padding: 3rem 1rem;
+  padding: 1.3rem 1.3rem;
 
   position: fixed;
   top: 50%;
@@ -36,7 +36,7 @@
     height: 70vh;
     background-color: #fff;
     border-radius: 10px;
-    padding: 3rem 1rem;
+    padding: 1.3rem 1.3rem;
   
     position: fixed;
     top: 20%;
@@ -55,6 +55,13 @@
   margin: 3rem 0;
 }
 
+/* 닫기 버튼 */
+.reserve-login-modal-x {
+  color: var(--bottari-gray);
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
 
 /* 버튼 영역 */
 .reserve-login-modal-kakao-btn-wrapper {

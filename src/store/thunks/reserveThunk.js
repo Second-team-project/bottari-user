@@ -83,3 +83,33 @@ export const reserveComplete = createAsyncThunk(
     } 
   }
 )
+
+// =====================================================
+
+export const userReservation = createAsyncThunk(
+  'reserve/userReservation',
+  async (_, {rejectWithValue}) => {
+    try {
+      const url = `/api/user/reserve`;
+      const response = await axiosIns.get(url);
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+)
+
+export const guestReservation = createAsyncThunk(
+  'reserve/guestReservation',
+  async (data, {rejectWithValue}) => {
+    try {
+      const url = `/api/user/reserve/guest`;
+      const response = await axiosIns.post(url, data);
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+)

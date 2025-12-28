@@ -6,12 +6,14 @@
 
 import "./HeaderMobile.css";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence } from "motion/react"
+import { toast } from "sonner";
 
 import BottariLogo2 from "../logo/BottariLogo2.jsx";
 import MenuMobile from "./MenuMobile.jsx";
+import { logoutThunk } from "../../store/thunks/authThunk.js";
 
 // 아이콘 import
 import { User, UserRound, Globe, Menu, LogOut } from 'lucide-react';
@@ -20,14 +22,15 @@ import { User, UserRound, Globe, Menu, LogOut } from 'lucide-react';
 export default function HeaderMobile() {
   // ===== hook
   const navigate = useNavigate();
-
-  // ===== 전역 state
+  const dispatch = useDispatch();
+  // ===== redux state
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-
-  // ===== 로컬 state
+  // ===== local state
   const [menuFlg, setMenuFlg] = useState(false)
 
-  // 화면 크기가 769px 이상이 되면 메뉴 자동으로 닫기
+  // ===========================================================
+  // ||     화면 크기가 769px 이상이 되면 메뉴 자동으로 닫기     ||
+  // ===========================================================
   useEffect(() => {
     const mediaQuery = window.matchMedia('(min-width: 769px)');
 
@@ -48,6 +51,24 @@ export default function HeaderMobile() {
     // 클린업
     return () => mediaQuery.removeEventListener('change', handleResize);
   }, [menuFlg]);
+
+  // ============================
+  // ||     로그인 로그아웃     ||
+  // ============================
+  const handleAccount = () => {
+    if(isLoggedIn) {
+      dispatch(logoutThunk()).unwrap()
+        .then(() => {
+          toast.success('로그아웃 되었습니다.');
+          navigate("/");
+        })
+        .catch((error) => {
+          toast.error("로그아웃 중 오류가 발생했습니다.")
+        })
+    } else {
+      navigate("/login");
+    }
+  }
 
   return(
     <>
@@ -79,7 +100,7 @@ export default function HeaderMobile() {
             {/* <span className="header-mobile-icon-text">한국어</span> */}
             <Globe size={20} />
           </div>
-          <div className="header-mobile-icon-wrapper" onClick={() => { navigate('/login') }}>
+          <div className="header-mobile-icon-wrapper" onClick={() => handleAccount()}>
             {/* <span className="header-mobile-icon-text">로그인</span> */}
             {
               isLoggedIn 
