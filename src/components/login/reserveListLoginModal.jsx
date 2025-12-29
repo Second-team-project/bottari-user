@@ -32,16 +32,32 @@ export default function ReserveListLoginModal({ modalFlgFasle }) {
   function handleGuestLookup(e) {
     e.preventDefault();
 
-    if (!inputs.code || !inputs.password) {
+    const code = inputs.code.toUpperCase().trim();
+    const password = inputs.password.trim();
+
+    if (!code || !password) {
+      toast.error('예약코드와 비밀번호를 입력해주세요.')
       return;
     }
 
-    dispatch(guestReservation(inputs)).unwrap()
+    const firstChar = code.charAt(0);
+    const secondChar = code.charAt(1);
+
+    if (!['D', 'S'].includes(firstChar) || !['G', 'M'].includes(secondChar)) {
+      toast.error('예약코드와 비밀번호를 다시 확인해 주세요.');
+      return;
+    }
+
+    dispatch(guestReservation({
+      code: code,
+      password: password
+    })).unwrap()
       .then(() => {
         modalFlgFasle();
       })
       .catch(err => {
         toast.error('예약 조회에 실패했습니다. 다시 시도해 주세요.')
+        console.error('게스트 예약 조회 실패: ', err)
       })
   }
 

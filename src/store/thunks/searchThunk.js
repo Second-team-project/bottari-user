@@ -15,9 +15,10 @@ export const searchLocationThunk = createAsyncThunk(
         }
       )
       
-      console.log('response: ', response.data)
+      console.log('thunk-search1: ', response)
+      console.log('thunk-search2: ', response.data.data)
 
-      return response.data;
+      return response.data.data;
       
     } catch (error) {
       return rejectWithValue(error);

@@ -223,10 +223,12 @@ export default function ReserveStorage() {
   // 2. 결제 페이지로 넘어가기 & 유효성 검사
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const fullEmail = `${emailId}@${emailDomain}`.trim();
-
+  
   function handleNext() {
     // formData = 로컬state 생성
     const formData = createFormData();
+    const diffTime = new Date(formData.endedAt).getTime() - new Date(formData.startedAt).getTime();
+    const maxTime = 7 * 24 * 60 * 60 * 1000;
 
     // 2-1. 유효성 검사
     if(!formData.userName) {
@@ -266,6 +268,10 @@ export default function ReserveStorage() {
     }
     if (new Date(formData.startedAt) >= new Date(formData.endedAt)) {
       toast.error('찾을 시간은 맡길 시간 이후여야 합니다.');
+      return;
+    }
+    if (diffTime > maxTime) {
+      toast.error('최대 보관 기간은 7일입니다.');
       return;
     }
     if(!formData.store) {

@@ -120,6 +120,7 @@
   cursor: pointer;
 }
 .header-web-icon-text {
+  width: 36px;
   font-size: 10px;
 }
 

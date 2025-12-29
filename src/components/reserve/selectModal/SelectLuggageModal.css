@@ -38,6 +38,7 @@
   flex-direction: column;
   gap: 0.5rem;
 }
+
 /* 선택 영역 */
 .select-luggage-modal-select-container {
   border: 1px solid var(--bottari-coolgray);

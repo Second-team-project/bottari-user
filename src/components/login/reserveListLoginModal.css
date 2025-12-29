@@ -53,6 +53,8 @@
   width: 100%;
   display: flex;
   justify-content: flex-end;
+
+  cursor: pointer;
 }
 
 /* 유도 문구 */

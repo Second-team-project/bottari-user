@@ -13,8 +13,8 @@ const slice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setLoading(state) {
-      state.loading = true;
+    setLoading(state, action) {
+      state.loading = action.payload;
     },
     clearAuth(state) {
       state.accessToken = null,
@@ -24,7 +24,7 @@ const slice = createSlice({
   },
   extraReducers: builder => {
     builder
-      .addCase(reissueThunk.pending, (state, action) => {
+      .addCase(reissueThunk.pending, (state) => {
         state.loading = true;
       })
       .addCase(reissueThunk.fulfilled, (state, action) => {

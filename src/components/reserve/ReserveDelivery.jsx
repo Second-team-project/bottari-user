@@ -57,7 +57,9 @@ export default function ReserveDelivery() {
   // =====  주소 설정용
   const [locationModalFlg, setLocationModalFlg] = useState(false);
   const [startLocation, setStartLocation] = useState(savedData?.startedAddr || '');
+  const [startDetail, setStartDetail] = useState('');
   const [endLocation, setEndLocation] = useState(savedData?.endedAddr || '');
+  const [endDetail, setEndDetail] = useState('');
   const [locationType, setLocationType] = useState(null);
 
   // ===== 짐 설정용 
@@ -71,7 +73,9 @@ export default function ReserveDelivery() {
   useEffect(() => {
     if(!savedData && user) {
       // 작성&저장한 데이터가 없고, user 가 있을 경우
-      if(!name && user.userName) setName(user.userName || '');
+      if(!name && user.userName){
+        setName(user.userName || '');
+      } 
       if (!emailId && user.email) {
         const { id, domain } = handleEmail(user.email || '');
         if(id) setEmailId(id);
@@ -458,11 +462,20 @@ export default function ReserveDelivery() {
                 <span className="reserve-form-essential">*</span>
                 <label htmlFor="send-location" className="reserve-form-content-name">픽업 장소 :</label>
                 <div className="reserve-form-content-input-wrapper">
+                  {/* 주소 검색 */}
                   <div className="reserve-form-content-input-div"
                     onClick={ () => { setLocationModalFlg(true); setLocationType('start'); }}
                   >{startLocation ? <span style={{color: '#000'}}>{startLocation}</span> : <span>주소를 선택하세요</span>}</div>
                   <span className="reserve-form-content-input-x"
                     onClick={() => setStartLocation('')}
+                  ><X size={24}/></span>
+                  {/* 상세 주소 */}
+                  <input className="reserve-form-content-input"
+                    placeholder="상세 주소"
+                  />
+                    {/* {startLocation ? <span style={{color: '#000'}}>{startLocation}</span> : <span>주소를 선택하세요</span>}</ㅑ> */}
+                  <span className="reserve-form-content-input-x"
+                    // onClick={() => setStartLocation('')}
                   ><X size={24}/></span>
                 </div>
               </div>
@@ -471,11 +484,20 @@ export default function ReserveDelivery() {
                 <span className="reserve-form-essential">*</span>
                 <label htmlFor="recieve-location" className="reserve-form-content-name">도착 장소 :</label>
                 <div className="reserve-form-content-input-wrapper">
+                  {/* 주소 검색 */}
                   <div className="reserve-form-content-input-div"
                     onClick={ () => { setLocationModalFlg(true); setLocationType('end'); }}
                   >{endLocation ? <span style={{color: '#000'}}>{endLocation}</span> : <span>주소를 선택하세요</span>}</div>
                   <span className="reserve-form-content-input-x"
                     onClick={() => setEndLocation('')}
+                  ><X size={24}/></span>
+                  {/* 상세 주소 */}
+                  <input className="reserve-form-content-input"
+                    placeholder="상세 주소"
+                  />
+                    {/* {startLocation ? <span style={{color: '#000'}}>{startLocation}</span> : <span>주소를 선택하세요</span>}</ㅑ> */}
+                  <span className="reserve-form-content-input-x"
+                    // onClick={() => setStartLocation('')}
                   ><X size={24}/></span>
                 </div>                  
               </div>

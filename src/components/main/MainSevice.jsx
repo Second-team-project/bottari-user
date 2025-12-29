@@ -1,13 +1,10 @@
-import "./Main.css";
+import "./MainService.css";
 import banner from "/main.jpg";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import MainBanner from "./MainBanner.jsx";
-import MainEvent from "./MainEvent.jsx";
-import MainService from "./MainSevice.jsx";
 
-export default function Main() {
+export default function MainService() {
   // TODO: 백엔드에서 이벤트 목록 가져오기
   const [currentEvent, setCurrentEvent] = useState(0);
   const events = [
@@ -38,15 +35,24 @@ export default function Main() {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
     >
-      {/* 메인 배너 */}
-      <MainBanner />
-
-      {/* 이벤트 슬라이더 */}
-      <MainEvent />
 
       {/* 서비스 소개 */}
-      <MainService />
-
+      <div className="main-service-container">
+        <h2 className="main-service-title">보따리 서비스</h2>
+        <div className="main-service-list">
+          {serviceInfos.map((info) => (
+            <div key={info.id} className="main-service-item">
+              <div className="main-service-image">
+                {/* TODO: 백엔드에서 이미지 가져오기 */}
+                <span>{info.title}</span>
+              </div>
+              <h3>{info.title}</h3>
+              <p>{info.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      
     </motion.div>
   );
 }

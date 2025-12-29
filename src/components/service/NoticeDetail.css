@@ -1,0 +1,112 @@
+/* 불투명 배경 */
+.notice-detail-background {
+  width: 100%;
+  max-width: 1024px;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  z-index: 15;  
+}
+
+/* 흰 부분 컨테이너 */
+.notice-detail-container {
+  width: 90%;
+  max-width: 900px;
+  height: 80vh;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1.3rem 1.3rem;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  z-index: 16;
+}
+@media (min-width: 769px) {
+  .notice-detail-container {
+    width: 85%;
+    max-width: 900px;
+    height: 70vh;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 1.3rem 5.3rem;
+  
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+  
+    z-index: 16;
+  }
+}
+
+/* 닫기 버튼 */
+.notice-detail-x {
+  color: var(--bottari-gray);
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+
+  cursor: pointer;
+}
+
+/* 제목 */
+.notice-detail-title {
+  color: var(--bottari-navy);
+}
+.notice-detail-header-wrapper {
+  width: 100%;
+  
+  color: var(--bottari-gray);
+  font-size: 0.8rem;
+  padding: 1% 3%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+/* 가로줄 */
+.notice-detail-line {
+  /* width: 80%; */
+  border: 1px solid var(--bottari-coolgray);
+  margin: 0 auto;
+}
+
+/* 본문 */
+.notice-detail-content-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.notice-detail-content-wrapper {
+  width: 100%;
+
+  font-size: 0.95rem;
+  line-height: 1.6;
+  padding: 4% 5%;
+  margin: 0 auto;
+
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+@media (min-width: 769px) {
+  .notice-detail-content-wrapper {
+    width: 100%;
+
+    font-size: 1rem;
+    line-height: 2;
+
+    padding: 5% 8%;
+    margin: 0 auto;
+    white-space: pre-wrap;
+    word-break: keep-all;
+  }
+}

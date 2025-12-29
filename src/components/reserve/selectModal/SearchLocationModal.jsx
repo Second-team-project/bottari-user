@@ -1,7 +1,7 @@
 import "./SearchLocationModal.css";
 
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { searchLocationThunk } from "../../../store/thunks/searchThunk.js"
 
@@ -29,10 +29,12 @@ export default function SearchLocationModal({ modalFlgFalse, setLocation, locati
   // ||     주소 검색용     ||
   // ===== local state
   const [keyword, setKeyword] = useState(location || '');
+  const [isEnd, setIsEnd] = useState(true);
   const [page, setPage] = useState(1);
   const [resultList, setResultList] = useState(null);
 
   // ===== 검색
+  // === 첫번째 검색
   const firstSearch = async (keyword) => {
     // 유효성 검사
     if(!keyword || keyword.trim() === '') {
@@ -48,18 +50,37 @@ export default function SearchLocationModal({ modalFlgFalse, setLocation, locati
     setPage(1);  // 검색할 때마다 page 1로 초기화
 
     const result = await dispatch(searchLocationThunk({ keyword, page: 1}));
+
+    if (searchLocationThunk.fulfilled.match(result)) {
+      const { list, isEnd } = result.payload; // 구조 분해 할당
+
+      if (list.length === 0) {
+        toast.error('검색 결과가 없습니다');
+      }
+
+      setResultList(list); // 덮어쓰기
+      setIsEnd(isEnd);     // 버튼 표시 여부 업데이트
+
+    } else {
     // 백엔드 에러 처리
-    if(result.error) {
+
       // setErrorMsg(result.payload?.response?.data?.message || '검색 중 오류가 발생했습니다');
       toast.error('검색 중 오류가 발생했습니다')
-      return;
-    }
-    // 백엔드 에러 없으면 list 담기
-    setResultList(result.payload.data);
-    if(result.payload.data < 1) {
-      toast.error('검색 결과가 없습니다')
     }
   };
+
+  // === 더보기 검색
+  const loadMore = async () => {
+    const nextPage = page + 1;
+    const result = await dispatch(searchLocationThunk({ keyword, page: nextPage }));
+
+    if (searchLocationThunk.fulfilled.match(result)) {
+      const { list, isEnd } = result.payload;
+      setResultList(prev => [...prev, ...list]); // 기존 목록 뒤에 붙이기
+      setPage(nextPage);
+      setIsEnd(isEnd);
+    }
+  }
 
   // ===== 검색어 선택
   function selectSearch(keyword) {
@@ -87,6 +108,7 @@ export default function SearchLocationModal({ modalFlgFalse, setLocation, locati
 
         {/* 검색 영역 */}
         <div className="search-location-modal-input-wrapper">
+          {/* 검색 입력칸 */}
           <input 
             type="text" 
             className="reserve-form-content-input" 
@@ -117,6 +139,16 @@ export default function SearchLocationModal({ modalFlgFalse, setLocation, locati
                 <span>( {item.address_name} )</span>
               </div>
             ))
+          }
+
+          {/* 더보기 버튼 */}
+          {
+            resultList && resultList.length > 0 && !isEnd && (
+              <button
+                className="search-location-modal-result-wrapper search-location-modal-more-search"
+                onClick={loadMore}
+              >더보기</button>
+            )
           }
         </div>
 
