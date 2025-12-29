@@ -28,8 +28,8 @@ export default function TossCheckoutPage({ payData, password }) {
 
   // ===== 임시 저장용
   // console.log('체크아웃: ', payData)
-  console.log('임시 저장 값: ', {...payData, password})
   const draftReservation = {...payData, password}
+  console.log('임시 저장 값: ', draftReservation);
 
 
   // 1. 클라이언트키로 위젯 설정

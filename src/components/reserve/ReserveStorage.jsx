@@ -8,12 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 // ===== components
 import SelectLuggageModal from "./selectModal/SelectLuggageModal.jsx";
+import UserInfoSection from "./UserInfoSection.jsx";
 // ===== slices
 import { setStorageReserve } from "../../store/slices/reserveSlice.js";
 // ===== utils
 import { debounce } from "../../utils/debounceUtil.js";
-import { handlePhone } from "../../utils/handlePhone.js";
-import { handleEmail } from "../../utils/handleEmail.js";
 import { saveReserveSession } from "../../utils/sessionStorageUtil.js";
 import { getStores } from "../../store/thunks/storeThunk.js";
 // ===== icons
@@ -33,25 +32,12 @@ export default function ReserveStorage() {
   // ===== redux states
   const savedData = useSelector(state => state.reserve.storageReserve);
   const user = useSelector(state => state.auth.user);
-  
-  // ===== 개인 정보 설정용
-  const [name, setName] = useState(savedData?.userName || user?.userName || '');
-  
-  const { p1, p2, p3 } = handlePhone(savedData?.phone || user?.phone);
-  const [phone1, setPhone1] = useState(p1);
-  const [phone2, setPhone2] = useState(p2);
-  const [phone3, setPhone3] = useState(p3);
-  
+
+  // ===== 비밀번호 (비회원용, UserInfoSection에 전달)
   const [password, setPassword] = useState('');
   const [passwordChk, setPasswordChk] = useState('');
 
   const [notes, setNotes] = useState(savedData?.notes || '');
-
-  // ===== 이메일 설정용
-  const { id: initEmailId, domain: initEmailDomain } = handleEmail(savedData?.email || user?.email);
-  const [emailId, setEmailId] = useState(initEmailId);
-  const [emailDomain, setEmailDomain] = useState(initEmailDomain || 'naver.com');
-  const [isDomainInput, setIsDomainInput] = useState(false);
 
   // ===== 짐종류용
   const [luggageModalFlg, setLuggageModalFlg] = useState(false)
@@ -66,36 +52,6 @@ export default function ReserveStorage() {
   const [startDate, setStartDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null);
   const [endDate, setEndDate] = useState(savedData?.endedAt ? new Date(savedData.endedAt) : null);
 
-  
-  // ========================
-  // ||     휴대폰 번호     || 
-  // ========================
-  const handlePhone2 = e => {
-    const value = e.target.value.replace(/[^0-9]/g, "");
-    if (value.length <= 4) {
-      setPhone2(value)
-    };
-  }
-  const handlePhone3 = e => {
-    const value = e.target.value.replace(/[^0-9]/g, "");
-    if (value.length <= 4) {
-      setPhone3(value)
-    };
-  }
-  
-  // ===================
-  // ||     이메일     || 
-  // ===================
-  const handleDomainSelect = e => {
-    const value = e.target.value;
-    if(value === 'type') {
-      setEmailDomain('');
-      setIsDomainInput(true);
-    } else {
-      setIsDomainInput(false);
-      setEmailDomain(value);
-    }
-  }
   
   // ===================
   // ||     보관소     || 
@@ -181,19 +137,34 @@ export default function ReserveStorage() {
   // ||     결제 페이지로     ||
   // ==========================
 
-  // 1. 디바운스 redux 저장
-  // 1-1. formData 생성
-  const createFormData = () => {
-    const phone = (phone2 && phone3) ? `${phone1}${phone2}${phone3}`.trim() : '';
+  // ===== savedData 최신값 참조용 (무한루프 방지)
+  const savedDataRef = useMemo(() => ({ current: savedData }), []);
+  useEffect(() => {
+    savedDataRef.current = savedData;
+  }, [savedData]);
 
-    return ({
+  // 1. 디바운스 redux 저장 (보관 정보만 - 내 정보는 UserInfoSection에서 저장)
+  // 1-1. 디바운싱 적용 함수 생성
+  const saveToRedux = useMemo(() => {
+    const debounceFunc = debounce((storageInfoData) => {
+      const updatedData = {
+        ...savedDataRef.current,
+        ...storageInfoData,
+      };
+      dispatch(setStorageReserve(updatedData));
+      console.log('보관예약 - 보관정보 redux 저장: ', storageInfoData);
+    }, 1000);
+
+    return debounceFunc;
+  }, [dispatch]);
+
+  // 1-2. 보관 정보 변경될 때마다 saveToRedux 실행
+  useEffect(() => {
+    saveToRedux({
       type: 'STORAGE',
       userId: user?.id || null,
       userType: user ? 'MEMBER' : 'GUEST',
       savedAt: new Date().toISOString(),
-      userName: name.trim(),
-      email: `${emailId}@${emailDomain}`.trim(),
-      phone: phone,
       startedAt: startDate ? startDate.toISOString() : null,
       endedAt: endDate ? endDate.toISOString() : null,
       store: storageStore.trim(),
@@ -202,67 +173,70 @@ export default function ReserveStorage() {
       notes: notes.trim(),
       price: totalPrice,
     });
-  };
-  // 1-2. 디바운싱 적용 함수 생성 : useCallback -> useMemo 로 변경
-    const saveToRedux = useMemo(() => {
-      const debounceFunc =
-      debounce((data) => {
-        dispatch(setStorageReserve(data));
-        console.log('보관예약 - redux 저장: ', data);
-      }, 1000);   // 1초 후 저장
-    
-      return debounceFunc;
-    }, [dispatch] ) // dispatch 바뀔 때만 재생성 : data 변경 시엔 재생성x 
-
-  // 1-3. formData 변경될 때마다 saveToRedux 실행
-  useEffect(() => {
-    const formData = createFormData();
-    saveToRedux(formData);  // 디바운싱 적용!
-  }, [name, emailId, emailDomain, phone1, phone2, phone3, password, startDate, endDate, storageStore, luggageList, notes, saveToRedux]);
+  }, [startDate, endDate, storageStore, storageStoreId, luggageList, notes, totalPrice, saveToRedux]);
 
   // 2. 결제 페이지로 넘어가기 & 유효성 검사
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const fullEmail = `${emailId}@${emailDomain}`.trim();
-  
+
   function handleNext() {
-    // formData = 로컬state 생성
-    const formData = createFormData();
-    const diffTime = new Date(formData.endedAt).getTime() - new Date(formData.startedAt).getTime();
+    // 최종 formData 생성 (redux의 내 정보 + 로컬 state의 보관 정보)
+    const formData = {
+      // 내 정보 (UserInfoSection에서 redux에 저장한 값)
+      userName: savedData?.userName || '',
+      email: savedData?.email || '',
+      phone: savedData?.phone || '',
+      // 보관 정보
+      type: 'STORAGE',
+      userId: user?.id || null,
+      userType: user ? 'MEMBER' : 'GUEST',
+      savedAt: new Date().toISOString(),
+      startedAt: startDate ? startDate.toISOString() : null,
+      endedAt: endDate ? endDate.toISOString() : null,
+      store: storageStore.trim(),
+      storeId: storageStoreId,
+      luggageList: luggageList,
+      notes: notes.trim(),
+      price: totalPrice,
+    };
+
+    const diffTime = formData.endedAt && formData.startedAt
+      ? new Date(formData.endedAt).getTime() - new Date(formData.startedAt).getTime()
+      : 0;
     const maxTime = 7 * 24 * 60 * 60 * 1000;
 
     // 2-1. 유효성 검사
-    if(!formData.userName) {
-      toast.error('이름을 입력해주세요')
+    if (!formData.userName) {
+      toast.error('이름을 입력해주세요');
       return;
     }
-    if(!emailId || !emailDomain) {
-      toast.error('이메일 주소를 모두 입력해주세요');
+    if (!formData.email || !formData.email.includes('@')) {
+      toast.error('이메일 주소를 입력해주세요');
       return;
     }
-    if(!emailRegex.test(fullEmail)) {
+    if (!emailRegex.test(formData.email)) {
       toast.error('올바른 이메일 형식이 아닙니다');
       return;
     }
-      // 2-1-1. 유저가 아닌 경우만 비밀번호 체크
-    if(!user) {
-      if(!password || password.trim().length < 4 ) {
+    // 2-1-1. 유저가 아닌 경우만 비밀번호 체크
+    if (!user) {
+      if (!password || password.trim().length < 4) {
         toast.error('비밀번호를 4자리 이상 입력해주세요');
         return;
       }
-      if(!passwordChk || password.trim().length < 4 ) {
+      if (!passwordChk || passwordChk.trim().length < 4) {
         toast.error('비밀번호를 확인 해주세요');
         return;
       }
-      if(password !== passwordChk ) {
+      if (password !== passwordChk) {
         toast.error('비밀번호가 일치하지 않습니다.');
         return;
       }
     }
-    if(!formData.startedAt) {
+    if (!formData.startedAt) {
       toast.error('맡길 시간을 선택해주세요');
       return;
     }
-    if(!formData.endedAt) {
+    if (!formData.endedAt) {
       toast.error('찾을 시간을 선택해주세요');
       return;
     }
@@ -274,11 +248,11 @@ export default function ReserveStorage() {
       toast.error('최대 보관 기간은 7일입니다.');
       return;
     }
-    if(!formData.store) {
+    if (!formData.store) {
       toast.error('보관소를 선택해주세요');
       return;
     }
-    if(!formData.luggageList || formData.luggageList.length === 0) {
+    if (!formData.luggageList || formData.luggageList.length === 0) {
       toast.error('보따리 종류를 선택해주세요');
       return;
     }
@@ -287,7 +261,7 @@ export default function ReserveStorage() {
     // 2-3. sessionStorage에도 저장 (새로고침 대비, password는 보안상 저장 안함)
     saveReserveSession({ data: formData, type: 'STORAGE' });
     // 2-4. 결제 페이지로 이동
-    navigate('/reserve/confirm', { state: { type: 'STORAGE', password: password.trim(), } });
+    navigate('/reserve/confirm', { state: { type: 'STORAGE', password: password.trim() } });
   }
 
 
@@ -318,115 +292,13 @@ export default function ReserveStorage() {
         <div className="reserve-form-body">
 
           {/* 내 정보 입력 */}
-          <div className="reserve-form-content-container">
-            <div className="reserve-form-content-title">
-              <h3>내 정보</h3>
-            </div>
-            <div className="reserve-form-content-wrapper">
-              {/* 이름 */}
-              <div className="reserve-form-content">
-                <span className="reserve-form-essential">*</span>
-                <label className="reserve-form-content-name">이름 :</label>
-                <input type="text" className="reserve-form-content-input" 
-                  placeholder="보따리" 
-                  value={name}
-                  onChange={ (e) => setName(e.target.value) }
-                  onBlur={ (e) => setName(e.target.value.trim()) }
-                />
-              </div>
-              {/* 이메일 */}
-              <div className="reserve-form-content">
-                <span className="reserve-form-essential">*</span>
-                <label className="reserve-form-content-name">이메일 :</label>
-                <div className="reserve-form-email-input-wrapper">
-                  <input type="text" className="reserve-form-email-input" 
-                    placeholder="아이디"
-                    value={emailId}
-                    onChange={e => setEmailId(e.target.value)}
-                  />
-                  <span className="reserve-form-email-at">@</span>
-                  {
-                    !isDomainInput ? (
-                      <select name="email-domain" id="email-domain" className="reserve-form-email-input"
-                      value={emailDomain}
-                      onChange={handleDomainSelect}
-                      >
-                        <option value="naver.com">naver.com</option>
-                        <option value="gmail.com">gmail.com</option>
-                        <option value="daum.net">daum.net</option>
-                        <option value="type">직접 입력</option>
-                      </select>
-                    ) : (
-                      <input type="text" className="reserve-form-email-input" 
-                        placeholder="도메인"
-                        value={emailDomain}
-                        onChange={e => setEmailDomain(e.target.value)}
-                      />
-                    )
-                  }
-                </div>
-              </div>
-              {/* 휴대폰 */}
-              <div className="reserve-form-content">
-                <span className="reserve-form-essential">{' '}</span>
-                <label htmlFor="phone" className="reserve-form-content-name">휴대폰 :</label>
-                <div className="reserve-form-phone-input-wrapper">
-                  <select name="phone1" id="phone1" className="reserve-form-phone-input" 
-                    value={phone1}
-                    onChange={(e) => setPhone1(e.target.value)}
-                  >
-                    <option value={'010'}>010</option>
-                    <option value={'011'}>011</option>
-                    <option value={'016'}>016</option>
-                  </select>
-                  <span className="reserve-form-phone-dash">-</span>
-                  <input type="text" className="reserve-form-phone-input" 
-                    value={phone2}
-                    onChange={handlePhone2}
-                    placeholder="0000"
-                    inputMode="numeric"
-                  />
-                  <span className="reserve-form-phone-dash">-</span>
-                  <input type="text" className="reserve-form-phone-input" 
-                    value={phone3}
-                    onChange={handlePhone3}
-                    placeholder="0000"
-                    inputMode="numeric"
-                  />
-                </div>
-              </div>
-              {
-                !user && (
-                  <>
-                    {/* 비밀번호 */}
-                    <div className="reserve-form-content">
-                      <span className="reserve-form-essential">*</span>
-                      <label className="reserve-form-content-name">비밀번호 :</label>
-                      <input type="password" className="reserve-form-content-input" 
-                        placeholder="4글자 이상 입력 해주세요" 
-                        onChange={ (e) => setPassword(e.target.value) }
-                        onBlur={ (e) => setPassword(e.target.value.trim()) }
-                      />
-                    </div>
-                    {/* 비밀번호 확인 */}
-                    <div className="reserve-form-content">
-                      <span className="reserve-form-essential">*</span>
-                      <label htmlFor="password" className="reserve-form-content-name">비밀번호 확인 :</label>
-                      <input type="password" className="reserve-form-content-input" 
-                        placeholder="비밀번호 한 번 더 입력" 
-                        onChange={ (e) => setPasswordChk(e.target.value) }
-                        onBlur={ (e) => setPasswordChk(e.target.value.trim()) }
-                      />
-                    </div>
-                    {/* 안내문구  */}
-                    <div className="reserve-form-content-notice">
-                      <span className="reserve-form-content-notice-text"><span className="reserve-form-essential">*</span>비밀번호는 예약을 조회할 때 사용됩니다</span>
-                    </div>
-                  </>
-                )
-              }
-            </div>
-          </div>
+          <UserInfoSection
+            type="STORAGE"
+            password={password}
+            setPassword={setPassword}
+            passwordChk={passwordChk}
+            setPasswordChk={setPasswordChk}
+          />
 
           {/* 보따리 정보 입력 */}
           <div className="reserve-form-content-container">

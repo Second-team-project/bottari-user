@@ -48,16 +48,16 @@
   font-weight: 600;
 
   min-height: 40px;
-  margin: 1px 0;
+  margin: 0.1rem 0;
   
   display: flex;
   justify-content: flex-start;
-  align-items: center;
-
+  align-items: flex-start;
 }
 .reserve-form-content-name {
   min-width: 88px;
   font-size: 0.9rem;
+  margin-top: 2%;
 }
 @media (min-width: 769px) {
   .reserve-form-content-name {
@@ -65,6 +65,7 @@
     font-size: 1rem;
   }
 }
+
 .reserve-form-essential {
   color: var(--bottari-deeppink);
   width: 7px;

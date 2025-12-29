@@ -8,12 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 // ===== components
 import SearchLocationModal from "./selectModal/SearchLocationModal.jsx";
 import SelectLuggageModal from "./selectModal/SelectLuggageModal.jsx";
+import UserInfoSection from "./UserInfoSection.jsx";
 // ===== slices
 import { setDeliveryReserve } from "../../store/slices/reserveSlice.js";
 // ===== utils
 import { debounce } from "../../utils/debounceUtil.js";
-import { handlePhone } from "../../utils/handlePhone.js";
-import { handleEmail } from "../../utils/handleEmail.js";
 import { saveReserveSession } from "../../utils/sessionStorageUtil.js";
 // ===== icons
 import { X } from 'lucide-react';
@@ -35,90 +34,26 @@ export default function ReserveDelivery() {
   const savedData = useSelector(state => state.reserve.deliveryReserve);
   const user = useSelector(state => state.auth.user);
 
-  // ===== 개인 정보 설정용
-  const [name, setName] = useState(savedData?.userName || user?.userName || '');
-  
-  const { p1, p2, p3 } = handlePhone(savedData?.phone || user?.phone);
-  const [phone1, setPhone1] = useState(p1);
-  const [phone2, setPhone2] = useState(p2);
-  const [phone3, setPhone3] = useState(p3);
-  
+  // ===== 비밀번호 (비회원용, UserInfoSection에 전달)
   const [password, setPassword] = useState('');
   const [passwordChk, setPasswordChk] = useState('');
-  
-  const [notes, setNotes] = useState(savedData?.notes || '');
-  
-  // ===== 이메일 설정용
-  const { id: initEmailId, domain: initEmailDomain } = handleEmail(savedData?.email || user?.email);
-  const [emailId, setEmailId] = useState(initEmailId);
-  const [emailDomain, setEmailDomain] = useState(initEmailDomain || 'naver.com');
-  const [isDomainInput, setIsDomainInput] = useState(false);
 
-  // =====  주소 설정용
+  const [notes, setNotes] = useState(savedData?.notes || '');
+
+  // ===== 주소 설정용 (객체 형태: { addr, addrDetail })
   const [locationModalFlg, setLocationModalFlg] = useState(false);
-  const [startLocation, setStartLocation] = useState(savedData?.startedAddr || '');
-  const [startDetail, setStartDetail] = useState('');
-  const [endLocation, setEndLocation] = useState(savedData?.endedAddr || '');
-  const [endDetail, setEndDetail] = useState('');
   const [locationType, setLocationType] = useState(null);
+  const [startAddr, setStartAddr] = useState(savedData?.startedAddr?.addr || '');
+  const [startAddrDetail, setStartAddrDetail] = useState(savedData?.startedAddr?.addrDetail || '');
+  const [endAddr, setEndAddr] = useState(savedData?.endedAddr?.addr || '');
+  const [endAddrDetail, setEndAddrDetail] = useState(savedData?.endedAddr?.addrDetail || '');
 
   // ===== 짐 설정용 
   const [luggageModalFlg, setLuggageModalFlg] = useState(false)
   const [luggageList, setLuggageList] = useState(savedData?.luggageList || [])
 
   // ===== 달력 커스텀용 & 픽업 일시
-  const [pickupDate, setPickupDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null); // 픽업 날짜 
-
-  // ===== reudux 에서 데이터 불러오는데 시간이 걸릴 경우 대비
-  useEffect(() => {
-    if(!savedData && user) {
-      // 작성&저장한 데이터가 없고, user 가 있을 경우
-      if(!name && user.userName){
-        setName(user.userName || '');
-      } 
-      if (!emailId && user.email) {
-        const { id, domain } = handleEmail(user.email || '');
-        if(id) setEmailId(id);
-        if(domain) setEmailDomain(domain);
-      }
-      if (!phone2 && !phone3 && user.phone) {
-        const { p1, p2, p3 } = handlePhone(user.phone || '');
-        if(p1) setPhone1(p1);
-        if(p2) setPhone2(p2);
-        if(p3) setPhone3(p3);
-      }
-    }
-  }, [user, savedData]);
-
-  // ========================
-  // ||     휴대폰 번호     || 
-  // ========================
-  const handlePhone2 = e => {
-    const value = e.target.value.replace(/[^0-9]/g, "");
-    if (value.length <= 4) {
-      setPhone2(value)
-    };
-  }
-  const handlePhone3 = e => {
-    const value = e.target.value.replace(/[^0-9]/g, "");
-    if (value.length <= 4) {
-      setPhone3(value)
-    };
-  }
-
-  // ===================
-  // ||     이메일     || 
-  // ===================
-  const handleDomainSelect = e => {
-    const value = e.target.value;
-    if(value === 'type') {
-      setEmailDomain('');
-      setIsDomainInput(true);
-    } else {
-      setIsDomainInput(false);
-      setEmailDomain(value);
-    }
-  }
+  const [pickupDate, setPickupDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null);
 
   // ====================
   // ||     짐 요금     || 
@@ -155,107 +90,119 @@ export default function ReserveDelivery() {
   // ==========================
   // ||     결제 페이지로     ||
   // ==========================
-  
-  // 1. 디바운스 redux 저장
-  // 1-1. formData 생성
-  const createFormData = () => {
-    const phone = (phone2 && phone3) ? `${phone1}${phone2}${phone3}`.trim() : '';
 
-    return ({
+  // ===== savedData 최신값 참조용 (무한루프 방지)
+  const savedDataRef = useMemo(() => ({ current: savedData }), []);
+  useEffect(() => {
+    savedDataRef.current = savedData;
+  }, [savedData]);
+
+  // 1. 디바운스 redux 저장 (배송 정보만 - 내 정보는 UserInfoSection에서 저장)
+  const saveToRedux = useMemo(() => {
+    const debounceFunc = debounce((deliveryInfoData) => {
+      const updatedData = {
+        ...savedDataRef.current,
+        ...deliveryInfoData,
+      };
+      dispatch(setDeliveryReserve(updatedData));
+      console.log('배송예약 - 배송정보 redux 저장: ', deliveryInfoData);
+    }, 1000);
+
+    return debounceFunc;
+  }, [dispatch]);
+
+  // 1-2. 배송 정보 변경될 때마다 saveToRedux 실행
+  useEffect(() => {
+    saveToRedux({
       type: 'DELIVERY',
       userId: user?.id || null,
       userType: user ? 'MEMBER' : 'GUEST',
       savedAt: new Date().toISOString(),
-      userName: name.trim(),
-      email: `${emailId}@${emailDomain}`.trim(),
-      phone: phone,
       startedAt: pickupDate ? pickupDate.toISOString() : null,
-      startedAddr: startLocation.trim(),
-      endedAddr: endLocation.trim(),
+      startedAddr: { addr: startAddr.trim(), addrDetail: startAddrDetail.trim() },
+      endedAddr: { addr: endAddr.trim(), addrDetail: endAddrDetail.trim() },
       luggageList: luggageList,
       notes: notes.trim(),
       price: totalPrice,
     });
-  };
+  }, [pickupDate, startAddr, startAddrDetail, endAddr, endAddrDetail, luggageList, notes, totalPrice, saveToRedux]);
 
-  // 1-2. 디바운싱 적용 함수 생성 : useCallback -> useMemo 로 변경
-  const saveToRedux = useMemo(() => {
-    const debounceFunc =
-    debounce((data) => {
-      dispatch(setDeliveryReserve(data));
-      console.log('배송예약 - redux 저장: ', data);
-    }, 1000);   // 1초 후 저장
-
-    return debounceFunc;
-  }, [dispatch] ) // dispatch 바뀔 때만 재생성 : data 변경 시엔 재생성x 
-
-  // 1-3. formData 변경될 때마다 saveToRedux 실행
-  useEffect(() => {
-    const formData = createFormData();
-    saveToRedux(formData);  // 디바운싱 적용!
-  }, [name, emailId, emailDomain, phone1, phone2, phone3, password, pickupDate, startLocation, endLocation, luggageList, notes, saveToRedux]);
-  
   // 2. 결제 페이지로 넘어가기 & 유효성 검사
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const fullEmail = `${emailId}@${emailDomain}`.trim();
 
   function handleNext() {
-    // formData = 로컬state 생성
-    const formData = createFormData();
+    // 최종 formData 생성 (redux의 내 정보 + 로컬 state의 배송 정보)
+    const formData = {
+      // 내 정보 (UserInfoSection에서 redux에 저장한 값)
+      userName: savedData?.userName || '',
+      email: savedData?.email || '',
+      phone: savedData?.phone || '',
+      // 배송 정보
+      type: 'DELIVERY',
+      userId: user?.id || null,
+      userType: user ? 'MEMBER' : 'GUEST',
+      savedAt: new Date().toISOString(),
+      startedAt: pickupDate ? pickupDate.toISOString() : null,
+      startedAddr: { addr: startAddr.trim(), addrDetail: startAddrDetail.trim() },
+      endedAddr: { addr: endAddr.trim(), addrDetail: endAddrDetail.trim() },
+      luggageList: luggageList,
+      notes: notes.trim(),
+      price: totalPrice,
+    };
 
     // 2-1. 유효성 검사
-    if(!formData.userName) {
-      toast.error('이름을 입력해주세요')
+    if (!formData.userName) {
+      toast.error('이름을 입력해주세요');
       return;
     }
-    if(!emailId || !emailDomain) {
-      toast.error('이메일 주소를 모두 입력해주세요');
+    if (!formData.email || !formData.email.includes('@')) {
+      toast.error('이메일 주소를 입력해주세요');
       return;
     }
-    if(!emailRegex.test(fullEmail)) {
+    if (!emailRegex.test(formData.email)) {
       toast.error('올바른 이메일 형식이 아닙니다');
       return;
     }
-      // 2-1-1. 유저가 아닌 경우만 비밀번호 체크
-    if(!user) {
-      if(!password || password.trim().length < 4 ) {
+    // 2-1-1. 유저가 아닌 경우만 비밀번호 체크
+    if (!user) {
+      if (!password || password.trim().length < 4) {
         toast.error('비밀번호를 4자리 이상 입력해주세요');
         return;
       }
-      if(!passwordChk || passwordChk.trim().length < 4 ) {
+      if (!passwordChk || passwordChk.trim().length < 4) {
         toast.error('비밀번호를 확인 해주세요');
         return;
       }
-      if(password !== passwordChk ) {
+      if (password !== passwordChk) {
         toast.error('비밀번호가 일치하지 않습니다.');
         return;
       }
     }
-    if(!formData.startedAt) {
+    if (!formData.startedAt) {
       toast.error('픽업 시간을 선택해주세요');
       return;
     }
-    if(!formData.startedAddr) {
+    if (!formData.startedAddr.addr) {
       toast.error('픽업 장소를 선택해주세요');
       return;
     }
-    if (!formData.startedAddr.startsWith('대구')) {
+    if (!formData.startedAddr.addr.startsWith('대구')) {
       toast.error('픽업 장소는 대구 지역만 선택 가능합니다');
       return;
     }
-    if(!formData.endedAddr) {
+    if (!formData.endedAddr.addr) {
       toast.error('도착 장소를 선택해주세요');
       return;
     }
-    if (!formData.endedAddr.startsWith('대구')) {
+    if (!formData.endedAddr.addr.startsWith('대구')) {
       toast.error('도착 장소는 대구 지역만 선택 가능합니다');
       return;
     }
-    if(formData.startedAddr === formData.endedAddr) {
+    if (formData.startedAddr.addr === formData.endedAddr.addr) {
       toast.error('픽업 장소와 도착 장소는 달라야합니다');
       return;
     }
-    if(!formData.luggageList || formData.luggageList.length === 0) {
+    if (!formData.luggageList || formData.luggageList.length === 0) {
       toast.error('보따리 종류를 선택해주세요');
       return;
     }
@@ -264,7 +211,7 @@ export default function ReserveDelivery() {
     // 2-3. sessionStorage에도 저장 (새로고침 대비, password는 보안상 저장 안함)
     saveReserveSession({ data: formData, type: 'DELIVERY' });
     // 2-4. 결제 페이지로 이동
-    navigate('/reserve/confirm', { state: { type: 'DELIVERY', password: user ? null : password.trim(), } });
+    navigate('/reserve/confirm', { state: { type: 'DELIVERY', password: user ? null : password.trim() } });
   }
   
 
@@ -275,11 +222,11 @@ export default function ReserveDelivery() {
         {/* 장소 검색 모달 */}
         {
           locationModalFlg &&
-          <SearchLocationModal 
-            setLocation={locationType === 'start' ? setStartLocation : setEndLocation}
+          <SearchLocationModal
+            setLocation={locationType === 'start' ? setStartAddr : setEndAddr}
             modalFlgFalse={() => setLocationModalFlg(false)}
-            location={locationType === 'start' ? startLocation : endLocation}
-          /> 
+            location={locationType === 'start' ? startAddr : endAddr}
+          />
         }
         {/* 짐 선택 모달 */}
         {
@@ -301,116 +248,13 @@ export default function ReserveDelivery() {
         <div className="reserve-form-body">
 
           {/* 내 정보 입력 */}
-          <div className="reserve-form-content-container">
-            <div className="reserve-form-content-title">
-              <h3>내 정보</h3>
-            </div>
-            <div className="reserve-form-content-wrapper">
-              {/* 이름 */}
-              <div className="reserve-form-content">
-                <span className="reserve-form-essential">*</span>
-                <label htmlFor="name" className="reserve-form-content-name">이름:</label>
-                <input type="text" className="reserve-form-content-input" 
-                  placeholder="보따리"
-                  value={name}
-                  onChange={ (e) => setName(e.target.value) }
-                  onBlur={ (e) => setName(e.target.value.trim()) }
-                />
-              </div>
-              {/* 이메일 */}
-              <div className="reserve-form-content">
-                <span className="reserve-form-essential">*</span>
-                <label className="reserve-form-content-name">이메일 :</label>
-                <div className="reserve-form-email-input-wrapper">
-                  <input type="text" className="reserve-form-email-input" 
-                    placeholder="아이디"
-                    value={emailId}
-                    onChange={e => setEmailId(e.target.value)}
-                  />
-                  <span className="reserve-form-email-at">@</span>
-                  {
-                    !isDomainInput ? (
-                      <select name="email-domain" id="email-domain" className="reserve-form-email-input"
-                      value={emailDomain}
-                      onChange={handleDomainSelect}
-                      >
-                        <option value="naver.com">naver.com</option>
-                        <option value="gmail.com">gmail.com</option>
-                        <option value="daum.net">daum.net</option>
-                        <option value="type">직접 입력</option>
-                      </select>
-                    ) : (
-                      <input type="text" className="reserve-form-email-input" 
-                        placeholder="도메인"
-                        value={emailDomain}
-                        onChange={e => setEmailDomain(e.target.value)}
-                      />
-                    )
-                  }
-                </div>
-              </div>
-              {/* 휴대폰 */}
-              <div className="reserve-form-content">
-                <span className="reserve-form-essential">{' '}</span>
-                <label htmlFor="phone" className="reserve-form-content-name">휴대폰 :</label>
-                <div className="reserve-form-phone-input-wrapper">
-                  <select name="phone1" id="phone1" className="reserve-form-phone-input" 
-                    value={phone1}
-                    onChange={(e) => setPhone1(e.target.value)}
-                  >
-                    <option value={'010'}>010</option>
-                    <option value={'011'}>011</option>
-                    <option value={'016'}>016</option>
-                  </select>
-                  <span className="reserve-form-phone-dash">-</span>
-                  <input type="text" className="reserve-form-phone-input" 
-                    value={phone2}
-                    onChange={handlePhone2}
-                    placeholder="0000"
-                    inputMode="numeric"
-                  />
-                  <span className="reserve-form-phone-dash">-</span>
-                  <input type="text" className="reserve-form-phone-input" 
-                    value={phone3}
-                    onChange={handlePhone3}
-                    placeholder="0000"
-                    inputMode="numeric"
-                  />
-                </div>
-              </div>
-              {
-                !user && (
-                  <>
-                    {/* 비밀번호 */}
-                    <div className="reserve-form-content">
-                      <span className="reserve-form-essential">*</span>
-                      <label htmlFor="password" className="reserve-form-content-name">비밀번호 :</label>
-                      <input type="password" className="reserve-form-content-input" 
-                        placeholder="4글자 이상 입력 해주세요" 
-                        onChange={ (e) => setPassword(e.target.value) }
-                        onBlur={ (e) => setPassword(e.target.value.trim()) }
-                      />
-                    </div>
-                    {/* 비밀번호 확인 */}
-                    <div className="reserve-form-content">
-                      <span className="reserve-form-essential">*</span>
-                      <label htmlFor="password" className="reserve-form-content-name">비밀번호 확인 :</label>
-                      <input type="password" className="reserve-form-content-input" 
-                        placeholder="비밀번호 한 번 더 입력" 
-                        onChange={ (e) => setPasswordChk(e.target.value) }
-                        onBlur={ (e) => setPasswordChk(e.target.value.trim()) }
-                      />
-                    </div>
-                    {/* 안내문구  */}
-                    <div className="reserve-form-content-notice">
-                      <span className="reserve-form-essential">*</span>
-                      <span className="reserve-form-content-notice-text">비밀번호는 예약을 조회할 때 사용됩니다</span>
-                    </div>
-                  </>
-                )
-              }
-            </div>
-          </div>
+          <UserInfoSection
+            type="DELIVERY"
+            password={password}
+            setPassword={setPassword}
+            passwordChk={passwordChk}
+            setPasswordChk={setPasswordChk}
+          />
 
           {/* 보따리 정보 입력 */}
           <div className="reserve-form-content-container">
@@ -452,55 +296,69 @@ export default function ReserveDelivery() {
                   />
                 </div>
               </div>
+
               {/* 안내문구  */}
               <div className="reserve-form-content-notice">
                 <span className="reserve-form-essential">*</span>
                 <span className="reserve-form-content-notice-text">보따리 운영시간 : 09시 ~ 21시</span>
               </div>
+
               {/* 픽업장소 */}
               <div className="reserve-form-content">
                 <span className="reserve-form-essential">*</span>
                 <label htmlFor="send-location" className="reserve-form-content-name">픽업 장소 :</label>
+                
                 <div className="reserve-form-content-input-wrapper">
                   {/* 주소 검색 */}
                   <div className="reserve-form-content-input-div"
-                    onClick={ () => { setLocationModalFlg(true); setLocationType('start'); }}
-                  >{startLocation ? <span style={{color: '#000'}}>{startLocation}</span> : <span>주소를 선택하세요</span>}</div>
+                    onClick={() => { setLocationModalFlg(true); setLocationType('start'); }}
+                  >{startAddr ? <span style={{color: '#000'}}>{startAddr}</span> : <span>주소를 선택하세요</span>}
+                  </div>
                   <span className="reserve-form-content-input-x"
-                    onClick={() => setStartLocation('')}
+                    onClick={() => { setStartAddr(''); setStartAddrDetail(''); }}
                   ><X size={24}/></span>
-                  {/* 상세 주소 */}
+
+                  {/* 상세주소 */}
                   <input className="reserve-form-content-input"
-                    placeholder="상세 주소"
+                    placeholder="상세 주소 (동/호수 등)"
+                    value={startAddrDetail}
+                    onChange={(e) => setStartAddrDetail(e.target.value)}
+                    onBlur={(e) => setStartAddrDetail(e.target.value.trim())}
                   />
-                    {/* {startLocation ? <span style={{color: '#000'}}>{startLocation}</span> : <span>주소를 선택하세요</span>}</ㅑ> */}
                   <span className="reserve-form-content-input-x"
-                    // onClick={() => setStartLocation('')}
+                    onClick={() => setStartAddrDetail('')}
                   ><X size={24}/></span>
                 </div>
               </div>
+              
               {/* 도착장소 */}
               <div className="reserve-form-content">
                 <span className="reserve-form-essential">*</span>
                 <label htmlFor="recieve-location" className="reserve-form-content-name">도착 장소 :</label>
+
                 <div className="reserve-form-content-input-wrapper">
                   {/* 주소 검색 */}
                   <div className="reserve-form-content-input-div"
-                    onClick={ () => { setLocationModalFlg(true); setLocationType('end'); }}
-                  >{endLocation ? <span style={{color: '#000'}}>{endLocation}</span> : <span>주소를 선택하세요</span>}</div>
+                    onClick={() => { setLocationModalFlg(true); setLocationType('end'); }}
+                  >{endAddr ? <span style={{color: '#000'}}>{endAddr}</span> : <span>주소를 선택하세요</span>}</div>
                   <span className="reserve-form-content-input-x"
-                    onClick={() => setEndLocation('')}
+                    onClick={() => { setEndAddr(''); setEndAddrDetail(''); }}
                   ><X size={24}/></span>
-                  {/* 상세 주소 */}
+
+                  {/* 상세주소 */}
                   <input className="reserve-form-content-input"
-                    placeholder="상세 주소"
+                    placeholder="상세 주소 (동/호수 등)"
+                    value={endAddrDetail}
+                    onChange={(e) => setEndAddrDetail(e.target.value)}
+                    onBlur={(e) => setEndAddrDetail(e.target.value.trim())}
                   />
-                    {/* {startLocation ? <span style={{color: '#000'}}>{startLocation}</span> : <span>주소를 선택하세요</span>}</ㅑ> */}
                   <span className="reserve-form-content-input-x"
-                    // onClick={() => setStartLocation('')}
+                    onClick={() => setEndAddrDetail('')}
                   ><X size={24}/></span>
-                </div>                  
+
+                </div>
               </div>
+            
               {/* 보따리 종류 */}
               <div className="reserve-form-content">
                 <span className="reserve-form-essential">*</span>

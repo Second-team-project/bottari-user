@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import CheckoutPage from './tosspayments/TossCheckout.jsx';
 import { getReserveSession } from "../../utils/sessionStorageUtil.js";
 import { setDeliveryReserve, setStorageReserve } from "../../store/slices/reserveSlice.js";
+import dayjs, { Dayjs } from "dayjs";
 
 export default function ReserveConfirm() {
   // ===== hooks
@@ -78,15 +79,16 @@ export default function ReserveConfirm() {
           <h2 className="reserve-confirm-title">결제하기</h2>
           {/* 비회원 새로고침 주의 문구 */}
           {thisData.userType === 'GUEST' && (
-            <p className="reserve-confirm-notice">* 새로고침 시 이전 페이지로 돌아갑니다.</p>
+            <p className="reserve-confirm-notice">* 내용 확인 후 결제를 진행해 주세요.</p>
           )}
         </div>
 
         <div className="reserve-form-content-container reserve-confirm-content-container">
           <div className="reserve-confirm-content-title">
-            <h3 className="reserve-confirm-content-title-h3">
-              <span className="reserve-confirm-content-text-pont">{thisData?.userName}</span>
-              님의 <span className="reserve-confirm-content-text-pont">{thisData?.type === 'DELIVERY' ? "배송" : "보관"}</span>내용</h3>
+            <span className="border-bottom-var-bottari-pink font-size-1-3-rem">{thisData?.userName}</span>
+            <span> 님의 </span>
+            <span className="border-bottom-var-bottari-pink font-size-1-3-rem">{thisData?.type === 'DELIVERY' ? "배송" : "보관"}</span>
+            <span> 내용 </span>
           </div>
 
           <div className="reserve-confirm-content-body">
@@ -107,86 +109,93 @@ export default function ReserveConfirm() {
               {/* 요청사항 */}
               <div className="reserve-confirm-data-wrapper">
                 <span className="reserve-confirm-data-key">요청사항</span>
+                <span className="reserve-confirm-data-value">{thisData?.notes}</span>
               </div>
-              <div className="reserve-confirm-data-value">
-                <span>{thisData?.notes}</span>
-              </div>
-
-            </div>
-
-            <div className="reserve-confirm-content-data-container">
 
               {/* 짐 정보 */}
               <div className="reserve-confirm-data-wrapper">
                 <span className="reserve-confirm-data-key">보따리</span>
-              </div>
-              {
-                thisData?.luggageList.map((luggage) => (
-                  <div className="reserve-confirm-data-value">
-                    <span>{luggage.itemType} ({luggage.itemSize}) {luggage.itemWeight} {luggage.count}개</span>
-                  </div>
-                ))
-              }
-
-              {/* ===== 배송 전용 항목 ===== */}
-              {thisData?.type === 'DELIVERY' && (
-                <>
-                  {/* 픽업 일시 */}
-                  <div className="reserve-confirm-data-wrapper">
-                    <span className="reserve-confirm-data-key">픽업</span>
-                  </div>
-                  <div className="reserve-confirm-data-value">
-                    <span>{thisData?.startedAt && new Date(thisData.startedAt).toLocaleString()}<span className="reserve-confirm-content-gray"></span></span>
-                  </div>
-                  <div className="reserve-confirm-data-value">
-                    <span className="reserve-confirm-content-data">{thisData?.startedAddr}</span>
-                  </div>
-
-                  {/* 도착 일시 */}
-                  <div className="reserve-confirm-data-wrapper">
-                    <span className="reserve-confirm-data-key">도착지</span>
-                  </div>
-                  <div className="reserve-confirm-data-value">
-                    <span className="reserve-confirm-content-data">{thisData?.endedAddr}</span>
-                  </div>
-                </>
-              )}
-                  
-              {/* ===== 보관 전용 항목 ===== */}
-              {thisData?.type === 'STORAGE' && (
-                <>
-
-                  {/* 보관 날짜 */}
-                  <div className="reserve-confirm-data-wrapper">
-                    <span className="reserve-confirm-data-key">보관 기한</span>
-                  </div>
-                  <div className="reserve-confirm-data-value">
-                    <span>{thisData?.startedAt && new Date(thisData.startedAt).toLocaleString()}<span className="reserve-confirm-content-gray"> 부터</span></span>
-                  </div>
-                  <div className="reserve-confirm-data-value">
-                    <span>{thisData?.endedAt && new Date(thisData.endedAt).toLocaleString()}<span className="reserve-confirm-content-gray"> 까지</span></span>
-                  </div>
-
-                  {/* 보관소 */}
-                  <div className="reserve-confirm-data-wrapper">
-                    <span className="reserve-confirm-data-key">보관소</span>
-                  </div>
-                  <div className="reserve-confirm-data-value">
-                    <span>{thisData?.store}<span className="reserve-confirm-content-gray"> 보관소</span></span>
-                  </div>
-
-                </>
-              )}
-              {/* 결제 금액 */}
-              <hr className="reserve-confirm-line" />
-              <div className="reserve-confirm-content-title">
-                <h3 className="reserve-confirm-content-title-h3">결제 금액</h3>
-              </div>
-              <div className="reserve-confirm-content-data-container">
-                <div className="reserve-confirm-data-value reserve-confirm-data-value-point">
-                  <span className="reserve-confirm-content-data">{thisData?.price}<span className="reserve-confirm-content-gray"> 원</span></span>
+                <div className="reserve-confirm-data-value-wrapper">
+                {
+                  thisData?.luggageList.map((luggage) => (
+                    <div>
+                      <span>{luggage.itemType} ({luggage.itemSize}) {luggage.itemWeight} {luggage.count}개</span>
+                    </div>
+                  ))
+                }
                 </div>
               </div>
+
+            </div>
+
+
+
+            
+
+
+            {/* ===== 배송 전용 항목 ===== */}
+            {thisData?.type === 'DELIVERY' && (
+              <div className="reserve-confirm-content-data-container-middle">
+
+                {/* 픽업 일시 */}
+                <div className="reserve-confirm-data-wrapper">
+                  <span className="reserve-confirm-data-key">픽업</span>
+                  <div className="reserve-confirm-data-value-wrapper">
+                    <span>{thisData?.startedAt && dayjs(thisData.startedAt).format('MM월 DD일 ddd HH시 mm분')}</span>
+                    <span className="reserve-confirm-content-data">
+                      {thisData?.startedAddr?.addr}
+                      {thisData?.startedAddr?.addrDetail && ` ${thisData.startedAddr.addrDetail}`}
+                    </span>
+                  </div>
+                </div>
+
+
+                {/* 도착지 */}
+                <div className="reserve-confirm-data-wrapper">
+                  <span className="reserve-confirm-data-key">도착지</span>
+                  <div className="reserve-confirm-data-value-wrapper">
+                    <span className="reserve-confirm-content-data">
+                      {thisData?.endedAddr?.addr}
+                      {thisData?.endedAddr?.addrDetail && ` ${thisData.endedAddr.addrDetail}`}
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+            )}
+                  
+            {/* ===== 보관 전용 항목 ===== */}
+            {thisData?.type === 'STORAGE' && (
+              <div className="reserve-confirm-content-data-container-middle">
+
+                {/* 보관 날짜 */}
+                <div className="reserve-confirm-data-wrapper">
+                  <span className="reserve-confirm-data-key">보관 기한</span>
+                  <div className="reserve-confirm-data-value-wrapper">
+                    <span>{thisData?.startedAt && dayjs(thisData.startedAt).format('MM월 DD일 ddd HH시 mm분')}<span className="reserve-confirm-content-gray"> 부터</span></span>
+                    <span>{thisData?.endedAt && dayjs(thisData.endedAt).format('MM월 DD일 HH시 mm분')}<span className="reserve-confirm-content-gray"> 까지</span></span>
+                  </div>
+                </div>
+
+                {/* 보관소 */}
+                <div className="reserve-confirm-data-wrapper">
+                  <span className="reserve-confirm-data-key">보관소</span>
+                  <span className="reserve-confirm-data-value">{thisData?.store}<span className="reserve-confirm-content-gray"> 보관소</span></span>
+                </div>
+
+              </div>
+            )}
+
+            {/* <hr className="reserve-confirm-line" /> */}
+
+            <div className="reserve-confirm-content-data-container-middle">
+
+              {/* 결제 금액 */}
+              <div className="reserve-confirm-data-wrapper border-none background-color-var-bottari-offwhite">
+                <span className="reserve-confirm-data-key">결제 금액</span>
+                <span className="reserve-confirm-data-value font-size-1-2-rem font-weight-700">{thisData?.price.toLocaleString()} 원</span>
+              </div>
+
             </div>
           </div>
         </div>

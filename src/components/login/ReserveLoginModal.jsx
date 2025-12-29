@@ -53,7 +53,7 @@ export default function ReserveLoginModal({ modalFlgFasle }) {
         transition={{ duration: 0.3 }}
       >
         <div className="reserve-login-modal-x"
-          onClick={handleClose}
+          onClick={modalFlgFasle}
         >
           <X size={30} />
         </div>

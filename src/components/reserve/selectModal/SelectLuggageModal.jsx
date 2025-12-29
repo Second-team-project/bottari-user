@@ -51,21 +51,27 @@ export default function SelectLuggageModal({ serviceType, modalFlgFalse, setLugg
     ? [...new Set(pricingList.map(item => item.itemType))]
     : [];
 
-  const step2List = 
+  const step2List =
     pricingList && pricingList
     .filter(item => item.itemType === step1) // step1에 해당하는 타입 중
     .map(item => item.itemSize)              // 사이즈 뽑아내고
     .filter((value, index, self) => self.indexOf(value) === index); // 중복 제거
-  
+
+  // size가 null만 있거나 비어있으면 크기 선택 스킵
+  const hasValidSizes = step2List.length > 0 && step2List.some(size => size !== null);
+
+  // 무게 목록: size 선택이 필요없으면 (골프가방 등) step2 = null로 필터
+  const effectiveStep2 = hasValidSizes ? step2 : null;
+
   const step3List =
     pricingList && pricingList
-    .filter(item => item.itemType === step1 && item.itemSize === step2) // step1 타입의 step2 사이즈의
-    .map(item => item.itemWeight)                                       // 무게만 뽑아냄
-    .filter((value, index, self) => self.indexOf(value) === index);     // 중복 제거
+    .filter(item => item.itemType === step1 && item.itemSize === effectiveStep2) // step1 타입의 step2 사이즈의
+    .map(item => item.itemWeight)                                                 // 무게만 뽑아냄
+    .filter((value, index, self) => self.indexOf(value) === index);               // 중복 제거
 
   const selectedItem =
-    (step1 && step2 && step3) 
-    ? pricingList.find(item => item.itemType === step1 && item.itemSize === step2 && item.itemWeight === step3)
+    (step1 && step3)
+    ? pricingList.find(item => item.itemType === step1 && item.itemSize === effectiveStep2 && item.itemWeight === step3)
     : null;
 
    const unitPrice = selectedItem ? Number(selectedItem.basePrice) : 0;
@@ -76,7 +82,7 @@ export default function SelectLuggageModal({ serviceType, modalFlgFalse, setLugg
   const handleComplete = () => {
     setLuggageList({
       itemType: step1,
-      itemSize: step2,
+      itemSize: effectiveStep2,  // 골프가방 등은 null
       itemWeight: step3,
       count: count,
       price: totalPrice,
@@ -126,9 +132,9 @@ export default function SelectLuggageModal({ serviceType, modalFlgFalse, setLugg
             </div>
           </div>
 
-          {/* 크기 */}
+          {/* 크기 - 유효한 사이즈가 있을 때만 표시 */}
           {
-            step1 && (
+            step1 && hasValidSizes && (
               <div className="select-luggage-modal-input-wrapper">
                 <div className="select-luggage-modal-input-title-wrapper">
                   <span>크기</span>
@@ -136,7 +142,7 @@ export default function SelectLuggageModal({ serviceType, modalFlgFalse, setLugg
                 <div className="select-luggage-modal-input-type-btn-wrapper">
                   {
                     step2List.map(item => (
-                      <button key={item} 
+                      <button key={item}
                       className={`select-luggage-modal-input-type-btn select-luggage-modal-input-type-btn-${step2 === item ? 'active' : '' }`}
                       onClick={() => { setStep2(item); setStep3(null); }}
                       >{item}</button>
@@ -147,9 +153,9 @@ export default function SelectLuggageModal({ serviceType, modalFlgFalse, setLugg
             )
           }
 
-          {/* 무게 */}
+          {/* 무게 - 크기 선택했거나, 크기가 필요없는 타입(골프가방 등)일 때 표시 */}
           {
-            ( step2 || step2List.length === 0 ) && (
+            ( step2 || (step1 && !hasValidSizes) ) && (
               <div className="select-luggage-modal-input-wrapper">
                 <div className="select-luggage-modal-input-title-wrapper">
                   <span>무게</span>
@@ -170,7 +176,7 @@ export default function SelectLuggageModal({ serviceType, modalFlgFalse, setLugg
 
           {/* 개수 */}
           {
-            step3 && (
+            ( step3 ) && (
               <div className="select-luggage-modal-input-wrapper">
                 <div className="select-luggage-modal-input-title-wrapper">
                   <span>개수</span>
