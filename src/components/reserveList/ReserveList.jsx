@@ -1,7 +1,7 @@
 import "./ReserveList.css";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 import ReserveListLoginModal from "../login/ReserveListLoginModal.jsx";
 import ReserveListMember from "./ReserveListMember.jsx";
@@ -31,7 +31,12 @@ export default function ReserveList() {
         { modalFlg && <ReserveListLoginModal modalFlgFasle={() => setModalFlg(false)} /> }
       </AnimatePresence>
       {/* 전체 컨테이너 */}
-      <div className="reserve-list-container">
+      <motion.div
+        className="reserve-list-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         {/* 페이지 제목 */}
         <div className="reserve-list-title-wrapper page-title-wrapper">
           <h2 className="reserve-list-title">내 보따리 확인하기</h2>
@@ -47,7 +52,7 @@ export default function ReserveList() {
           <ReserveListGuest />
         }
 
-      </div>
+      </motion.div>
     </>
   )
 };

@@ -1,11 +1,17 @@
 import "./Main.css";
 import banner from "/main.jpg";
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import MainBanner from "./MainBanner.jsx";
 import MainEvent from "./MainEvent.jsx";
 import MainService from "./MainSevice.jsx";
+import Loading from "../common/Loading.jsx"
+import Error from "../common/Error.jsx"
+import TossSuccessPage from "../reserve/tosspayments/TossSuccess.jsx";
+import TossFailPage from "../reserve/tosspayments/TossFail.jsx";
 
 export default function Main() {
   // TODO: 백엔드에서 이벤트 목록 가져오기
@@ -46,6 +52,10 @@ export default function Main() {
 
       {/* 서비스 소개 */}
       <MainService />
+
+      <Loading />
+      <Error />
+      <TossFailPage />
 
     </motion.div>
   );

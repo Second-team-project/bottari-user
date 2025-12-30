@@ -5,6 +5,7 @@ import "./ReserveDelivery.css";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { motion } from "framer-motion";
 // ===== components
 import SearchLocationModal from "./selectModal/SearchLocationModal.jsx";
 import SelectLuggageModal from "./selectModal/SelectLuggageModal.jsx";
@@ -218,7 +219,12 @@ export default function ReserveDelivery() {
   return(
     <>
       {/* 전체 컨테이너 */}
-      <div className="reserve-form-container">
+      <motion.div
+        className="reserve-form-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         {/* 장소 검색 모달 */}
         {
           locationModalFlg &&
@@ -439,7 +445,7 @@ export default function ReserveDelivery() {
           </div>
 
         </div>
-      </div>
+      </motion.div>
     </>
   )
 };

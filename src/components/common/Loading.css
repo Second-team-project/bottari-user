@@ -1,12 +1,39 @@
-/* 소제목 */
-.loading-title-wrapper {
+/* 로딩 컨테이너 */
+.loading-container {
   width: 100%;
-  height: 3rem;
-  padding: 4%;
+  height: 100vh;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 3rem;
+  gap: 1rem;
+}
+
+/* 아이콘 래퍼 */
+.loading-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 통통 튀는 애니메이션 */
+.loading-bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* 로딩 텍스트 */
+.loading-text {
+  color: var(--bottari-navy);
+  font-size: 1.1rem;
+  font-weight: 600;
 }

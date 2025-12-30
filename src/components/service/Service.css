@@ -3,15 +3,6 @@
   width: 100%;
   max-width: 1024px;
   min-height: 100vh;
-  padding-bottom: 40%;
-}
-@media (min-width: 769px) {
-  .service-container {
-    width: 100%;
-    max-width: 1024px;
-    min-height: 100vh;
-    padding-bottom: 30%;
-  }
 }
 
 /* 폴더 탭 래퍼 */

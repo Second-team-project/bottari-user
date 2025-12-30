@@ -21,9 +21,9 @@ export default function Service() {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 0.5 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      exit={{ opacity: 0.5 }}
       transition={{ duration: 0.3 }}
     >
       {/* 전체 컨테이너 */}

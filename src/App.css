@@ -3,7 +3,14 @@
   max-width: 1024px;
   min-height: 100vh;
   margin: 0 auto;
+  padding-bottom: 40%;
   position: relative;
+}
+@media (min-width: 769px) {
+  .app-container {
+    padding-bottom: 20%;
+  }
+
 }
 
 /* =========================================

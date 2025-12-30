@@ -1,0 +1,43 @@
+/* 에러 컨테이너 */
+.error-container {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* 아이콘 래퍼 */
+.error-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* 부들부들 떨리는 애니메이션 */
+.error-shake {
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px) rotate(-1deg);
+  }
+  75% {
+    transform: translateX(3px) rotate(1deg);
+  }
+}
+
+/* 에러 텍스트 */
+.error-text {
+  color: var(--bottari-navy);
+  font-size: 1.1rem;
+  font-weight: 600;
+}

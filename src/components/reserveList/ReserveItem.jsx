@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
 import { userReservationCancel } from "../../store/thunks/reserveThunk.js";
 import RecheckModal from "./RecheckModal.jsx";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function ReserveItem({ data }) {
   // code: "DM251227G5H6I"
@@ -63,13 +64,15 @@ export default function ReserveItem({ data }) {
   return(
     <div className="reserve-list-content-body">
       {/* 예약 취소 모달 */}
-      {
-        recheckFlg &&
-        <RecheckModal 
-          modalFlgfalse={() => setRecheckFlg()}
-          data={data}
-        />
-      }
+      <AnimatePresence>
+        {
+          recheckFlg &&
+          <RecheckModal
+            modalFlgfalse={() => setRecheckFlg()}
+            data={data}
+          />
+        }
+      </AnimatePresence>
     
       {/* 상단 */}
       <div className="reserve-list-content-header">
@@ -135,56 +138,65 @@ export default function ReserveItem({ data }) {
       </div>
 
       {/* 아코디언 내용 */}
-      {
-        isOpen && (
-          <div className="reserve-list-content-container">
+      <AnimatePresence>
+        {
+          isOpen && (
+            <motion.div
+              className="reserve-list-content-container"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              style={{ overflow: "hidden" }}
+            >
 
-            <div className="reserve-list-content-wrapper">
-              <span>예약 코드</span>
-              <span>{data.code}</span>
-            </div>
-
-            <div className="reserve-list-content-wrapper">
-              <span>결제 금액</span>
-              <span>{data.price?.toLocaleString()}</span>
-            </div>
-
-            <div>
-              <div className="reserve-list-content-left">
-                <span>요구 사항</span>
+              <div className="reserve-list-content-wrapper">
+                <span>예약 코드</span>
+                <span>{data.code}</span>
               </div>
-              <div className="reserve-list-content-right">
-                <span>{data.notes}</span>
-              </div>
-            </div>
 
-            <div>
-              <div className="reserve-list-content-left">
-                <span>보따리 정보</span>
+              <div className="reserve-list-content-wrapper">
+                <span>결제 금액</span>
+                <span>{data.price?.toLocaleString()} 원</span>
               </div>
-              {
-                data.luggageList && data.luggageList.map( (luggage, index) => (
-                  <div className="reserve-list-content-right" key={index}>
-                    <span>{luggage.itemType} ({luggage.itemSize}) {luggage.itemWeight} {luggage.count}개</span>
-                  </div>
-                ))
-              }
-            </div>
 
-            {
-              data.state === 'RESERVED' ? (
+              <div>
+                <div className="reserve-list-content-left">
+                  <span>요구 사항</span>
+                </div>
                 <div className="reserve-list-content-right">
-                  <div className="reserve-list-tag reserve-list-cancel-btn" onClick={setRecheckFlg}>예약 취소</div>
+                  <span>{data.notes}</span>
                 </div>
-              ) : (
-                <div className="reserve-list-empty-space">
-                </div>
-              )
-            }
+              </div>
 
-          </div>
-        )
-      }
+              <div>
+                <div className="reserve-list-content-left">
+                  <span>보따리 정보</span>
+                </div>
+                {
+                  data.luggageList && data.luggageList.map( (luggage, index) => (
+                    <div className="reserve-list-content-right" key={index}>
+                      <span>{luggage.itemType} ({luggage.itemSize}) {luggage.itemWeight} {luggage.count}개</span>
+                    </div>
+                  ))
+                }
+              </div>
+
+              {
+                data.state === 'RESERVED' ? (
+                  <div className="reserve-list-content-right">
+                    <div className="reserve-list-tag reserve-list-cancel-btn" onClick={setRecheckFlg}>예약 취소</div>
+                  </div>
+                ) : (
+                  <div className="reserve-list-empty-space">
+                  </div>
+                )
+              }
+
+            </motion.div>
+          )
+        }
+      </AnimatePresence>
     
     </div>
   )

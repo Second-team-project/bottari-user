@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 import CheckoutPage from './tosspayments/TossCheckout.jsx';
 import { getReserveSession } from "../../utils/sessionStorageUtil.js";
@@ -73,7 +74,12 @@ export default function ReserveConfirm() {
   return(
     <>
       {/* 전체 컨테이너 */}
-      <div className="reserve-form-body">
+      <motion.div
+        className="reserve-form-body"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         {/* 페이지 제목 */}
         <div className="reserve-confirm-title-wrapper page-title-wrapper">
           <h2 className="reserve-confirm-title">결제하기</h2>
@@ -104,12 +110,12 @@ export default function ReserveConfirm() {
               {/* 휴대폰 */}
               <div className="reserve-confirm-data-wrapper">
                 <span className="reserve-confirm-data-key">휴대폰</span>
-                <span className="reserve-confirm-data-value">{thisData?.phone}</span>
+                <span className="reserve-confirm-data-value">{thisData?.phone || '미입력'}</span>
               </div>
               {/* 요청사항 */}
               <div className="reserve-confirm-data-wrapper">
                 <span className="reserve-confirm-data-key">요청사항</span>
-                <span className="reserve-confirm-data-value">{thisData?.notes}</span>
+                <span className="reserve-confirm-data-value">{thisData?.notes || '없음'}</span>
               </div>
 
               {/* 짐 정보 */}
@@ -119,7 +125,7 @@ export default function ReserveConfirm() {
                 {
                   thisData?.luggageList.map((luggage, index) => (
                     <div key={index}>
-                      <span>{luggage.itemType} ({luggage.itemSize}) {luggage.itemWeight} {luggage.count}개</span>
+                      <span>{luggage.itemType} {luggage.itemSize ? '(luggage.itemSize)' : ''} {luggage.itemWeight} {luggage.count}개</span>
                     </div>
                   ))
                 }
@@ -206,7 +212,7 @@ export default function ReserveConfirm() {
         {/* 결제 버튼 - 토스 */}
         <CheckoutPage payData={thisData} password={password} />
 
-      </div>
+      </motion.div>
     </>
   )
 }

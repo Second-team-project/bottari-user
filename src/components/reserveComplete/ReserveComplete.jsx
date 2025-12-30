@@ -1,6 +1,7 @@
 import "./ReserveComplete.css";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 import { Copy } from 'lucide-react';
 import { useDispatch } from "react-redux";
@@ -57,7 +58,12 @@ export default function ReserveComplete() {
   return(
     <>
       {/* 전체 컨테이너 */}
-      <div className="reserve-complete-container">
+      <motion.div
+        className="reserve-complete-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         {/* 페이지 제목 */}
         <div className="reserve-complete-title-wrapper page-title-wrapper">
           <h2 className="reserve-complete-title">예약 완료</h2>
@@ -168,7 +174,7 @@ export default function ReserveComplete() {
 
 
         </div>
-      </div>
+      </motion.div>
     </>
   )
 }

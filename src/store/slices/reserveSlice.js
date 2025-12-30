@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { guestReservation, userReservation } from "../thunks/reserveThunk";
+import { guestReservation, guestReservationCancel, userReservation, userReservationCancel } from "../thunks/reserveThunk";
 
 const initialState = {
   deliveryReserve: null,
@@ -51,6 +51,16 @@ const slice = createSlice({
       })
       .addCase(guestReservation.fulfilled, (state, action) => {
         state.reservation = action.payload.data;
+      })
+
+      .addCase(userReservationCancel.fulfilled, (state, action) => {
+        const cancelledId = action.meta.arg.reservId;
+        const item = state.reservationList.find(resev => resev.id === cancelledId);
+        if (item) item.state = 'CANCELLED';
+      })
+      .addCase(guestReservationCancel.fulfilled, (state, action) => {
+        const cancelledId = action.meta.arg.reservId;
+        state.reservation.state = 'CANCELLED';
       })
   }
 })

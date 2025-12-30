@@ -136,3 +136,77 @@ a {
 .toss-color-grey {
   color: #b0b8c1;
 }
+
+
+/* 결제 실패 페이지 */
+.toss-fail-container {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* 보따리 아이콘 */
+.toss-fail-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px) rotate(-1deg); }
+  75% { transform: translateX(3px) rotate(1deg); }
+}
+
+/* 안내 문구 */
+.toss-fail-text-wrapper {
+  text-align: center;
+}
+
+.toss-fail-title {
+  color: var(--bottari-navy);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.toss-fail-message {
+  color: var(--bottari-grayfont);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* 버튼 */
+.toss-fail-btn-wrapper {
+  display: flex;
+  gap: 1rem;
+}
+
+.toss-fail-btn {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  background-color: var(--bottari-coolgray);
+  color: var(--bottari-navy);
+}
+
+.toss-fail-btn:active {
+  transform: scale(0.97);
+}
+
+.toss-fail-btn-primary {
+  background-color: var(--bottari-navy);
+  color: #fff;
+}

@@ -6,7 +6,35 @@
 
 import "./BottariIcon.css";
 
-const BottariIcon = ({ width = 70, height = 70, className = "" }) => {
+const BottariIcon = ({ width = 70, height = 70, className = "", mood = "happy" }) => {
+  // 눈 렌더링 함수
+  const renderEyes = () => {
+    switch (mood) {
+      case "dead":
+      case "error":
+        // X X 눈
+        return (
+          <>
+            {/* 왼쪽 X 눈 */}
+            <line className="bottari-icon-cls-6" x1="21" y1="38.5" x2="25" y2="42.5" />
+            <line className="bottari-icon-cls-6" x1="25" y1="38.5" x2="21" y2="42.5" />
+            {/* 오른쪽 X 눈 */}
+            <line className="bottari-icon-cls-6" x1="33.5" y1="38.5" x2="37.5" y2="42.5" />
+            <line className="bottari-icon-cls-6" x1="37.5" y1="38.5" x2="33.5" y2="42.5" />
+          </>
+        );
+      case "happy":
+      default:
+        // 기본 세로선 눈
+        return (
+          <>
+            <line className="bottari-icon-cls-6" x1="23.11" y1="38.79" x2="23.11" y2="42.31" />
+            <line className="bottari-icon-cls-6" x1="35.63" y1="38.79" x2="35.63" y2="42.31" />
+          </>
+        );
+    }
+  };
+
   return (
     <svg
       id="Layer_1"
@@ -53,8 +81,7 @@ const BottariIcon = ({ width = 70, height = 70, className = "" }) => {
         d="M29.81,26.86s-9.52-1.06-17,8.22a10.11,10.11,0,0,0-3.14,2.58,9.73,9.73,0,0,0-2.34,5.7,7.33,7.33,0,0,1-.14,1.86,3.07,3.07,0,0,1-.55,1.52,4.5,4.5,0,0,0-.89,1.09A13.07,13.07,0,0,0,5,49.71a10.46,10.46,0,0,0,1.4,7.38,9.85,9.85,0,0,0,4.09,3.63,8.68,8.68,0,0,1-5.31-2.31c-4-3.83-2.77-10.6-2.28-13.19C5.28,32.48,19.68,25.84,22.24,24.7l4.25-.89h2.3Z"
       />
       {/* 눈 */}
-      <line className="bottari-icon-cls-6" x1="23.11" y1="38.79" x2="23.11" y2="42.31" />
-      <line className="bottari-icon-cls-6" x1="35.63" y1="38.79" x2="35.63" y2="42.31" />
+      {renderEyes()}
       {/* 입 */}
       <rect className="bottari-icon-cls-7" x="25.93" y="43.46" width="6.86" height="4.68" />
       {/* 오른쪽 귀 */}

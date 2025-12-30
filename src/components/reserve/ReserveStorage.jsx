@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 // ===== components
 import SelectLuggageModal from "./selectModal/SelectLuggageModal.jsx";
 import UserInfoSection from "./UserInfoSection.jsx";
@@ -109,6 +110,10 @@ export default function ReserveStorage() {
     // 1-3. 오늘 아니면 통과
     return true;
   };
+
+  // 맡길 수 있는 날 (오늘부터 한달 뒤 까지)
+  const maxSelectableDate = new Date();
+  maxSelectableDate.setMonth(maxSelectableDate.getMonth() + 1);
 
   // 2. 찾는 시간 필터 (맡긴 시간 이후만 허용)
   // const filterEndTime = (time) => {
@@ -271,7 +276,12 @@ export default function ReserveStorage() {
   return(
     <>
       {/* 전체 컨테이너 */}
-      <div className="reserve-form-container">
+      <motion.div
+        className="reserve-form-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         {/* 짐 선택 모달 */}
         {
           luggageModalFlg &&
@@ -341,6 +351,7 @@ export default function ReserveStorage() {
                     dateFormat="yyyy년 MM월 dd일 HH:mm"
                     timeIntervals={30}
                     minDate={new Date()} // 오늘부터 가능
+                    maxDate={maxSelectableDate}
                     filterTime={filterStartTime}
                     placeholderText="맡길 날짜/시간 선택"
                     onCalendarOpen={() => document.body.style.overflow = 'hidden'}  //  스크롤 방지
@@ -467,7 +478,7 @@ export default function ReserveStorage() {
           </div>
 
         </div>
-      </div>
+      </motion.div>
     </>
   )
 };

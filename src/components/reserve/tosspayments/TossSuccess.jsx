@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { tossPaymentsThunk } from "../../../store/thunks/tossPaymentsThunk.js";
 import { useDispatch } from "react-redux";
 import { clearReserveSession } from "../../../utils/sessionStorageUtil.js";
+import Loading from "../../common/Loading.jsx";
+import { toast } from "sonner";
 
 export default function TossSuccessPage() {
   // ===== hooks
@@ -28,47 +30,21 @@ export default function TossSuccessPage() {
         navigate(`/reserve/complete/${response.data.orderId}`)
       
       } catch (error) {
-        navigate(`/reserve/tosspayments/fail?message=${error.message}`);
-        
+        if (error.code === 'ALREADY_PAID') {
+          toast.info('이미 처리된 결제입니다.');
+          navigate('/');
+        } else {
+          navigate(`/reserve/tosspayments/fail?message=${error.message}`);
+        }  
       }
     }
     confirm();
 
-    // async function confirm(requestData) {
-    //   const response = await fetch("/confirm", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(requestData),
-    //   });
-
-    //   const json = await response.json();
-
-    //   if (!response.ok) {
-    //     // 결제 실패 비즈니스 로직을 구현하세요.
-    //     navigate(`/fail?message=${json.message}&code=${json.code}`);
-    //     return;
-    //   }
-
-    //   // 결제 성공 비즈니스 로직을 구현하세요.
-    // }
-    // confirm();
-
   }, []);
 
   return (
-    <div className="result toss-wrapper">
-      <div className="toss-box-section">
-        <h2>
-          결제 성공
-        </h2>
-        <p>{`주문번호: ${searchParams.get("orderId")}`}</p>
-        <p>{`결제 금액: ${Number(
-          searchParams.get("amount")
-        ).toLocaleString()}원`}</p>
-        <p>{`paymentKey: ${searchParams.get("paymentKey")}`}</p>
-      </div>
-    </div>
+    <>
+      <Loading text="결제중..."/>
+    </>
   );
 }

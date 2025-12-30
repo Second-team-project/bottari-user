@@ -1,15 +1,15 @@
 import "./Loading.css";
+import BottariIcon from "../logo/BottariIcon.jsx";
 
-export default function Loading() {
-  return(
-    <>
-      {/* 전체 컨테이너 */}
-      <div className="loading-container">
-        {/* 페이지 제목 */}
-        <div className="loading-title-wrapper">
-          <h2 className="loading-title">불러오는 중...</h2>
-        </div>
-      </div>    
-    </>
+export default function Loading({ text = "로딩중..." }) {
+  return (
+    <div className="loading-container">
+      <div className="loading-icon-wrapper loading-bounce">
+        <BottariIcon width={80} height={80} />
+        <BottariIcon width={80} height={80} />
+        <BottariIcon width={80} height={80} />
+      </div>
+      <span className="loading-text">{text}</span>
+    </div>
   )
 }

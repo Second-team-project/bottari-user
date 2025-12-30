@@ -1,18 +1,19 @@
-/* 불투명 배경 */
+/* 블러 배경 */
 .recheck-modal-background {
   width: 100%;
   max-width: 1024px;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(1px);
 
   position: fixed;
   top: 0;
 
-  z-index: 15;  
+  z-index: 15;
 }
 /* 흰 전체 영역 */
 .recheck-modal-cotainer {
-  width:75%;
+  width:80%;
   max-width: 900px;
   background-color: #fff;
   border-radius: 10px;
@@ -28,9 +29,8 @@
 
 @media (min-width: 769px) {
   .recheck-modal-cotainer {
-    width: 30%;
+    width: 50%;
     max-width: 900px;
-    height: 70vh;
     background-color: #fff;
     border-radius: 10px;
     padding: 1.3rem 2rem;
@@ -45,6 +45,12 @@
 }
 
 /* 닫기 버튼 */
+.recheck-modal-x-wrapper {
+  color: var(--bottari-gray);
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
 .recheck-modal-x {
   color: var(--bottari-gray);
   width: 100%;
@@ -68,24 +74,47 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 /* step1 */
 /* 예약 데이터 */
-.recheck-modal-data-wrapper {
-  color: var(--bottari-darkslate);
-  font-size: 1rem;
-  font-weight: 700;
+.recheck-modal-data-title {
+  color: var(--bottari-navy);
+  font-size: 1.2rem;
+  font-weight: 800;
 
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.recheck-modal-data-wrapper {
+  font-size: 1rem;
+  font-weight: 800;
+
+  width: 100%;
   background-color: var(--bottari-coolgray);
   border-radius: 5px;
   padding: 7%;
 
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 0.5rem;
+}
+.recheck-modal-data {
+  display: flex;
+  justify-content: space-between;
+}
+.recheck-modal-data-label {
+  font-weight: 600;
+  width: 100%;
+  max-width: 61px;
+}
+.recheck-modal-data-value {
+  width: 100%;
+
 }
 /* 선택창 */
 .recheck-modal-select-wrapper {
@@ -146,32 +175,64 @@
 /* step2 */
 /* 상단 약관 */
 .recheck-modal-terms {
+  color: var(--bottari-grayfont);
   font-size: 0.95rem;
+  font-weight: 500;
   
-  background-color: var(--bottari-offwhite);
-  border-radius: 5px;
-  padding: 2% 0;
+  /* background-color: var(--bottari-coolgray); */
+  border-top: 1px solid var(--bottari-coolgray);
+  border-bottom: 1px solid var(--bottari-coolgray);
+  /* border-radius: 5px; */
+  padding: 5% 1%;
   
   display: flex;
   flex-direction: column;
 }
 .recheck-modal-term {
-  white-space: pre-wrap;
+  width: 100%;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.recheck-modal-checkbox-text {
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 /* 비밀번호 */
 .recheck-modal-password-wrapper {
+  width: 100%;
+  background-color: var(--bottari-offwhite);
+  border-radius: 5px;
+  padding: 3% 0;
+  margin: 0 auto;
+  
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
   align-items: center;
+  gap: 0.3rem;
 }
 .recheck-modal-password-input {
   font-size: 0.95rem;
   font-weight: 500;
-  width: 60%;
-  background-color: var(--bottari-offwhite);
+  text-align: center;
+  width: 80%;
+
+  background-color: #fff;
   border: 1px solid var(--bottari-gray);
   border-radius: 5px;
-  padding: 0.3rem;
+  padding: 0.3rem 1rem;
+}
+@media (min-width: 769px) {
+  .recheck-modal-password-input {
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+    width: 60%;
+
+    background-color: #fff;
+    border: 1px solid var(--bottari-gray);
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+  }
 }
 .recheck-modal-password-input:focus {
   border: 1px solid var(--bottari-gray);
@@ -181,16 +242,42 @@
 
 /* 버튼 */
 .recheck-modal-btn-wrapper {
+  color: var(--bottari-navy);
   display: flex;
   justify-content: space-around;
+  gap: 5%;
+}
+@media (min-width: 769px) {
+  .recheck-modal-btn-wrapper {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-around;
+    gap: 5%;
+  }
+
 }
 .rechck-modal-btn {
   font-size: 1rem;
-  border: 1px solid var(--bottari-navy);
-  border-radius: 10px;
-  padding: 0.3rem 1rem;
-}
 
+  width: 100%;
+  max-width: 200px;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--bottari-coolgray);
+  padding: 0.5rem 1rem;
+
+  display: flex;
+  justify-content: center;
+
+  cursor: pointer;
+}
+.rechck-modal-btn:hover {
+  transform: scale(0.98);
+}
+.rechck-modal-btn:active {
+  transform: scale(0.95);
+}
 /* flex */
 .flex-content-end {
   width: 100%;

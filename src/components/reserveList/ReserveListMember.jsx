@@ -3,6 +3,7 @@ import "./ReserveListMember.css";
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { motion } from "framer-motion";
 
 import { userReservation } from "../../store/thunks/reserveThunk.js";
 
@@ -39,8 +40,15 @@ export default function ReserveListMemeber() {
       {/* 예약 아이템이 있는 경우 */}
       {
         reservationList.length >= 1 && reservationList.filter(item => item.state !== 'PENDING_PAYMENT') // 결제 대기 제외
-          .map(item => (
-            <ReserveItem key={item.code} data={item} />
+          .map((item, index) => (
+            <motion.div
+              key={item.code}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+            >
+              <ReserveItem data={item} />
+            </motion.div>
           )
         )
       }

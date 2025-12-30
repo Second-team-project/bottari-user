@@ -1,16 +1,9 @@
-/* 전체 컨테이너 */
-.reserve-form-container {
-  margin-bottom: 150px;
-}
-
 /* 내용 */
 .reserve-form-body {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.7rem;
-
-  padding-bottom: 40%;
 }
 @media (min-width: 769px) {
   .reserve-form-body {
@@ -18,8 +11,6 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-  
-    padding-bottom: 30%;
   }
 }
 
