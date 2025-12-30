@@ -28,7 +28,7 @@ export const getNoticeThunk = createAsyncThunk(
       const params = { page };
 
       const response = await axiosIns.get(url, { params })
-      console.log('thunk-notice: ', response.data.data.posts)
+      console.log('thunk-notice: ', response.data.data.notices)
       
       return response.data;
       

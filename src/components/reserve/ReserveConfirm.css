@@ -35,19 +35,19 @@
   
   display: flex;
   flex-direction: column;
-  gap: 0.5rem
+  gap: 0.1rem
 }
 /* 데이터별로 */
 .reserve-confirm-content-data-container {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem
+  gap: 0.1rem
 }
 /* 데이터 별로 아래 */
 .reserve-confirm-content-data-container-middle {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem
+  gap: 0.1rem
 }
 /* 데이터 각각 */
 .reserve-confirm-data-wrapper {
@@ -145,4 +145,9 @@
 }
 .color-var-bottari-darkslate {
   color: var(--bottari-darkslate);
+}
+
+/* 마진 */
+.margin-0-5-rem {
+  margin: 0.5rem 0;
 }

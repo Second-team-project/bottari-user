@@ -44,6 +44,34 @@
   margin: 3% 0 5%
 }
 
+/* 내부 소제목 스타일 */
+.reserve-complete-content-title {
+  color: var(--bottari-navy);
+  font-weight: 700;
+  font-size: 1.25rem;
+
+  max-width: 500px;
+  margin: 0 auto 7%;
+  padding: 5% 0 0 5%;
+
+  display: flex;
+  gap: 0.3rem;
+}
+@media (min-width: 769px) {
+  .reserve-complete-content-title {
+    color: var(--bottari-navy);
+    font-weight: 700;
+    font-size: 1.3rem;
+  
+    max-width: 500px;
+    margin: 0 auto 4%;
+    padding: 1% 0 0 5%;
+  
+    display: flex;
+    gap: 0.3rem;
+  }
+}
+
 /* 정보 칸 */
 .reserve-complete-content-data-body {
   font-size: 1rem;

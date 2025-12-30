@@ -30,7 +30,7 @@ export default function FAQ() {
 
 
 
-          { faqList.length > 0 && faqList?.map((faq, index) => (
+          { faqList?.length > 0 && faqList?.map((faq, index) => (
             <FAQItem 
               key={faq.id}
               faq={faq}

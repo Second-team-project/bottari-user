@@ -118,6 +118,7 @@ export default function UserInfoSection({
         <h3>내 정보</h3>
       </div>
       <div className="reserve-form-content-wrapper">
+
         {/* 이름 */}
         <div className="reserve-form-content">
           <span className="reserve-form-essential">*</span>
@@ -129,6 +130,7 @@ export default function UserInfoSection({
             onBlur={(e) => setName(e.target.value.trim())}
           />
         </div>
+
         {/* 이메일 */}
         <div className="reserve-form-content">
           <span className="reserve-form-essential">*</span>
@@ -161,6 +163,7 @@ export default function UserInfoSection({
             }
           </div>
         </div>
+
         {/* 휴대폰 */}
         <div className="reserve-form-content">
           <span className="reserve-form-essential">{' '}</span>
@@ -190,6 +193,7 @@ export default function UserInfoSection({
             />
           </div>
         </div>
+        
         {/* 비회원일 경우 비밀번호 입력 */}
         {
           !user && (

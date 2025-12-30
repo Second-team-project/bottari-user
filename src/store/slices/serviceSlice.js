@@ -31,13 +31,13 @@ const slice = createSlice({
       .addCase(getFaqThunk.fulfilled, (state, action) => {
         state.loading = false;
 
-        state.faqList = action.payload.data.posts;
+        state.faqList = action.payload.data.notices;
         console.log('slice-faqList: ', state.faqList);
       })
       .addCase(getFaqThunk.rejected, (state, action) => {
         state.loading = false;
 
-        console.error('로그인 실패 : ', action.error);
+        console.error('faq 불러오기 실패 : ', action.error);
       })
       
       // notice
@@ -47,13 +47,13 @@ const slice = createSlice({
       .addCase(getNoticeThunk.fulfilled, (state, action) => {
         state.loading = false;
 
-        state.noticeList = action.payload.data.posts;
+        state.noticeList = action.payload.data.notices;
         console.log('slice-noticeList: ', state.noticeList);
       })
       .addCase(getNoticeThunk.rejected, (state, action) => {
         state.loading = false;
 
-        console.error('로그인 실패 : ', action.error);
+        console.error('notice 불러오기 실패 : ', action.error);
       })
   },
 })

@@ -17,13 +17,15 @@ export default function Notice() {
   }, [])
   // TODO: 백엔드에서 공지사항 목록 가져오기
 
+  console.log('Notice: ', noticeList)
+
   return (
     <div className="notice-container">
       {/* 공지사항 목록 */}
       <div className="notice-list">
 
         {
-          noticeList.length > 0 && noticeList.map(notice => (
+          noticeList?.length > 0 && noticeList.map(notice => (
             <div className="notice-item" key={notice.id}
             onClick={() => setselectedNotice(notice)}
             >

@@ -103,9 +103,7 @@ export default function ReserveListLoginModal({ modalFlgFasle }) {
         exit={{ opacity: 0.9, filter: "blur(2px)" }}
         transition={{ duration: 0.3 }}
       >
-        <div className="reserve-list-login-modal-x"
-          onClick={handleClose}
-        >
+        <div className="reserve-list-login-modal-x" onClick={handleClose}>
           <X size={30} />
         </div>
 

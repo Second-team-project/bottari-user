@@ -3,9 +3,28 @@ import "./ReserveItem.css";
 import { useState } from "react";
 import { Truck, Package, ChevronDown, ChevronUp } from 'lucide-react';
 import dayjs from "dayjs";
+import { useDispatch, useSelector } from "react-redux";
+import { userReservationCancel } from "../../store/thunks/reserveThunk.js";
+import RecheckModal from "./RecheckModal.jsx";
 
 export default function ReserveItem({ data }) {
-  const [isOpen, setIsOpen] = useState(false)
+  // code: "DM251227G5H6I"
+  // endedAddr: "대구 동구 아양로 200"
+  // id: 3
+  // luggageList: [{…}]
+  // notes: "문 앞에 놔주세요"
+  // price: 18000
+  // startedAddr: "대구 북구 대학로 80"
+  // startedAt: "2025-12-30T02:36:44.000Z"
+  // state: "IN_PROGRESS"
+
+  // ===== hooks
+  const dispatch = useDispatch();
+  // ===== redux states
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  // ===== local states
+  const [isOpen, setIsOpen] = useState(false);
+  const [recheckFlg, setRecheckFlg] = useState(false);
 
   // data 가공
   const isDelivery = data.code.startsWith('D');
@@ -39,8 +58,18 @@ export default function ReserveItem({ data }) {
       statusLabel = <span className="reserve-list-tag-inner">{data.state}</span>;
   }
 
+
+
   return(
     <div className="reserve-list-content-body">
+      {/* 예약 취소 모달 */}
+      {
+        recheckFlg &&
+        <RecheckModal 
+          modalFlgfalse={() => setRecheckFlg()}
+          data={data}
+        />
+      }
     
       {/* 상단 */}
       <div className="reserve-list-content-header">
@@ -145,7 +174,7 @@ export default function ReserveItem({ data }) {
             {
               data.state === 'RESERVED' ? (
                 <div className="reserve-list-content-right">
-                  <div className="reserve-list-tag reserve-list-cancel-btn">예약 취소</div>
+                  <div className="reserve-list-tag reserve-list-cancel-btn" onClick={setRecheckFlg}>예약 취소</div>
                 </div>
               ) : (
                 <div className="reserve-list-empty-space">

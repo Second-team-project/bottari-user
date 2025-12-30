@@ -21,15 +21,15 @@ export default function ReserveComplete() {
   useEffect(() => {
     dispatch(reserveComplete(reserveCode)).unwrap()
       .then( res => {
-        setCompleteData(res.data);
-        console.log('res.data: ', res.data)
+        setCompleteData(res);
+        console.log('res: ', res)
+        console.log('completeData.luggageList: ', res.luggageList)
         if(completeData.code.startsWith('D')) {
           setType('D');
           return;
         }
         if(completeData.code.startsWith('S')) {
           console.log('completeData: ', completeData)
-          console.log('completeData.luggageList: ', completeData.luggageList)
           setType('S');
           return;
         }
@@ -38,6 +38,9 @@ export default function ReserveComplete() {
         console.error("조회 실패:", error);
       })
   }, [])
+
+  console.log('completeData: ', completeData)
+
 
   // 복사 아이콘 조작
   const handleCopyCode = async () => {
@@ -79,10 +82,9 @@ export default function ReserveComplete() {
           </div>
 
           <div className="reserve-form-content-container">
-            <div className="reserve-confirm-content-title">
-              <h3 className="reserve-confirm-content-title-h3">
-                <span className="reserve-confirm-content-text-pont">{(type !== '' && type ==='D') ? '배송' : '보관'}</span>내용</h3>
-                {/* 님의 <span className="reserve-confirm-content-text-pont">{thisData?.type === 'DELIVERY' ? "배송" : "보관"}</span>내용</h3> */}
+            <div className="reserve-complete-content-title">
+              <span className="border-bottom-var-bottari-pink font-size-1-3-rem">{(type !== '' && type ==='D') ? '배송' : '보관'}</span>
+              <span>내용</span>
             </div>
 
             <div className="reserve-complete-content-data-body">
@@ -92,26 +94,22 @@ export default function ReserveComplete() {
                 {/* 요청사항 */}
                 <div className="reserve-confirm-data-wrapper">
                   <span className="reserve-confirm-data-key">요청사항</span>
+                  <span className="reserve-confirm-data-value">{completeData?.notes || <span className="reserve-confirm-content-gray">없음</span>}</span>
                 </div>
-                <div className="reserve-confirm-data-value">
-                  <span>{completeData?.notes || <span className="reserve-confirm-content-gray">없음</span>}</span>
-                </div>
-
-              </div>
-
-              <div className="reserve-confirm-content-data-container">
 
                 {/* 짐 정보 */}
                 <div className="reserve-confirm-data-wrapper">
                   <span className="reserve-confirm-data-key">보따리</span>
+                  <div className="reserve-confirm-data-value-wrapper">
+                  {
+                    completeData?.luggageList?.map((luggage, index) => (
+                      <div key={index}>
+                        <span>{luggage.itemType} ({luggage.itemSize}) {luggage.itemWeight} {luggage.count}개</span>
+                      </div>
+                    ))
+                  }
+                  </div>
                 </div>
-                {
-                  completeData?.luggageList.map((luggage, index) => (
-                    <div className="reserve-confirm-data-value" key={index}>
-                      <span>{luggage.itemType} ({luggage.itemSize}) {luggage.itemWeight} {luggage.count}개</span>
-                    </div>
-                  ))
-                }
 
                 {/* ===== 배송 전용 항목 ===== */}
                 {type === 'D' && (
@@ -119,20 +117,18 @@ export default function ReserveComplete() {
                     {/* 픽업 일시 */}
                     <div className="reserve-confirm-data-wrapper">
                       <span className="reserve-confirm-data-key">픽업</span>
-                    </div>
-                    <div className="reserve-confirm-data-value">
-                      <span>{completeData?.startedAt && new Date(completeData.startedAt).toLocaleString()}<span className="reserve-confirm-content-gray"></span></span>
-                    </div>
-                    <div className="reserve-confirm-data-value">
-                      <span className="reserve-confirm-content-data">{completeData?.startedAddr}</span>
+                      <div className="reserve-confirm-data-value-wrapper">
+                        <span>{completeData?.startedAt && new Date(completeData.startedAt).toLocaleString()}<span className="reserve-confirm-content-gray"></span></span>
+                        <span className="reserve-confirm-content-data">{completeData?.startedAddr}</span>
+                      </div>
                     </div>
 
                     {/* 도착 일시 */}
                     <div className="reserve-confirm-data-wrapper">
                       <span className="reserve-confirm-data-key">도착지</span>
-                    </div>
-                    <div className="reserve-confirm-data-value">
-                      <span className="reserve-confirm-content-data">{completeData?.endedAddr}</span>
+                      <div className="reserve-confirm-data-value-wrapper">
+                        <span className="reserve-confirm-content-data">{completeData?.endedAddr}</span>
+                      </div>
                     </div>
                   </>
                 )}

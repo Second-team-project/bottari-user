@@ -75,9 +75,9 @@ export const reserveComplete = createAsyncThunk(
       const url = `/api/user/reserve/complete/${reserveCode}`;
       const response = await axiosIns.get(url);
 
-      console.log('thunk-response: ', response);
+      console.log('reserveCompletethunk-response: ', response);
 
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error);
     } 
@@ -86,6 +86,9 @@ export const reserveComplete = createAsyncThunk(
 
 // =====================================================
 
+/**
+ * 회원 예약 정보 조회
+ */
 export const userReservation = createAsyncThunk(
   'reserve/userReservation',
   async (_, {rejectWithValue}) => {
@@ -100,6 +103,9 @@ export const userReservation = createAsyncThunk(
   }
 )
 
+/**
+ * 게스트 예약 정보 조회
+ */
 export const guestReservation = createAsyncThunk(
   'reserve/guestReservation',
   async (data, {rejectWithValue}) => {
@@ -108,6 +114,46 @@ export const guestReservation = createAsyncThunk(
       const response = await axiosIns.post(url, data);
 
       return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+)
+
+// =====================================================
+
+/**
+ * 회원 예약 취소
+ */
+export const userReservationCancel = createAsyncThunk(
+  'reserve/userReservationCancel',
+  async (data, {rejectWithValue}) => {
+    try {
+      const url = `/api/user/reserve/cancel/${data.reservId}`;
+      const response = await axiosIns.post(url, data);
+
+      console.log('reserveCompletethunk-response: ', response);
+
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+)
+
+/**
+ * 비회원 예약 취소
+ */
+export const guestReservationCancel = createAsyncThunk(
+  'reserve/guestReservationCancel',
+  async (data, {rejectWithValue}) => {
+    try {
+      const url = `/api/user/reserve/guest/cancel/${data.reservId}`;
+      const response = await axiosIns.post(url, data);
+
+      console.log('reserveCompletethunk-response: ', response);
+
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error);
     }

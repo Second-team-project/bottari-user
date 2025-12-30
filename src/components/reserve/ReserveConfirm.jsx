@@ -117,8 +117,8 @@ export default function ReserveConfirm() {
                 <span className="reserve-confirm-data-key">보따리</span>
                 <div className="reserve-confirm-data-value-wrapper">
                 {
-                  thisData?.luggageList.map((luggage) => (
-                    <div>
+                  thisData?.luggageList.map((luggage, index) => (
+                    <div key={index}>
                       <span>{luggage.itemType} ({luggage.itemSize}) {luggage.itemWeight} {luggage.count}개</span>
                     </div>
                   ))
@@ -191,7 +191,7 @@ export default function ReserveConfirm() {
             <div className="reserve-confirm-content-data-container-middle">
 
               {/* 결제 금액 */}
-              <div className="reserve-confirm-data-wrapper border-none background-color-var-bottari-offwhite">
+              <div className="reserve-confirm-data-wrapper border-none background-color-var-bottari-offwhite margin-0-5-rem">
                 <span className="reserve-confirm-data-key">결제 금액</span>
                 <span className="reserve-confirm-data-value font-size-1-2-rem font-weight-700">{thisData?.price.toLocaleString()} 원</span>
               </div>
