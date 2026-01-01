@@ -1,0 +1,90 @@
+/* 이벤트 슬라이더 */
+.main-event-container {
+  background-color: var(--bottari-offwhite);
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  margin: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 화살표 */
+.main-event-arrow {
+  color: var( --bottari-grayfont);
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.main-event-arrow:hover {
+  color: var(--bottari-pink);
+}
+
+/* 컨텐트 */
+.main-event-content {
+  width: 100%;
+  min-height: 60px;
+  text-align: center;
+  
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-event-item {
+  width: 100%;
+  height: 120px;
+}
+.main-event-banner {
+  height: 120px;
+  width: auto; 
+  cursor: pointer;
+}
+
+.main-event-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+
+.main-event-desc {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* 인디케이터 */
+.main-event-indicator {
+  width: 100%;
+  margin-top: 0.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: normal;
+  gap: 0.5rem;
+}
+
+.indicator-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--bottari-grayfont);
+  border-radius: 50%;
+
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+.indicator-dot-active {
+  width: 8px;
+  height: 8px;
+  background-color: var(--bottari-navy);
+  border-radius: 50%;
+  
+  transition: background-color 0.2s;
+  cursor: pointer;
+}

@@ -1,19 +1,29 @@
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
 import "./MainBanner.css";
-import banner from "/main.jpg";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+
+import { useSelector } from "react-redux";
 
 export default function MainBanner() {
-  // TODO: 백엔드에서 배너 가져오기
+  // ===== redux states
+  const bannerList = useSelector(state => state.guideImg.bannerList);
+  const loading = useSelector(state => state.guideImg.loading);
 
+  // console.log('loading:', loading, 'bannerList:', bannerList);
 
   return (
-
       <div className="main-banner-container">
-        <div className="main-banner" style={{ backgroundImage: `url(${banner})` }}></div>
-        배너입니다.
+        {
+          loading || !bannerList?.length ? (
+            <Skeleton height={500} width="100%" />
+          ) : (
+            <div className="main-banner" style={{ backgroundImage: `url(${bannerList[0]?.img})` }}></div>
+
+          )
+        }
       </div>
+      
 
   );
 }

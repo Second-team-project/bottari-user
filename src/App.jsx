@@ -1,5 +1,7 @@
 import './App.css'
 
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Toaster } from 'sonner';
@@ -10,9 +12,16 @@ import HeaderMobile from "./components/header/HeaderMobile.jsx";
 import BottomNav from './components/header/BottomNav.jsx';
 import ProtectedRouter from './routes/ProtectedRouter.jsx';
 
+import { getGuideImgThunk } from './store/thunks/guideImgThunk.js';
+
 function App() {
   // ===== hooks
-  const location = useLocation()
+  const dispatch = useDispatch();
+  const location = useLocation();
+
+  useEffect(() => {
+    dispatch(getGuideImgThunk())
+  }, [])
 
   return (
     <>

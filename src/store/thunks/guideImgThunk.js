@@ -1,18 +1,18 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosIns from "../../api/axiosInstance";
 
-export const getStores = createAsyncThunk(
-  'store/getStores',
+export const getGuideImgThunk = createAsyncThunk(
+  'guideImg/getGuideImgThunk',
   async (_, {rejectWithValue}) => {
     try {
 
-      const url = `/api/common/store`;
+      const url = `/api/common/guide-img`;
 
       const response = await axiosIns.get(url)
-      
-      // console.log('thunk-store: ', response.data)
 
-      return response.data;
+      console.log('thunk-guideImg: ', response.data.data)
+
+      return response.data.data;
       
     } catch (error) {
       return rejectWithValue(error);

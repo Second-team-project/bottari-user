@@ -18,6 +18,11 @@ export default function ReserveComplete() {
   const [completeData, setCompleteData] = useState({})
   const [type, setType] = useState('');
 
+  // ===== 스크롤 설정
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // 출력할 정보 thunk 로 받아오기
   useEffect(() => {
     dispatch(reserveComplete(reserveCode)).unwrap()

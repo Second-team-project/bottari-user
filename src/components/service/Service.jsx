@@ -1,10 +1,16 @@
 import "./Service.css";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 export default function Service() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  // ===== 스크롤 설정
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const tabs = [
     { id: "notice", path: "/service/notice", label: "공지사항" },

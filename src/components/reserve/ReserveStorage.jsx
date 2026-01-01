@@ -53,7 +53,11 @@ export default function ReserveStorage() {
   const [startDate, setStartDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null);
   const [endDate, setEndDate] = useState(savedData?.endedAt ? new Date(savedData.endedAt) : null);
 
-  
+  // ===== 스크롤 설정
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // ===================
   // ||     보관소     || 
   // ===================

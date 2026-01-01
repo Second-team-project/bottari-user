@@ -11,7 +11,7 @@ export const getPricing = createAsyncThunk(
       const response = await axiosIns.get(url, data)
 
       
-      console.log('pricing: ', response.data)
+      // console.log('pricing: ', response.data)
 
       return response.data;
       

@@ -7,8 +7,13 @@
 import "./SocialLoginPage.css";
 import kakaoBtn from "../../assets/kakao_login_large_narrow.png";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 export default function Login() {
+  // ===== 스크롤 설정
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // =============================
   // ||     소셜 로그인 요청     ||

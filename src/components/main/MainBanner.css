@@ -1,0 +1,12 @@
+/* 메인 배너 */
+.main-banner-container {
+  padding-top: 100px;
+}
+.main-banner {
+  width: 100%;
+  padding-top: 80%;
+  
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}

@@ -9,6 +9,11 @@ import BottariIcon from "../logo/BottariIcon.jsx";
 export default function Reserve() {
   const navigate = useNavigate()
 
+  // ===== 스크롤 설정
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // ===== 전역 state
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 

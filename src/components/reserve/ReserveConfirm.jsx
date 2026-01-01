@@ -18,6 +18,11 @@ export default function ReserveConfirm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // ===== 스크롤 설정
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // ===== redux state
   const { deliveryReserve, storageReserve } = useSelector(state => state.reserve)
 
