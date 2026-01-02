@@ -17,6 +17,7 @@ import { logoutThunk } from "../../store/thunks/authThunk.js";
 
 // 아이콘 import
 import { User, UserRound, Globe, Menu, LogOut } from 'lucide-react';
+import { span } from "motion/react-client";
 
 
 export default function HeaderMobile() {
@@ -96,16 +97,23 @@ export default function HeaderMobile() {
 
         {/* 오른쪽 영역 : 아이콘 */}
         <div className="header-mobile-right-container">
-          <div className="header-mobile-icon-wrapper">
-            {/* <span className="header-mobile-icon-text">한국어</span> */}
+          {/* <div className="header-mobile-icon-wrapper">
             <Globe size={20} />
-          </div>
+          </div> */}
           <div className="header-mobile-icon-wrapper" onClick={() => handleAccount()}>
-            {/* <span className="header-mobile-icon-text">로그인</span> */}
             {
               isLoggedIn 
-              ? <LogOut size={24} />
-              : <UserRound size={24} />
+              ? (
+                <>
+                  <span className="header-web-icon-text">로그아웃</span>
+                  <LogOut size={24} />
+                </>
+              ) : (
+                <>
+                  <span className="header-web-icon-text">로그인</span>
+                  <UserRound size={24} />
+                </>
+              ) 
             }
             
           </div>

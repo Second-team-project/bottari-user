@@ -2,14 +2,13 @@ import "./ReviewCreate.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Star, ImagePlus, X } from "lucide-react";
+import { ImagePlus, X } from "lucide-react";
 
 export default function ReviewCreate() {
   const navigate = useNavigate();
 
-  // 폼 상태
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
+  // ===== local states
+  const [title, setTitle] = useState('');
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -33,7 +32,7 @@ export default function ReviewCreate() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: 백엔드로 후기 전송
-    console.log({ rating, content, image });
+    console.log({ content, image });
     navigate("/review");
   };
 
@@ -52,23 +51,16 @@ export default function ReviewCreate() {
         </div>
 
         <form className="review-create-form" onSubmit={handleSubmit}>
-          {/* 별점 */}
+
+          {/* 제목 */}
           <div className="review-create-section">
-            <label className="review-create-label">별점</label>
-            <div className="review-create-stars">
-              {Array.from({ length: 5 }, (_, i) => (
-                <Star
-                  key={i}
-                  size={32}
-                  fill={(hoverRating || rating) > i ? "#ffc107" : "none"}
-                  color={(hoverRating || rating) > i ? "#ffc107" : "#ddd"}
-                  onClick={() => setRating(i + 1)}
-                  onMouseEnter={() => setHoverRating(i + 1)}
-                  onMouseLeave={() => setHoverRating(0)}
-                  style={{ cursor: "pointer" }}
-                />
-              ))}
-            </div>
+            <label className="review-create-label">제목</label>
+            <input
+              className="review-create-textarea"
+              placeholder="제목을 작성해 주세요"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </div>
 
           {/* 내용 */}
@@ -85,30 +77,32 @@ export default function ReviewCreate() {
 
           {/* 이미지 첨부 */}
           <div className="review-create-section">
-            <label className="review-create-label">사진 (선택)</label>
-            {imagePreview ? (
-              <div className="review-create-image-preview">
-                <img src={imagePreview} alt="미리보기" />
-                <button
-                  type="button"
-                  className="review-create-image-remove"
-                  onClick={handleImageRemove}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-            ) : (
-              <label className="review-create-image-upload">
-                <ImagePlus size={32} />
-                <span>사진 추가</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  hidden
-                />
-              </label>
-            )}
+            <label className="review-create-label">사진 ( 선택 )</label>
+            {
+              imagePreview ? (
+                <div className="review-create-image-preview">
+                  <img src={imagePreview} alt="미리보기" />
+                  <button
+                    type="button"
+                    className="review-create-image-remove"
+                    onClick={handleImageRemove}
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+              ) : (
+                <label className="review-create-image-upload">
+                  <ImagePlus size={32} />
+                  <span>사진 추가</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    hidden
+                  />
+                </label>
+              )
+            }
           </div>
 
           {/* 버튼 */}
@@ -123,7 +117,7 @@ export default function ReviewCreate() {
             <button
               type="submit"
               className="review-create-btn submit"
-              disabled={!rating || !content.trim()}
+              disabled={!title.trim() || !content.trim()}
             >
               등록
             </button>

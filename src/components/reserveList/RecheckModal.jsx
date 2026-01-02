@@ -154,8 +154,8 @@ export default function RecheckModal({ modalFlgfalse, data}) {
         {/* 취소 처리중 */}
         {
           isSubmitting ? (
-            <div className="recheck-modal-step-container" style={{ minHeight: '300px', display: 'flex', alignItems: 'center' }}>
-              <Loading text="취소 처리 중입니다..." />
+            <div className="recheck-modal-step-loading-container">
+              <Loading fullScreen={false} text="취소 처리 중입니다..." />
             </div>
           ) : (
             // 기본 처리 step
@@ -255,13 +255,13 @@ export default function RecheckModal({ modalFlgfalse, data}) {
                     }
 
                     <div className="recheck-modal-btn-wrapper">
-                      <div className="rechck-modal-btn"
+                      <button type="button" className="rechck-modal-btn"
                         onClick={() => { handle2to1() }}
-                      >취소</div>
-                      <div className="rechck-modal-btn background-color-var-navy"
+                      >취소</button>
+                      <button type="button" className="rechck-modal-btn background-color-var-submit"
                         onClick={handleCancelReservation}
                         disabled={!isConfirmEnabled || isSubmitting}
-                      >예약취소하기</div>
+                      >예약취소하기</button>
                     </div>
                   </div>
                 )

@@ -1,12 +1,13 @@
 import "./ReserveItem.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Truck, Package, ChevronDown, ChevronUp } from 'lucide-react';
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux";
-import { userReservationCancel } from "../../store/thunks/reserveThunk.js";
 import RecheckModal from "./RecheckModal.jsx";
 import { AnimatePresence, motion } from "framer-motion";
+import { getDriverLocation } from "../../store/thunks/driverLocatinThunk.js";
+import { toast } from "sonner";
 
 export default function ReserveItem({ data }) {
   // code: "DM251227G5H6I"
@@ -26,12 +27,15 @@ export default function ReserveItem({ data }) {
   // ===== local states
   const [isOpen, setIsOpen] = useState(false);
   const [recheckFlg, setRecheckFlg] = useState(false);
-
+  // === driver
+  const [driverInfo, setDriverInfo] = useState(null);
+  const [isLoadingDriver, setIsLoadingDriver] = useState(false);
   // data 가공
   const isDelivery = data.code.startsWith('D');
   const typeClass = isDelivery ? 'd' : 's';
   const typeText = isDelivery ? '배송' : '보관';
   const stateText = data.state?.trim().toLowerCase();
+  const isProgress = data.state === 'RESERVED' || data.state === 'IN_PROGRESS' || data.state === 'COMPLETED';
 
   let statusLabel = '';
   switch(data.state) {
@@ -59,7 +63,28 @@ export default function ReserveItem({ data }) {
       statusLabel = <span className="reserve-list-tag-inner">{data.state}</span>;
   }
 
+  useEffect(() => {
+    if( isDelivery && isProgress && isOpen && !driverInfo) {
+      setIsLoadingDriver(true);
 
+      dispatch(getDriverLocation(data.id)).unwrap()
+        .then(res => {
+          console.log('기사 정보 불러오기: ', res.data)
+          setDriverInfo(res.data);
+        })
+        .catch(err => {
+          const errorCode = err.response?.data?.code || err.code;
+          if (errorCode === 'NO_ASSIGNMENT_ERROR' || err.status === 404) {
+            console.error("배정 기사 없음: ", err);
+          } else {
+          toast.error("통신 오류가 발생했습니다.");
+          console.error("기사 정보 조회 실패: ", err);
+          }
+          setDriverInfo(null);
+        })
+        .finally(() => setIsLoadingDriver(false));
+    } 
+  }, [isOpen, isDelivery, isProgress, data.id, driverInfo, dispatch])
 
   return(
     <div className="reserve-list-content-body">
@@ -68,7 +93,7 @@ export default function ReserveItem({ data }) {
         {
           recheckFlg &&
           <RecheckModal
-            modalFlgfalse={() => setRecheckFlg()}
+            modalFlgfalse={() => setRecheckFlg(false)}
             data={data}
           />
         }
@@ -183,14 +208,36 @@ export default function ReserveItem({ data }) {
               </div>
 
               {
-                data.state === 'RESERVED' ? (
+                data.state === 'RESERVED' && (
                   <div className="reserve-list-content-right">
-                    <div className="reserve-list-tag reserve-list-cancel-btn" onClick={setRecheckFlg}>예약 취소</div>
-                  </div>
-                ) : (
-                  <div className="reserve-list-empty-space">
+                    <div className="reserve-list-tag reserve-list-cancel-btn" onClick={() => setRecheckFlg(true)}>예약 취소</div>
                   </div>
                 )
+              }
+              {
+                isDelivery && isProgress && (
+                  <>
+                    <div className="reserve-list-content-wrapper">
+                      <span>배정 기사</span>
+                      <span>{isLoadingDriver ? '불러오는 중...' : (driverInfo?.driverName || '미배정')}</span>
+                    </div>
+                    <div className="reserve-list-content-wrapper">
+                      <span>기사 연락처</span>
+                      <span>{isLoadingDriver ? '불러오는 중...' : (driverInfo?.phone || '미배정')}</span>
+                    </div>
+                    <div className="reserve-list-content-wrapper">
+                      <span>배송 차량 번호</span>
+                      <span>{isLoadingDriver ? '불러오는 중...' : (driverInfo?.carNumber || '미배정')}</span>
+                    </div>
+                    <div className="reserve-list-empty-space">
+                    </div>
+                  </>
+
+                )
+              }
+              {
+                !isProgress &&
+                <div className="reserve-list-empty-space"></div>
               }
 
             </motion.div>

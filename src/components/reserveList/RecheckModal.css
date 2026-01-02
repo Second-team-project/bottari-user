@@ -26,7 +26,6 @@
 
   z-index: 16;
 }
-
 @media (min-width: 769px) {
   .recheck-modal-cotainer {
     width: 50%;
@@ -58,6 +57,13 @@
   justify-content: flex-end;
 
   cursor: pointer;
+}
+
+/* 로딩 중 컨테이너 */
+.recheck-modal-step-loading-container {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
 }
 
 /* step 컨테이너 */
@@ -278,6 +284,24 @@
 .rechck-modal-btn:active {
   transform: scale(0.95);
 }
+/* 다음 버튼 */
+.background-color-var-navy {
+  background-color: var(--bottari-navy);
+  color: #fff;  
+}
+/* 취소 버튼 */
+.background-color-var-submit {
+  background-color: var(--bottari-navy);
+  color: #fff;
+}
+.background-color-var-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.background-color-var-submit:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
 /* flex */
 .flex-content-end {
   width: 100%;
@@ -294,10 +318,4 @@
 /* 폰트 색상 */
 .color-var-bottari-gray {
   color: var(--bottari-gray);
-}
-
-/* 배경색 */
-.background-color-var-navy {
-  background-color: var(--bottari-navy);
-  color: #fff;
 }

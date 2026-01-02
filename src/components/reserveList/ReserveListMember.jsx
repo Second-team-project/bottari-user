@@ -8,10 +8,13 @@ import { motion } from "framer-motion";
 import { userReservation } from "../../store/thunks/reserveThunk.js";
 
 import ReserveItem from "./ReserveItem.jsx";
+import Loading from "../common/Loading.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function ReserveListMemeber() {
   // ===== hooks
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   // ===== redux states
   const user = useSelector(state => state.auth.user)
   const reservationList = useSelector(state => state.reserve.reservationList);
@@ -33,8 +36,12 @@ export default function ReserveListMemeber() {
       {
         reservationList.length === 0 &&
         <div className="reserve-list-noItem">
-          예약 내역이 없습니다.
+          <Loading fullScreen={false} text="예약 내역이 없습니다."/>
+          <div className="reserve-list-noItem-btn-wrapper">
+            <button className="reserve-list-noItem-btn" onClick={() => navigate('/reserve')}>예약 하러가기</button>
+          </div>
         </div>
+
       }
 
       {/* 예약 아이템이 있는 경우 */}

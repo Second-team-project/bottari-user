@@ -22,31 +22,19 @@
   gap: 0.5rem;
 }
 
-.review-create-label {
-  font-weight: 600;
-  color: #333;
-}
-
-/* 별점 */
-.review-create-stars {
-  display: flex;
-  gap: 4px;
-}
-
 /* 내용 */
 .review-create-textarea {
   width: 100%;
   padding: 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--bottari-coolgray);
   border-radius: 8px;
   font-size: 1rem;
   resize: none;
   font-family: inherit;
 }
-
 .review-create-textarea:focus {
   outline: none;
-  border-color: var(--bottari-navy, #2c3e50);
+  border-color: var(--bottari-navy);
 }
 
 /* 이미지 업로드 */
@@ -64,7 +52,6 @@
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s;
 }
-
 .review-create-image-upload:hover {
   border-color: var(--bottari-navy, #2c3e50);
   color: var(--bottari-navy, #2c3e50);
@@ -116,13 +103,13 @@
 }
 
 .review-create-btn.cancel {
-  background-color: #f1f1f1;
+  background-color: var(--bottari-coolgray);
   border: none;
-  color: #666;
+  color: var(--bottari-grayfont);
 }
 
 .review-create-btn.submit {
-  background-color: var(--bottari-navy, #2c3e50);
+  background-color: var(--bottari-navy);
   border: none;
   color: #fff;
 }
@@ -131,7 +118,6 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
-
 .review-create-btn:hover:not(:disabled) {
   opacity: 0.9;
 }

@@ -11,16 +11,18 @@
 
 /* 모달 */
 .review-modal {
+  width: 90%;
+  max-width: 600px;
+  min-height: 40vh;
+  max-height: 80vh;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  width: 90%;
-  max-width: 600px;
-  max-height: 80vh;
-  background-color: #fff;
-  border-radius: 16px;
   
   overflow: hidden;
   overflow-y: auto;
@@ -43,9 +45,8 @@
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  color: #333;
+  color: var(--bottari-grayfont);
 }
-
 .review-modal-close:hover {
   background: #fff;
 }
@@ -53,9 +54,10 @@
 /* 이미지 */
 .review-modal-image {
   width: 100%;
-  max-height: 300px;
+  min-height: 30vh;
+  max-height: 50vh;
   overflow: hidden;
-
+  
   display: flex;
   justify-content: center;
   align-items: center;
@@ -69,36 +71,36 @@
 }
 
 /* 내용 */
-.review-modal-content {
-  padding: 1.5rem;
+.review-detail-container {
+  padding: 0.5rem;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .review-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 }
 
-.review-modal-nickname {
+.review-modal-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #333;
-}
-
-.review-modal-stars {
-  display: flex;
-  gap: 2px;
+  color: var(--bottari-darkslate);
 }
 
 .review-modal-text {
-  font-size: 1rem;
-  color: #555;
+  font-size: 0.95rem;
+  color: var(--bottari-grayfont);
   line-height: 1.6;
   margin-bottom: 1rem;
 }
-
-.review-modal-date {
-  font-size: 0.85rem;
-  color: #999;
+@media (min-width: 769px) {
+  .review-modal-text {
+    font-size: 1rem;
+  }
 }
+

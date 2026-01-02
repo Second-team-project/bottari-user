@@ -1,6 +1,10 @@
 import "./ReviewDetail.css";
+
 import { motion } from "framer-motion";
 import { X, Star } from "lucide-react";
+
+import { maskEmail } from "../../utils/maskEmail.js";
+import { useEffect } from "react";
 
 export default function ReviewDetailModal({ review, onClose }) {
   // // 별점 렌더링
@@ -14,6 +18,15 @@ export default function ReviewDetailModal({ review, onClose }) {
   //     />
   //   ));
   // };
+
+  // ========================
+  // ||     스크롤 방지     ||
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
 
   return (
     <>
@@ -47,14 +60,22 @@ export default function ReviewDetailModal({ review, onClose }) {
         )}
 
         {/* 내용 */}
-        <div className="review-modal-content">
+        <div className="review-detail-container">
+
           <div className="review-modal-header">
-            <span className="review-modal-nickname">{review.nickname}</span>
-            {/* <div className="review-modal-stars">{renderStars(review.rating)}</div> */}
+            <span className="review-modal-title">{review?.title}</span>
           </div>
-          <p className="review-modal-text">{review.content}</p>
-          <span className="review-modal-date">작성일 {review.createdAt}</span>
+
+          <p className="review-modal-text">{review?.content}</p>
+
+          <div className="review-card-bottom">
+            <span>작성일: {review?.createdAt}</span>
+            <span>작성자: {maskEmail(review.writer?.email)}</span>
+          </div>
+
         </div>
+
+
       </motion.div>
     </>
   );

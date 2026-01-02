@@ -19,18 +19,3 @@ export const getReviewList = createAsyncThunk(
     return rejectWithValue(error);
   }}
 )
-
-export const getReviewDetail = createAsyncThunk(
-  'reveiw/getReviewDetail',
-  async (id, {rejectWithValue}) => {
-  const url = `/api/user/review/${id}`
-
-  try {
-    const response = await axiosIns.get(url);
-    
-    return response.data;
-
-  } catch (error) {
-    return rejectWithValue(error);
-  }}
-)

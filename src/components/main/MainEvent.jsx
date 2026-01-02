@@ -14,11 +14,6 @@ export default function MainEvent() {
   const loading = useSelector(state => state.guideImg.loading);
 
   const [currentEvent, setCurrentEvent] = useState(0);
-  // const events = [
-  //   { id: 1, title: "신규 가입 이벤트", description: "첫 예약 시 10% 할인!" },
-  //   { id: 2, title: "연말 특별 이벤트", description: "12월 한정 무료 보관 1시간 추가" },
-  //   { id: 3, title: "친구 초대 이벤트", description: "친구 초대 시 적립금 지급" },
-  // ];
 
   const prevEvent = () => {
     setCurrentEvent((prev) => (prev === 0 ? eventList.length - 1 : prev - 1));
@@ -48,7 +43,7 @@ export default function MainEvent() {
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <img src={eventList[currentEvent]?.img} alt={`${eventList[currentEvent].title}` || '이벤트'} className="main-event-banner" 
+                  <img src={eventList[currentEvent]?.img} alt={`${eventList[currentEvent]?.title}` || '이벤트'} className="main-event-banner" 
                     onClick={() => navigate(`${eventList[currentEvent].link}`)}
                   />
                 </motion.div>

@@ -1,11 +1,15 @@
 import "./Review.css";
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Plus } from "lucide-react";
-import ReviewDetailModal from "./ReviewDetail.jsx";
-import { useDispatch } from "react-redux";
+
 import { getReviewList } from "../../store/thunks/reviewThunk.js";
+import { maskEmail } from "../../utils/maskEmail.js";
+
+import ReviewDetailModal from "./ReviewDetail.jsx";
 
 export default function Review() {
   // ===== hooks
@@ -39,7 +43,6 @@ export default function Review() {
   }, [])
 
 
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -58,7 +61,7 @@ export default function Review() {
           <button
             className="review-btn"
             onClick={() => navigate("/review/create")}
-          >후기 쓰기</button>
+          >후기 작성하기</button>
         </div>
 
         {/* 후기 카드 목록 */}
@@ -71,31 +74,38 @@ export default function Review() {
             >
               {/* 이미지 (있을 때만) */}
               {review.img && (
-                <div className="review-card-image">
-                  <img src={review.img} alt="후기 이미지" />
+                <div className="review-card-image-wrapper">
+                  <div className="review-card-image" style={{backgroundImage: `url('${review?.img}')`}}  />
+                  {/* src={review?.img} */}
                 </div>
               )}
 
               {/* 카드 내용 */}
               <div className="review-card-content">
+
                 <div className="review-card-header">
-                  <span className="review-card-nickname">{review.useId}</span>
-                  {/* <div className="review-card-stars">{renderStars(review.rating)}</div> */}
+                  <span className="review-card-title">{review?.title}</span>
                 </div>
-                <p className="review-card-text">{review.content}</p>
-                <span className="review-card-date">작성일 {review.createdAt}</span>
+
+                <p className="review-card-text">{review?.content}</p>
+
+                <div className="review-card-bottom">
+                  <span>작성일: {review?.createdAt}</span>
+                  <span>작성자: {maskEmail(review.writer?.email)}</span>
+                </div>
+
               </div>
             </div>
           ))}
         </div>
 
         {/* 작성 버튼 */}
-        <button
+        {/* <button
           className="review-write-btn"
           onClick={() => navigate("/review/create")}
         >
           <Plus size={24} />
-        </button>
+        </button> */}
       </div>
 
       {/* 상세 모달 */}

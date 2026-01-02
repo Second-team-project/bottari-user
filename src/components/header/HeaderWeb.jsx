@@ -107,10 +107,10 @@ export default function HeaderWeb() {
 
             {/* 아이콘 영역 */}
             <div className="header-web-icon-container">
-              <div className="header-web-icon-wrapper header-web-click-effect">
+              {/* <div className="header-web-icon-wrapper header-web-click-effect">
                 <span className="header-web-icon-text">한국어</span>
                 <Globe size={20} />
-              </div>
+              </div> */}
               <div className="header-web-icon-wrapper header-web-click-effect" 
                 onClick={() => handleAccount()}
               >
