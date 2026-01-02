@@ -21,18 +21,6 @@ export default function Review() {
   // 모달 상태
   const [reviewDetail, setReviewDetail] = useState(null);
 
-  // 별점 렌더링
-  // const renderStars = (rating) => {
-  //   return Array.from({ length: 5 }, (_, i) => (
-  //     <Star
-  //       key={i}
-  //       size={16}
-  //       fill={i < rating ? "#ffc107" : "none"}
-  //       color={i < rating ? "#ffc107" : "#ddd"}
-  //     />
-  //   ));
-  // };
-
   // ===== 데이터 불러오기
   useEffect(() => {
     dispatch(getReviewList({page : 1})).unwrap()

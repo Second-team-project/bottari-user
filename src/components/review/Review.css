@@ -18,7 +18,7 @@
   font-weight: 500;
   font-size: 1rem;
   background-color: #fff;
-  border: 2px solid var(--bottari-grayfont);
+  border: 1px solid var(--bottari-grayfont);
   border-radius: 5px;
   padding: 0.3rem;
   margin: 1rem;
@@ -28,7 +28,7 @@
 }
 .review-btn:hover {
   color: var(--bottari-navy);
-  border: 2px solid var(--bottari-navy);
+  border: 1px solid var(--bottari-navy);
 
 }
 .review-btn:active {

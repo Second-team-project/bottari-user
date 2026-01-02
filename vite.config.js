@@ -13,6 +13,11 @@ export default defineConfig({
         changeOrigin: true,              // Request Header Host 필드 값을 대상 서버 호스트로 변경
         secure: false,                   // SSL 인증서 검증 무시
         ws: true                         // WebSoket 프로토콜 사용
+      },
+      '/files' : {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
       }
     }
   }

@@ -1,25 +1,45 @@
 /* 이벤트 슬라이더 */
 .main-event-container {
+  /* height: 200px; 고정 높이 제거 */
   background-color: var(--bottari-offwhite);
   border-radius: 12px;
-  padding: 0.5rem 1rem;
   margin: 1rem;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  position: relative;
+  padding-bottom: 1rem; /* 인디케이터 공간 확보 */
 }
 
 /* 화살표 */
 .main-event-arrow {
-  color: var( --bottari-grayfont);
-  background: none;
+  color: var( --bottari-navy);
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50px;
   border: none;
   padding: 0.5rem;
   
+  position: absolute;
+  top: 30%;
+
   transition: color 0.2s;
   cursor: pointer;
+  z-index: 10;
+}
+@media (min-width: 769px) {
+  .main-event-arrow {
+    position: absolute;
+    top: 40%;
+  }
+}
+.main-event-arrow-right {
+  right: 0%;
+}
+.main-event-arrow-left {
+  left: 0%;
 }
 .main-event-arrow:hover {
   color: var(--bottari-pink);
@@ -28,23 +48,46 @@
 /* 컨텐트 */
 .main-event-content {
   width: 100%;
-  min-height: 60px;
-  text-align: center;
   
   display: flex;
   flex: 1;
   align-items: center;
   justify-content: center;
 }
+@media (min-width: 769px) {
+  .main-event-content {
+    padding: 0.5rem 2rem 0;
+  }
+}
 
 .main-event-item {
   width: 100%;
-  height: 120px;
+}
+@media (min-width: 769px) {
+  .main-event-item {
+    width: 80%;
+  }
 }
 .main-event-banner {
-  height: 120px;
-  width: auto; 
+  height: 100%;
   cursor: pointer;
+}
+
+.main-event-banner-div {
+  width: 100%;
+  aspect-ratio: 3 / 1; /* 모바일: 2:1 비율 */
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 3px;
+
+  cursor: pointer;
+}
+@media (min-width: 769px) {
+  .main-event-banner-div {
+    aspect-ratio: 4 / 1; /* PC: 4:1 비율 (더 납작하게) */
+  }
 }
 
 .main-event-title {
@@ -62,12 +105,14 @@
 /* 인디케이터 */
 .main-event-indicator {
   width: 100%;
-  margin-top: 0.5rem;
 
   display: flex;
   justify-content: center;
   align-items: normal;
   gap: 0.5rem;
+
+  position: absolute;
+  bottom: 5px; /* 위치 조정 */
 }
 
 .indicator-dot {

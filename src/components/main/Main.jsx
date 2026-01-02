@@ -22,9 +22,12 @@ export default function Main() {
     >
       {/* 메인 배너 */}
       <MainBanner />
+      <div className="main-empty-space"></div>
 
       {/* 이벤트 슬라이더 */}
       <MainEvent />
+      <div className="main-empty-space"></div>
+
 
       {/* 서비스 소개 */}
       <MainService />

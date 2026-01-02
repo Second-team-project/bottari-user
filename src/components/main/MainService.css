@@ -1,0 +1,21 @@
+.main-service-img-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+  box-sizing: border-box;
+}
+/* PC 버전에서는 너무 커지지 않게 제한할 경우 */
+@media (min-width: 769px) {
+  .main-service-img-container {
+    padding: 0; /* PC에서는 여백 제거 혹은 조정 */
+    max-width: 1024px; /* 최대 너비 제한 */
+    margin: 2rem auto; /* 중앙 정렬 */
+  }
+}
+
+.main-service-img {
+  width: 100%;
+  height: auto; /* 비율 유지하며 높이 자동 조절 */
+  object-fit: contain; /* 이미지 전체 보여주기 */
+}
