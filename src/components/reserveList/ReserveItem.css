@@ -1,1 +1,33 @@
+.reserve-list-line {
+  border: none;
+  border-top: 1px solid var(--bottari-offwhite);
+}
 
+.reserve-item-align-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reserve-item-map-wrapper {
+  width: 100%;
+  height: 250px;
+  margin: 0.5rem 0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.reserve-item-map-picker {
+  color: #fff;
+  font-size: 0.8rem;
+  text-align: center;
+  background-color: var(--bottari-navy);
+  border-radius: 10px;
+  padding: 0.3rem;
+}
+
+.reserve-item-map-btn {
+  border: none;
+  background-color: #fff;
+  padding: 0.1rem 1rem;
+  cursor: pointer;
+}

@@ -1,13 +1,15 @@
 import "./ReserveItem.css";
 
-import { useEffect, useState } from "react";
-import { Truck, Package, ChevronDown, ChevronUp } from 'lucide-react';
-import dayjs from "dayjs";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import RecheckModal from "./RecheckModal.jsx";
+import dayjs from "dayjs";
+import { Truck, Package, ChevronDown, ChevronUp, MapPin } from 'lucide-react';
 import { AnimatePresence, motion } from "framer-motion";
-import { getDriverLocation } from "../../store/thunks/driverLocatinThunk.js";
 import { toast } from "sonner";
+import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
+
+import RecheckModal from "./RecheckModal.jsx";
+import { getDriverLocation } from "../../store/thunks/driverLocatinThunk.js";
 
 export default function ReserveItem({ data }) {
   // code: "DM251227G5H6I"
@@ -22,6 +24,7 @@ export default function ReserveItem({ data }) {
 
   // ===== hooks
   const dispatch = useDispatch();
+  const mapRef = useRef(null);
   // ===== redux states
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   // ===== local states
@@ -206,17 +209,13 @@ export default function ReserveItem({ data }) {
                   ))
                 }
               </div>
+              <div className="reserve-list-empty-space"></div>
 
-              {
-                data.state === 'RESERVED' && (
-                  <div className="reserve-list-content-right">
-                    <div className="reserve-list-tag reserve-list-cancel-btn" onClick={() => setRecheckFlg(true)}>예약 취소</div>
-                  </div>
-                )
-              }
+
               {
                 isDelivery && isProgress && (
                   <>
+                    <hr className="reserve-list-line" />
                     <div className="reserve-list-content-wrapper">
                       <span>배정 기사</span>
                       <span>{isLoadingDriver ? '불러오는 중...' : (driverInfo?.driverName || '미배정')}</span>
@@ -232,12 +231,57 @@ export default function ReserveItem({ data }) {
                     <div className="reserve-list-empty-space">
                     </div>
                   </>
-
-                )
+              )
               }
               {
-                !isProgress &&
+                data.state === 'RESERVED' && (
+                  <div className="reserve-list-content-right">
+                    <div className="reserve-list-tag reserve-list-cancel-btn" onClick={() => setRecheckFlg(true)}>예약 취소</div>
+                  </div>
+                )
+              }
+              {data.state === 'IN_PROGRESS' && driverInfo?.lat && driverInfo?.lng && (
+                <>
+                  <hr className="reserve-list-line" />
+                  <div className="reserve-list-content-wrapper reserve-item-align-center">
+                    <span>기사님 위치</span>
+                    <span>
+                      <button type="button" className="reserve-item-map-btn" 
+                        onClick={() => {
+                          if (mapRef.current) {
+                            mapRef.current.panTo(new kakao.maps.LatLng(driverInfo.lat, driverInfo.lng));
+                          }
+                        }}
+                      ><MapPin size={24} /></button>
+                    </span>
+                  </div>
+                  <div className="reserve-item-map-wrapper">
+                  <Map
+                    center={{ lat: Number(driverInfo.lat), lng: Number(driverInfo.lng) }} // 지도의 중심 좌표
+                    style={{ width: "100%", height: "100%" }} // 지도 크기
+                    level={5} // 확대 레벨
+                    ref={mapRef}
+                  >
+                    {/* 기사님 위치에 핀(마커) 표시 */}
+                    <MapMarker
+                      position={{ lat: Number(driverInfo.lat), lng: Number(driverInfo.lng) }}
+                      image={{ src: "/bottari-pick.png", size: { width: 35, height: 35 } }}
+                    ></MapMarker>
+                    <CustomOverlayMap
+                      position={{ lat: Number(driverInfo.lat), lng: Number(driverInfo.lng) }}
+                      yAnchor={2.5}
+                    >
+                    <div className="reserve-item-map-picker">
+                      보따리가 가고 있어요!
+                    </div>
+                    </CustomOverlayMap>
+                  </Map>
+
+                </div>
                 <div className="reserve-list-empty-space"></div>
+                </>
+
+                )
               }
 
             </motion.div>

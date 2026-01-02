@@ -177,15 +177,14 @@ export default function TossCheckoutPage({ payData, password }) {
               });
 
             } catch (error) {
+              
+              setIsSubmitting(false);  // <- 에러난 경우  버튼 다시 활성화
 
-              // 3. 에러 발생 시 처리
               if (error.type === 'DRAFT_SAVE_ERROR') {
                 console.error('예약 정보 저장 실패');
               } else {
                 toast.error(`error: ${error.data.data || '알 수 없는 오류'}`);
               } 
-            } finally {
-              setIsSubmitting(false);  // <- 성공/실패 상관없이 버튼 다시 활성화
             }
           }}
         >{isSubmitting ? '처리 중...' : '결제하기'}</button>
