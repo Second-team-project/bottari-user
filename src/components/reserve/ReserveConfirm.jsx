@@ -11,6 +11,7 @@ import CheckoutPage from './tosspayments/TossCheckout.jsx';
 import { getReserveSession } from "../../utils/sessionStorageUtil.js";
 import { setDeliveryReserve, setStorageReserve } from "../../store/slices/reserveSlice.js";
 import dayjs, { Dayjs } from "dayjs";
+import { ArrowBigDown } from "lucide-react";
 
 export default function ReserveConfirm() {
   // ===== hooks
@@ -183,8 +184,9 @@ export default function ReserveConfirm() {
                 <div className="reserve-confirm-data-wrapper">
                   <span className="reserve-confirm-data-key">보관 기한</span>
                   <div className="reserve-confirm-data-value-wrapper">
-                    <span>{thisData?.startedAt && dayjs(thisData.startedAt).format('MM월 DD일 ddd HH시 mm분')}<span className="reserve-confirm-content-gray"> 부터</span></span>
-                    <span>{thisData?.endedAt && dayjs(thisData.endedAt).format('MM월 DD일 HH시 mm분')}<span className="reserve-confirm-content-gray"> 까지</span></span>
+                    <span>{thisData?.startedAt && dayjs(thisData.startedAt).format('MM월 DD일  HH시 mm분')}</span>
+                    <span className="reserve-confirm-content-gray"><ArrowBigDown /><span className="reserve-confirm-margin-right-4-rem">{'   '}</span></span>
+                    <span>{thisData?.endedAt && dayjs(thisData.endedAt).format('MM월 DD일  HH시 mm분')}</span>
                   </div>
                 </div>
 

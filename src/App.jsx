@@ -27,7 +27,7 @@ function App() {
     <>
       <div className='app-container'>
         {/* 토스트 */}
-        <Toaster position="top-center" />
+        <Toaster position="top-center" offset="80px" />
 
         {/* 웹용 헤더 */}
         <div className="app-header-web-wrapper">

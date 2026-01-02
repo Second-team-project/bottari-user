@@ -129,7 +129,7 @@ export const userReservationCancel = createAsyncThunk(
   'reserve/userReservationCancel',
   async (data, {rejectWithValue}) => {
     try {
-      const url = `/api/user/reserve/cancel/${data.reservId}`;
+      const url = `/api/user/reserve/cancel/${data.code}`;
       const response = await axiosIns.post(url, data);
 
       // console.log('reserveCompletethunk-response: ', response);
@@ -148,7 +148,7 @@ export const guestReservationCancel = createAsyncThunk(
   'reserve/guestReservationCancel',
   async (data, {rejectWithValue}) => {
     try {
-      const url = `/api/user/reserve/guest/cancel/${data.reservId}`;
+      const url = `/api/user/reserve/guest/cancel/${data.code}`;
       const response = await axiosIns.post(url, data);
 
       // console.log('reserveCompletethunk-response: ', response);

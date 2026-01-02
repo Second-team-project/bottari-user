@@ -1,63 +1,44 @@
 import "./Review.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Plus } from "lucide-react";
 import ReviewDetailModal from "./ReviewDetail.jsx";
+import { useDispatch } from "react-redux";
+import { getReviewList } from "../../store/thunks/reviewThunk.js";
 
 export default function Review() {
+  // ===== hooks
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  // ===== local states
+  const [reviewList, setReviewList] = useState([]);
 
   // 모달 상태
-  const [selectedReview, setSelectedReview] = useState(null);
-
-  // TODO: 백엔드에서 후기 목록 가져오기
-  const reviews = [
-    {
-      id: 1,
-      nickname: "여행러버",
-      rating: 5,
-      content: "여행 중 짐 맡기기 너무 편했어요! 직원분도 친절하시고 위치도 좋았습니다.",
-      image: null,
-      createdAt: "2024.12.25",
-    },
-    {
-      id: 2,
-      nickname: "출장족",
-      rating: 4,
-      content: "공항에서 호텔까지 짐 배송 서비스 이용했는데 정말 편리했습니다. 다음에도 이용할게요!",
-      image: "https://via.placeholder.com/300x200",
-      createdAt: "2024.12.20",
-    },
-    {
-      id: 3,
-      nickname: "김보따리",
-      rating: 5,
-      content: "보따리 서비스 덕분에 가볍게 여행할 수 있었어요. 강력 추천합니다!",
-      image: null,
-      createdAt: "2024.12.18",
-    },
-    {
-      id: 4,
-      nickname: "힐링여행",
-      rating: 5,
-      content: "예약도 간편하고 가격도 합리적이에요. 자주 이용할 것 같아요~",
-      image: "https://via.placeholder.com/300x200",
-      createdAt: "2024.12.15",
-    },
-  ];
+  const [reviewDetail, setReviewDetail] = useState(null);
 
   // 별점 렌더링
-  const renderStars = (rating) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        size={16}
-        fill={i < rating ? "#ffc107" : "none"}
-        color={i < rating ? "#ffc107" : "#ddd"}
-      />
-    ));
-  };
+  // const renderStars = (rating) => {
+  //   return Array.from({ length: 5 }, (_, i) => (
+  //     <Star
+  //       key={i}
+  //       size={16}
+  //       fill={i < rating ? "#ffc107" : "none"}
+  //       color={i < rating ? "#ffc107" : "#ddd"}
+  //     />
+  //   ));
+  // };
+
+  // ===== 데이터 불러오기
+  useEffect(() => {
+    dispatch(getReviewList({page : 1})).unwrap()
+      .then(res => {
+        console.log('Review-thunkRes: ', res.data.list)
+        setReviewList(res.data.list);
+      })
+  }, [])
+
+
 
   return (
     <motion.div
@@ -73,29 +54,36 @@ export default function Review() {
           <h2 className="review-title">후기</h2>
         </div>
 
+        <div className="review-btn-wrapper">
+          <button
+            className="review-btn"
+            onClick={() => navigate("/review/create")}
+          >후기 쓰기</button>
+        </div>
+
         {/* 후기 카드 목록 */}
         <div className="review-list">
-          {reviews.map((review) => (
+          {reviewList?.map((review) => (
             <div
               key={review.id}
               className="review-card"
-              onClick={() => setSelectedReview(review)}
+              onClick={() => setReviewDetail(review)}
             >
               {/* 이미지 (있을 때만) */}
-              {review.image && (
+              {review.img && (
                 <div className="review-card-image">
-                  <img src={review.image} alt="후기 이미지" />
+                  <img src={review.img} alt="후기 이미지" />
                 </div>
               )}
 
               {/* 카드 내용 */}
               <div className="review-card-content">
                 <div className="review-card-header">
-                  <span className="review-card-nickname">{review.nickname}</span>
-                  <div className="review-card-stars">{renderStars(review.rating)}</div>
+                  <span className="review-card-nickname">{review.useId}</span>
+                  {/* <div className="review-card-stars">{renderStars(review.rating)}</div> */}
                 </div>
                 <p className="review-card-text">{review.content}</p>
-                <span className="review-card-date">{review.createdAt}</span>
+                <span className="review-card-date">작성일 {review.createdAt}</span>
               </div>
             </div>
           ))}
@@ -112,10 +100,10 @@ export default function Review() {
 
       {/* 상세 모달 */}
       <AnimatePresence>
-        {selectedReview && (
+        {reviewDetail && (
           <ReviewDetailModal
-            review={selectedReview}
-            onClose={() => setSelectedReview(null)}
+            review={reviewDetail}
+            onClose={() => setReviewDetail(null)}
           />
         )}
       </AnimatePresence>

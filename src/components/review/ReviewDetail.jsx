@@ -3,17 +3,17 @@ import { motion } from "framer-motion";
 import { X, Star } from "lucide-react";
 
 export default function ReviewDetailModal({ review, onClose }) {
-  // 별점 렌더링
-  const renderStars = (rating) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        size={20}
-        fill={i < rating ? "#ffc107" : "none"}
-        color={i < rating ? "#ffc107" : "#ddd"}
-      />
-    ));
-  };
+  // // 별점 렌더링
+  // const renderStars = (rating) => {
+  //   return Array.from({ length: 5 }, (_, i) => (
+  //     <Star
+  //       key={i}
+  //       size={20}
+  //       fill={i < rating ? "#ffc107" : "none"}
+  //       color={i < rating ? "#ffc107" : "#ddd"}
+  //     />
+  //   ));
+  // };
 
   return (
     <>
@@ -40,9 +40,9 @@ export default function ReviewDetailModal({ review, onClose }) {
         </button>
 
         {/* 이미지 */}
-        {review.image && (
+        {review.img && (
           <div className="review-modal-image">
-            <img src={review.image} alt="후기 이미지" />
+            <img src={review.img} alt="후기 이미지" />
           </div>
         )}
 
@@ -50,10 +50,10 @@ export default function ReviewDetailModal({ review, onClose }) {
         <div className="review-modal-content">
           <div className="review-modal-header">
             <span className="review-modal-nickname">{review.nickname}</span>
-            <div className="review-modal-stars">{renderStars(review.rating)}</div>
+            {/* <div className="review-modal-stars">{renderStars(review.rating)}</div> */}
           </div>
           <p className="review-modal-text">{review.content}</p>
-          <span className="review-modal-date">{review.createdAt}</span>
+          <span className="review-modal-date">작성일 {review.createdAt}</span>
         </div>
       </motion.div>
     </>

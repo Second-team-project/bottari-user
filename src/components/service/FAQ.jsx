@@ -26,32 +26,14 @@ export default function FAQ() {
     <div className="faq-container">
       {/* FAQ 목록 */}
       <div className="faq-list">
-
-
-
-
-          { faqList?.length > 0 && faqList?.map((faq, index) => (
-            <FAQItem 
-              key={faq.id}
-              faq={faq}
-              isOpen={openIndex === index}
-              onToggle={() => setOpenIndex(index)}
-            />
-            // <div key={index} className="faq-item">
-            //   <div className="faq-question" onClick={() => toggleFaq(index)}>
-            //     <span>Q. {faq.question}</span>
-            //     {openIndex === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-            //   </div>
-            //   {openIndex === index && (
-            //     <div className="faq-answer">
-            //       A. {faq.answer}
-            //     </div>
-            //   )}
-            // </div>
-          ))}
-
-
-
+        { faqList?.length > 0 && faqList?.map((faq, index) => (
+          <FAQItem 
+            key={faq.id}
+            faq={faq}
+            isOpen={openIndex === index}
+            onToggle={() => setOpenIndex(index)}
+          />
+        ))}
       </div>
     </div>
   );

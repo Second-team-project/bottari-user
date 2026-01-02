@@ -31,7 +31,7 @@ const slice = createSlice({
       .addCase(getFaqThunk.fulfilled, (state, action) => {
         state.loading = false;
 
-        state.faqList = action.payload.data.notices;
+        state.faqList = action.payload.data.faqs;
         console.log('slice-faqList: ', state.faqList);
       })
       .addCase(getFaqThunk.rejected, (state, action) => {

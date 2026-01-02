@@ -18,14 +18,16 @@
 .review-card {
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px var(--bottari-coolgray);
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
+
+  cursor: pointer;
 }
 
 .review-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 3px 10px var(--bottari-coolgray);
 }
 
 /* 카드 이미지 */
@@ -81,24 +83,59 @@
   color: #999;
 }
 
+.review-btn-wrapper {
+  width: 100%;
+  margin-right: 10%;
+  display: flex;
+  justify-content: flex-end;
+}
+
 /* 작성 버튼 (FAB) */
 .review-write-btn {
-  position: fixed;
-  bottom: 100px;
-  right: 20px;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background-color: var(--bottari-navy, #2c3e50);
   color: #fff;
+  width: 3.2rem;
+  height: 3.2rem;
+
+  position: fixed;
+  bottom: 20%;
+  right: 10%;
+
+  border-radius: 50%;
+  background-color: var(--bottari-navy);
   border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  
   display: flex;
   align-items: center;
   justify-content: center;
+
+  cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
-  z-index: 50;
+  z-index: 20;
+}
+@media (min-width: 769px) {
+  .review-write-btn {
+    color: #fff;
+    width: 3.2rem;
+    height: 3.2rem;
+
+    position: fixed;
+    bottom: 8%;
+    right: 8%;
+
+    border-radius: 50%;
+    background-color: var(--bottari-navy);
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 50;
+  }
 }
 
 .review-write-btn:hover {

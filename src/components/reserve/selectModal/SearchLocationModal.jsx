@@ -143,7 +143,7 @@ export default function SearchLocationModal({ modalFlgFalse, setLocation, locati
 
           {/* 더보기 버튼 */}
           {
-            resultList && resultList.length > 0 && !isEnd && (
+            resultList && !isEnd && (
               <button
                 className="search-location-modal-result-wrapper search-location-modal-more-search"
                 onClick={loadMore}

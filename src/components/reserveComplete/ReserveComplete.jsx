@@ -81,7 +81,9 @@ export default function ReserveComplete() {
           <div className="reserve-form-content-container reserve-complete-margin-updonw">
             <div className="reserve-complete-reserve-code-wrapper">
               <span className="reserve-complete-reserve-code-notice"><span>user</span>님의 예약코드는 아래와 같습니다.</span>
-              <span className="reserve-complete-reserve-code">{reserveCode}{' '}<span className="reserve-complete-copy-icon"><Copy size={16} onClick={handleCopyCode} title="예약 코드 복사" />복사하기</span></span>
+              <div className="reserve-complete-reserve-code-copy" onClick={handleCopyCode}>
+                <span className="reserve-complete-reserve-code">{reserveCode}{' '}<span className="reserve-complete-copy-icon"><Copy size={16} title="예약 코드 복사" />복사하기</span></span>
+              </div>
               {/* 안내문구  */}
               <div className="reserve-complete-notice-wrapper">
                 <p className="reserve-complete-notice-text">예약코드 분실 시 예약 조회가 불가합니다.</p>
