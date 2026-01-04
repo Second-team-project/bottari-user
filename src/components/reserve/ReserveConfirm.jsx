@@ -150,7 +150,7 @@ export default function ReserveConfirm() {
               <div className="reserve-confirm-content-data-container-middle">
 
                 {/* 픽업 일시 */}
-                <div className="reserve-confirm-data-wrapper">
+                <div className="reserve-confirm-data-wrapper border-none padding-bottom-0">
                   <span className="reserve-confirm-data-key">픽업</span>
                   <div className="reserve-confirm-data-value-wrapper">
                     <span>{thisData?.startedAt && dayjs(thisData.startedAt).format('MM월 DD일 ddd HH시 mm분')}</span>
@@ -158,12 +158,12 @@ export default function ReserveConfirm() {
                       {thisData?.startedAddr?.addr}
                       {thisData?.startedAddr?.addrDetail && ` ${thisData.startedAddr.addrDetail}`}
                     </span>
+                    <span className="reserve-confirm-content-gray"><ArrowBigDown /><span className="reserve-confirm-margin-right-4-rem">{'   '}</span></span>
                   </div>
                 </div>
 
-
                 {/* 도착지 */}
-                <div className="reserve-confirm-data-wrapper">
+                <div className="reserve-confirm-data-wrapper padding-top-0">
                   <span className="reserve-confirm-data-key">도착지</span>
                   <div className="reserve-confirm-data-value-wrapper">
                     <span className="reserve-confirm-content-data">
