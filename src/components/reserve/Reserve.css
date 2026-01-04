@@ -18,7 +18,7 @@
   height: 145px;
   border: 1px solid var(--bottari-slateblue);
   border-radius: 10px;
-  box-shadow: 0 0 5px 2px var(--coolgray-input);
+  box-shadow: var(--bottari-shadow);
   margin: 10% 10% 0 10%;
 
   display: flex;

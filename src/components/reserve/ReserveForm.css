@@ -102,7 +102,7 @@
 .reserve-form-content-input:focus {
   border: none;
   outline: none;
-  box-shadow: 0 0 3px 0 var(--bottari-navy);
+  box-shadow: var(--bottari-input-shadow);
 }
 
 /* emai input */
@@ -138,7 +138,7 @@
 .reserve-form-email-input:focus {
   border: none;
   outline: none;
-  box-shadow: 0 0 3px 0 var(--bottari-navy);
+  box-shadow: var(--bottari-input-shadow);
 }
 
 /* 휴대폰 input */
@@ -175,7 +175,7 @@
 .reserve-form-phone-input:focus {
   border: none;
   outline: none;
-  box-shadow: 0 0 3px 0 var(--bottari-navy);
+  box-shadow: var(--bottari-input-shadow);
 }
 
 /* 장소 검색 input인 척 */
@@ -314,7 +314,7 @@
   cursor: pointer;
 }
 .reserve-form-complete-btn:active {
-  transform: scale(0.95);
+  transform: scale(0.98);
   filter: brightness(0.95);
 }
 
@@ -327,7 +327,7 @@
 }
 /* 인풋 래퍼 */
 .reserve-form-daypicker-wrapper {
-  color: #777;
+  color: var(--bottari-placeholder);
   font-size: 0.9rem;
   font-weight: 600;
 
@@ -338,7 +338,7 @@
   
   border-radius: 10px;
   border: 1px solid var(--bottari-placeholder);
-  background-color: #eee;
+  background-color: var(--bottari-input);
   
   padding: 0.4rem 1rem;
   margin: 3px;  
@@ -359,7 +359,7 @@
 
   width: 100%;
   min-height: 15px;
-  background-color: #eee;
+  background-color: var(--bottari-input);
   border: none;
 
   box-sizing: border-box;
@@ -374,7 +374,7 @@
 }
 .react-datepicker__input-container input:focus {
   outline: none;
-  box-shadow: 0 0 3px 0 var(--bottari-navy);
+  box-shadow: var(--bottari-input-shadow);
 }
 
 
@@ -383,7 +383,7 @@
   font-family: 'Paperozi', sans-serif;
   border: 1px solid #fff;
   border-radius: 10px;
-  box-shadow: 0 0 3px 0 var(--bottari-navy);
+  box-shadow: var(--bottari-input-shadow);
 }
 
 /* 헤더 (월/년 표시 부분) */
@@ -396,20 +396,24 @@
 .react-datepicker__header--time:not(.react-datepicker__header--time--only) {
   border-radius: 0 10px 0 0;
 }
+.react-datepicker__navigation {
+  width: 30px;
+  height: 50px;
+}
 .react-datepicker__navigation-icon::before {
   border-color: #fff;
 }
 /* 상단 날짜 / 시간 */
 .react-datepicker__current-month,
 .react-datepicker-time__header {
-  color: var(--bottari-navy);
+  color: #fff;
 }
 .react-datepicker__day-names {
   font-weight: 600;
 }
 .react-datepicker__time-list,
 .react-datepicker__month {
-  color: #333;
+  color: var(--bottari-darkslate);
   font-weight: 400;
   overflow-x: hidden;
 }

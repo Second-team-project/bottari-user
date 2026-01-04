@@ -18,6 +18,7 @@
   height: 60vh;
   background-color: #fff;
   border-radius: 10px;
+  box-shadow: var(--bottari-shadow);
   padding: 1.3rem 1.3rem;
 
   position: fixed;
@@ -165,5 +166,5 @@
 }
 .reserve-list-login-modal-input:focus {
   outline: none;
-  box-shadow: 0 0 3px 0 var(--bottari-navy);
+  box-shadow: var(--bottari-input-shadow);
 }

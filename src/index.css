@@ -29,6 +29,10 @@
   --bottari-slateblue: #5D75A6;
   --bottari-softblue: #6A9DED;
   --bottari-darkslate: #111827;
+
+  --bottari-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  --bottari-input-shadow: 0 0 3px 0 var(--bottari-navy);
+  --bottari-card-shadow: 0 0 10px 2px var(--bottari-coolgray);
 }
 
 @font-face {

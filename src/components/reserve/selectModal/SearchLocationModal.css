@@ -43,14 +43,20 @@
 .search-location-modal-input-btn {
   color: #fff;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
 
   width: 60px;
   height: 35px;
 
   border: none;
   border-radius: 30px;
-  background-color: var(--bottari-slateblue);
+  background-color: var(--bottari-navy);
+
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+.search-location-modal-input-btn:hover {
+  transform: scale(0.98);
 }
 .search-location-modal-input-btn:active {
   transform: scale(0.95);
@@ -124,7 +130,7 @@
 }
 .search-location-modal-result-wrapper:hover {
   transform: scale(0.98);
-  background-color: var(--bottari-coolgray);
+  background-color: var(--bottari-offwhite);
 }
 
 /* 에러 메세지 */
