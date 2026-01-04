@@ -1,17 +1,18 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosIns from "../../api/axiosInstance";
 
+/**
+ * 기본 요금 가져오기
+ */
 export const getPricing = createAsyncThunk(
   'pricing/getPricingThunk',
-  async (data, {rejectWithValue}) => {
+  async (_, {rejectWithValue}) => {
     try {
 
-      const url = `/api/common/pricing`;
+      const url = `/api/admin/pricing`;
 
-      const response = await axiosIns.get(url, data)
-
-      
-      // console.log('pricing: ', response.data)
+      const response = await axiosIns.get(url)
+      console.log('pricing: ', response.data)
 
       return response.data;
       
@@ -20,3 +21,24 @@ export const getPricing = createAsyncThunk(
     }
   }
 );
+
+/**
+ * 구간별 추가 요금 가져오기
+ */
+export const getAdditionalPricing = createAsyncThunk(
+  'pricing/getAdditionalPricing',
+  async (_, {rejectWithValue}) => {
+    try {
+
+      const url = `/api/admin/pricing/additional`;
+
+      const response = await axiosIns.get(url)
+      console.log('pricing-additional: ', response.data.data)
+
+      return response.data.data;
+      
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+)
