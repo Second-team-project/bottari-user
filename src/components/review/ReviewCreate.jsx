@@ -31,7 +31,7 @@ export default function ReviewCreate() {
   useEffect(() => {
     dispatch(getReviewable()).unwrap()
       .then(res => {
-        // console.log('res', res.data)
+        console.log('RevieCreate.jsx-res: ', res.data)
         if(res.data && Array.isArray(res.data)) {
           setReservations(res.data);
         }

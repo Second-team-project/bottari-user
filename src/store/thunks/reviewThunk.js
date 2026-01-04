@@ -1,6 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import axiosIns from "../../api/axiosInstance.js";
 
+/**
+ * 후기 목록 불러오기
+ */
 export const getReviewList = createAsyncThunk(
   'review/getReviewList',
   async (data, {rejectWithValue}) => {
@@ -20,6 +23,28 @@ export const getReviewList = createAsyncThunk(
   }}
 )
 
+/**
+ * 후기 작성 가능한 예약 목록 불러오기
+*/
+export const getReviewable = createAsyncThunk(
+  'review/getReviewable',
+  async (_, {rejectWithValue}) => {
+    try {
+      const url = `/api/user/review/reviewable`;
+      
+      const response = await axiosIns.get(url)
+      
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+      
+    }
+  }
+)
+
+/**
+ * 후기 생성하기
+ */
 export const createReview = createAsyncThunk(
   'review/createReview',
   async (data, {rejectWithValue}) => {
@@ -45,18 +70,22 @@ export const createReview = createAsyncThunk(
   }
 )
 
-export const getReviewable = createAsyncThunk(
-  'review/getReviewable',
-  async (_, {rejectWithValue}) => {
+/**
+ * 후기 삭제하기
+ */
+export const destroyReview = createAsyncThunk(
+  'review/destroyReview',
+  async (id, {rejectWithValue}) => {
     try {
-      const url = `/api/user/review/reviewable`;
 
-      const response = await axiosIns.get(url)
+    const url = `/api/user/review/${id}`;
 
-      return response.data;
+    const response = await axiosIns.delete(url);
+
+    return response.data;
+      
     } catch (error) {
       return rejectWithValue(error);
-      
     }
   }
 )

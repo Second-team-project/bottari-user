@@ -6,14 +6,14 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 100;
+  z-index: 15;
 }
 
 /* 모달 */
 .review-modal {
   width: 90%;
   max-width: 600px;
-  min-height: 40vh;
+  min-height: 60vh;
   max-height: 80vh;
   background-color: #fff;
   border-radius: 10px;
@@ -27,7 +27,7 @@
   overflow: hidden;
   overflow-y: auto;
 
-  z-index: 101;
+  z-index: 16;
 }
 
 /* 닫기 버튼 */
@@ -51,11 +51,41 @@
   background: #fff;
 }
 
+/* 제목 */
+.review-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+}
+.review-modal-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--bottari-darkslate);
+}
+
+/* 삭제 버튼 */
+.review-detail-tresh {
+  color: var(--bottari-navy);
+  background-color: #fff;
+  width: 30px;
+  height: 30px;
+  border: none;
+
+  cursor: pointer;
+}
+.review-detail-tresh:hover {
+  color: var(--bottari-pink);
+}
+.review-detail-tresh:active {
+  color: var(--bottari-pink);
+  transform: scale(0.95);
+}
+
 /* 이미지 */
 .review-modal-image {
   width: 100%;
-  min-height: 30vh;
-  max-height: 50vh;
+  height: auto;
   overflow: hidden;
   
   display: flex;
@@ -66,8 +96,12 @@
 .review-modal-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
+}
+
+.review-font-color-gray {
+  color: var(--bottari-gray);
 }
 
 /* 내용 */
@@ -77,19 +111,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-.review-modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1rem 0;
-}
-
-.review-modal-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--bottari-darkslate);
 }
 
 .review-modal-text {
@@ -104,3 +125,8 @@
   }
 }
 
+
+
+.review-margin-right {
+  margin-right: 1rem;
+}

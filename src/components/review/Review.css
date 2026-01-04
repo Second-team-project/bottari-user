@@ -10,6 +10,7 @@
 .review-btn-wrapper {
   width: 100%;
   margin-right: 10%;
+  
   display: flex;
   justify-content: flex-end;
 }
@@ -22,11 +23,12 @@
   border-radius: 5px;
   padding: 0.3rem;
   margin: 1rem;
-
+  
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
 .review-btn:hover {
+  box-shadow: var(--bottari-shadow);
   color: var(--bottari-navy);
   border: 1px solid var(--bottari-navy);
 
@@ -55,7 +57,7 @@
 .review-card {
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px var(--bottari-coolgray);
+  box-shadow: var(--bottari-card-shadow);
   overflow: hidden;
 
   display: flex;
@@ -67,7 +69,7 @@
 }
 .review-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 3px 10px var(--bottari-coolgray);
+  box-shadow: var(--bottari-card-shadow);
 }
 
 /* 카드 이미지 */

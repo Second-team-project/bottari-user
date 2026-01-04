@@ -17,7 +17,6 @@ export default function Review() {
   const navigate = useNavigate();
   // ===== local states
   const [reviewList, setReviewList] = useState([]);
-
   // 모달 상태
   const [reviewDetail, setReviewDetail] = useState(null);
 
@@ -30,6 +29,9 @@ export default function Review() {
       })
   }, [])
 
+  function handleDeleteReview(reviewId) {
+    setReviewList(prev => prev.filter(item => item.id !== reviewId));
+  } 
 
   return (
     <motion.div
@@ -102,6 +104,7 @@ export default function Review() {
           <ReviewDetailModal
             review={reviewDetail}
             onClose={() => setReviewDetail(null)}
+            onDeleteSuccess={handleDeleteReview}
           />
         )}
       </AnimatePresence>

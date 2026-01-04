@@ -1,23 +1,21 @@
 import "./ReviewDetail.css";
 
 import { motion } from "framer-motion";
-import { X, Star } from "lucide-react";
+import { X, Star, Trash2, ImageOff } from "lucide-react";
 
 import { maskEmail } from "../../utils/maskEmail.js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
-export default function ReviewDetailModal({ review, onClose }) {
-  // // 별점 렌더링
-  // const renderStars = (rating) => {
-  //   return Array.from({ length: 5 }, (_, i) => (
-  //     <Star
-  //       key={i}
-  //       size={20}
-  //       fill={i < rating ? "#ffc107" : "none"}
-  //       color={i < rating ? "#ffc107" : "#ddd"}
-  //     />
-  //   ));
-  // };
+import ReviewDeleteCheck from "./ReviewDeleteCheck.jsx";
+
+export default function ReviewDetailModal({ review, onClose, onDeleteSuccess }) {
+  // ===== redux states
+  const user = useSelector(state => state.auth.user);
+  // ===== local states
+  const [deleteFlg, setDeleteFlg] = useState(false);
+
+  // console.log('user.id: ', user.id, 'review.writer.id: ', review.writer.userId)
 
   // ========================
   // ||     스크롤 방지     ||
@@ -39,6 +37,19 @@ export default function ReviewDetailModal({ review, onClose }) {
         onClick={onClose}
       />
 
+      {
+        deleteFlg && (
+          <ReviewDeleteCheck 
+            onClose={() => setDeleteFlg(false)}
+            reviewId={review.id} 
+            onDeleteSuccess={() => {
+              onClose();
+              if(onDeleteSuccess) onDeleteSuccess(review.id);
+            }}
+          />
+        )
+      }
+
       {/* 모달 */}
       <motion.div
         className="review-modal"
@@ -53,17 +64,32 @@ export default function ReviewDetailModal({ review, onClose }) {
         </button>
 
         {/* 이미지 */}
-        {review.img && (
-          <div className="review-modal-image">
-            <img src={review.img} alt="후기 이미지" />
-          </div>
-        )}
+        {
+          review.img ? (
+            <div className="review-modal-image">
+              <img src={review.img} alt="후기 이미지" />
+            </div>
+          ) : (
+            <div className="review-modal-image">
+              <span className="review-font-color-gray review-margin-right"><ImageOff /></span>
+              <span className="review-font-color-gray">등록된 이미지가 없습니다.</span>
+            </div>
+
+          )
+        }
 
         {/* 내용 */}
         <div className="review-detail-container">
 
           <div className="review-modal-header">
             <span className="review-modal-title">{review?.title}</span>
+            {
+              user?.id === review?.writer.userId && (
+                <button type="button" className="review-detail-tresh"
+                  onClick={() => setDeleteFlg(true)}
+                ><Trash2 size={24} /></button>
+              )
+            }
           </div>
 
           <p className="review-modal-text">{review?.content}</p>
