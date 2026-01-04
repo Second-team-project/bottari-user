@@ -1,0 +1,7 @@
+.faq-category {
+  color: var(--bottari-grayfont);
+  background-color: var(--bottari-coolgray);
+  border-radius: 5px;
+  padding: 0.2rem 0.4rem;
+  margin: 0 0.5rem 0 0.1rem;
+}

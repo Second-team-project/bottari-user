@@ -10,7 +10,7 @@ export default function FAQItem({ faq, isOpen, onToggle }) {
 
     <div className="faq-item">
       <div className="faq-question" onClick={onToggle}>
-        <span>Q. {faq.title}</span>
+        <span><span className="faq-category">{faq.category}</span>{faq.title}</span>
         {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
       </div>
       {isOpen && (
