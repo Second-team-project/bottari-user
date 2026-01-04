@@ -3,7 +3,7 @@ import "./ReserveItem.css";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
-import { Truck, Package, ChevronDown, ChevronUp, MapPin } from 'lucide-react';
+import { Truck, Package, ChevronDown, ChevronUp, MapPin, ArrowBigDown, Clock4, CircleAlert } from 'lucide-react';
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "sonner";
 import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
@@ -41,20 +41,27 @@ export default function ReserveItem({ data }) {
   const isProgress = data.state === 'RESERVED' || data.state === 'IN_PROGRESS' || data.state === 'COMPLETED';
 
   let statusLabel = '';
+  let statusDesc = '';
   switch(data.state) {
     case 'RESERVED':
       statusLabel = '예약 완료';
+      statusDesc = isDelivery
+        ? <span className="reserve-item-status-desc"><CircleAlert size={20} />기사님의 출발을 기다리고 있어요.</span>
+        : <span className="reserve-item-status-desc"><Clock4 size={20} />보관 시작을 기다리고 있어요.</span>
       break;
-      case 'IN_PROGRESS':
-        statusLabel = isDelivery ? ( // 타입에 따라 분기
-          <span className="reserve-list-tag-inner">
-          배송 중 <Truck size={20} />
-        </span>
+    case 'PICKING_UP':
+      statusLabel = <span className="reserve-list-tag-inner">픽업중 <Truck size={20} /></span>;
+      statusDesc = <span className="reserve-item-status-desc"><Truck size={20} />기사님이 고객님의 보따리를 가지러 가고 있어요.</span>
+      break;
+    case 'IN_PROGRESS':
+      statusLabel = isDelivery ? ( // 타입에 따라 분기
+        <span className="reserve-list-tag-inner">배송 중</span>
       ) : (
-        <span className="reserve-list-tag-inner">
-          보관 중 <Package size={20} />
-        </span>
+        <span className="reserve-list-tag-inner">보관 중</span>
       ) 
+      statusDesc = isDelivery
+        ? <span className="reserve-item-status-desc">고객님의 보따리가 목적지로 이동 중이에요.<Truck size={20} /></span>
+        : <span className="reserve-item-status-desc">고객님의 보따리가 안전하게 보관되고 있어요.<Package size={20} /></span>
       break;
     case 'COMPLETED':
       statusLabel = <span className="reserve-list-tag-inner">이용 완료</span>;
@@ -115,6 +122,11 @@ export default function ReserveItem({ data }) {
       </div>
 
       {/* 중간 */}
+      {
+        statusDesc && (
+          <span className="reserve-item-status-desc-wrapper">{statusDesc}</span>
+        )
+      }
 
       {/* 배송인 경우 */}
       {
@@ -122,13 +134,14 @@ export default function ReserveItem({ data }) {
           <div className="reserve-list-content-container">
 
             {/* 중간 */}
-            <div className="reserve-list-content-left">
-              <span>{dayjs(data.startedAt).format('YYYY년 MM월 DD일 HH:mm')} 픽업</span>
+            <div className="reserve-list-content-left border-bottom-offwhite">
+              <span className="color-darkslate">{dayjs(data.startedAt).format('YYYY년 MM월 DD일 HH:mm')} 픽업</span>
             </div>
 
             {/* 하단 */}
-            <div className="reserve-list-content-right">
+            <div className="reserve-list-content-right border-bottom-offwhite">
               <span>{data.startedAddr} 에서</span>
+              <span className="reserve-confirm-arrow"><ArrowBigDown size={20} /><span className="reserve-confirm-margin-right-4-rem">{'   '}</span></span>
               <span>{data.endedAddr} 까지</span>
             </div>
 
@@ -143,12 +156,13 @@ export default function ReserveItem({ data }) {
 
             {/* 중간 */}
             <div className="reserve-list-content-left">
-                <span>{data.storeName} 보관소</span>
+                <span className="color-darkslate">{data.storeName} 보관소</span>
             </div>
 
             {/* 하단 */}
             <div className="reserve-list-content-right">
               <span>{dayjs(data.startedAt).format('YYYY년 MM월 DD일 HH:mm')} 부터</span>
+              <span className="reserve-confirm-arrow"><ArrowBigDown size={20} /><span className="reserve-confirm-margin-right-4-rem">{'   '}</span></span>
               <span>{dayjs(data.endedAt).format('YYYY년 MM월 DD일 HH:mm')} 까지</span>
             </div>
 
@@ -179,27 +193,28 @@ export default function ReserveItem({ data }) {
             >
 
               <div className="reserve-list-content-wrapper">
-                <span>예약 코드</span>
+                <span className="reserve-list-content-left">예약 코드</span>
                 <span>{data.code}</span>
               </div>
 
               <div className="reserve-list-content-wrapper">
-                <span>결제 금액</span>
+                <span className="reserve-list-content-left">결제 금액</span>
                 <span>{data.price?.toLocaleString()} 원</span>
               </div>
 
               <div>
                 <div className="reserve-list-content-left">
-                  <span>요구 사항</span>
+                  <span className="reserve-list-content-left">요구 사항</span>
                 </div>
                 <div className="reserve-list-content-right">
                   <span>{data.notes}</span>
                 </div>
+                <hr className="reserve-list-line" />
               </div>
 
               <div>
                 <div className="reserve-list-content-left">
-                  <span>보따리 정보</span>
+                  <span className="reserve-list-content-left">보따리 정보</span>
                 </div>
                 {
                   data.luggageList && data.luggageList.map( (luggage, index) => (
@@ -208,24 +223,25 @@ export default function ReserveItem({ data }) {
                     </div>
                   ))
                 }
+                <hr className="reserve-list-line" />
               </div>
+
               <div className="reserve-list-empty-space"></div>
 
 
               {
                 isDelivery && isProgress && (
                   <>
-                    <hr className="reserve-list-line" />
                     <div className="reserve-list-content-wrapper">
-                      <span>배정 기사</span>
+                      <span className="reserve-list-content-left">배정 기사</span>
                       <span>{isLoadingDriver ? '불러오는 중...' : (driverInfo?.driverName || '미배정')}</span>
                     </div>
                     <div className="reserve-list-content-wrapper">
-                      <span>기사 연락처</span>
+                      <span className="reserve-list-content-left">기사 연락처</span>
                       <span>{isLoadingDriver ? '불러오는 중...' : (driverInfo?.phone || '미배정')}</span>
                     </div>
                     <div className="reserve-list-content-wrapper">
-                      <span>배송 차량 번호</span>
+                      <span className="reserve-list-content-left">배송 차량 번호</span>
                       <span>{isLoadingDriver ? '불러오는 중...' : (driverInfo?.carNumber || '미배정')}</span>
                     </div>
                     <div className="reserve-list-empty-space">

@@ -224,7 +224,7 @@ export default function UserInfoSection({
               <div className="reserve-form-content-notice">
                 <span className="reserve-form-content-notice-text">
                   <span className="reserve-form-essential">*</span>
-                  비밀번호는 예약을 조회할 때 사용됩니다
+                  비밀번호는 예약을 조회할 때 사용됩니다.
                 </span>
               </div>
             </>

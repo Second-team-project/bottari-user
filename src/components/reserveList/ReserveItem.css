@@ -1,3 +1,173 @@
+/* 상단 영역 */
+.reserve-list-content-header {
+  width: 100%;
+  
+  display: flex;
+  justify-content: space-between;
+}
+@media (min-width: 769px) {
+  .reserve-list-content-header {
+    width: 90%;
+    margin: 0.5rem 0;
+    
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+/* 상태 안내말 */
+.reserve-item-status-desc-wrapper {
+margin-bottom: 1rem;
+}
+.reserve-item-status-desc {
+color: var(--bottari-grayfont);
+font-size: 0.95rem;
+font-weight: 600;
+
+width: 100%;
+background-color: var();
+
+display: flex;
+align-items: center;
+}
+
+/* 상태 태그 */
+.reserve-list-tag {
+  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+  
+  border: 1px solid transparent;
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  gap: 0.3rem;
+}
+/* 왼쪽 : 서비스 타입 */
+.reserve-list-type-d {
+  background-color: var(--bottari-pink);
+  border-color: var(--bottari-pink);
+}
+.reserve-list-type-s {
+  background-color: var(--bottari-skyblue);
+  border-color: var(--bottari-skyblue);
+}
+/* 오른쪽 : 서비스 상태 */
+.reserve-list-status-reserved {
+  color: #fff;
+  background-color: var(--bottari-slateblue);
+  border-color: var(--bottari-slateblue);
+}
+.reserve-list-tag-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.2rem;
+}
+.reserve-list-status-picking_up {
+  color: #fff;
+  background-color: var(--bottari-softblue);
+  border-color: var(--bottari-softblue);
+}
+.reserve-list-status-in_progress {
+  color: #fff;
+  background-color: var(--bottari-softblue);
+  border-color: var(--bottari-softblue);
+}
+.reserve-list-status-completed {
+  color: #fff;
+  background-color: var(--bottari-coolgray);
+  border-color: var(--bottari-coolgray);
+}
+.reserve-list-status-cancelled {
+  color: #fff;
+  background-color: var(--bottari-coolgray);
+  border-color: var(--bottari-coolgray);
+}
+
+/* 중간 데이터 */
+/* 왼쪽 출력 */
+.reserve-list-content-left {
+  color: var(--bottari-grayfont);
+  display: flex;
+  flex-direction: column;  
+}
+/* 오른쪽 출력 */
+.reserve-list-content-right {
+  width: 100%;
+  max-height: 60px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+/* 가운데 출력 */
+.reserve-list-content-center {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 하단 : 더보기 */
+.reserve-list-bottom {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center  
+}
+.reserve-list-icon {
+  color: var(--bottari-grayfont);
+  width: 50%;
+  padding: 1%;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+.reserve-list-icon:hover {
+  color: var(--bottari-pink);
+}
+
+/* 아코디언 출력 내용 */
+.reserve-list-content-wrapper {
+  display: flex;
+  justify-content: space-between;
+
+  border-bottom: 1px solid var(--bottari-offwhite);
+}
+.border-bottom-offwhite {
+  border-bottom: 1px solid var(--bottari-offwhite);
+}
+
+.reserve-confirm-arrow {
+  color: var(--bottari-gray);
+}
+
+/* 취소버튼 */
+.reserve-list-cancel-btn {
+  color: var(--bottari-grayfont);
+  background-color: #fff;
+  border-color: var(--bottari-coolgray); 
+  margin: 3% 0;
+  
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+.reserve-list-cancel-btn:hover {
+  color: var(--bottari-pink);
+  border-color: var(--bottari-pink); 
+}
+
+
+/* 추가 스타일 */
 .reserve-list-line {
   border: none;
   border-top: 1px solid var(--bottari-offwhite);
@@ -9,12 +179,18 @@
   align-items: center;
 }
 
+.color-darkslate {
+  color: var(--bottari-darkslate);
+}
+
+/* 지도 */
 .reserve-item-map-wrapper {
   width: 100%;
   height: 250px;
   margin: 0.5rem 0;
   border-radius: 5px;
   overflow: hidden;
+
 }
 .reserve-item-map-picker {
   color: #fff;
