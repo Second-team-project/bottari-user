@@ -11,6 +11,7 @@ import HeaderWeb from "./components/header/HeaderWeb.jsx";
 import HeaderMobile from "./components/header/HeaderMobile.jsx";
 import BottomNav from './components/header/BottomNav.jsx';
 import ProtectedRouter from './routes/ProtectedRouter.jsx';
+import NotificationInfoModal from './components/common/NotificationInfoModal.jsx';
 
 import { getGuideImgThunk } from './store/thunks/guideImgThunk.js';
 
@@ -42,6 +43,7 @@ function App() {
         <AnimatePresence mode="wait">
           <ProtectedRouter key={location.pathname} />
         </AnimatePresence>
+        <NotificationInfoModal />
       </div>
     </>
   )
