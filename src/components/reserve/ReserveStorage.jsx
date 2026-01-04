@@ -16,6 +16,7 @@ import { setStorageReserve } from "../../store/slices/reserveSlice.js";
 import { debounce } from "../../utils/debounceUtil.js";
 import { saveReserveSession } from "../../utils/sessionStorageUtil.js";
 import { getStores } from "../../store/thunks/storeThunk.js";
+import { getAdditionalPricing } from "../../store/thunks/pricingThunk.js";
 // ===== icons
 import { X } from 'lucide-react';
 // ===== 달력 관련
@@ -53,14 +54,17 @@ export default function ReserveStorage() {
   const [startDate, setStartDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null);
   const [endDate, setEndDate] = useState(savedData?.endedAt ? new Date(savedData.endedAt) : null);
 
+  // ===== 구간별 요금률
+  const [additionalPricing, setAdditionalPricing] = useState([]);
+
   // ===== 스크롤 설정
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // ===================
-  // ||     보관소     || 
-  // ===================
+  // ===================================
+  // ||     Thunk로 데이터 받아오기     || 
+  // ===== 보관소 가져오기
   useEffect(() => {
     dispatch(getStores()).unwrap()
     .then((res) => {
@@ -71,32 +75,64 @@ export default function ReserveStorage() {
         console.log('ReserveStorage-store: ', err);
       })
     }, [])
+
+  // ===== 구간별 요금률 가져오기
+  useEffect(() => {
+    dispatch(getAdditionalPricing()).unwrap()
+      .then((res) => {
+        setAdditionalPricing(res);
+        console.log('ReserveStorage-additionalPricing: ', res)
+      })
+      .catch(err => {
+        console.log('ReserveStorage-additionalPricing: ', err);
+        toast.error('요금 정보를 불러오지 못했습니다. 새로고침 해주세요.');
+      })
+  }, [])
     
-    // TODO : DB 설계 이후 thunk로 보관소 받아오기
-    const stores = [
-      { id: 1, name: '대구역'},
-      { id: 2, name: '동대구역'},
-      { id: 3, name: '반월당역'},
-      { id: 4, name: '서대구역'},
-    ]
-  // ====================
-  // ||     짐 요금     || 
-  // ====================
+  // ========================
+  // ||     짐 요금 계산    ||
+  // ===== 날짜 계산
   const diffDays = useMemo(() => {
     if (!startDate || !endDate) return 0;
-    
+
     const diffTime = endDate.getTime() - startDate.getTime();
     if (diffTime <= 0) return 0;
-    
+
     // 24시간(86400000ms)으로 나누고 올림!
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }, [startDate, endDate]);
-  
-  const totalPrice = useMemo(() => {
-    const luggagePrice = luggageList.reduce((accumulator, current) => accumulator + (current.price || 0), 0)
 
-    return luggagePrice * diffDays;
-  }, [luggageList, diffDays]); 
+  // ===== 총 금액 (구간별 요금률 적용)
+  const totalPrice = useMemo(() => {
+    // 짐 기본가격 합계 (각 짐의 price는 이미 basePrice * count)
+    const basePricePerDay = luggageList.reduce((acc, cur) => acc + (cur.price || 0), 0);
+
+    // 날짜나 요금률 데이터가 없으면 0
+    if (diffDays <= 0 || additionalPricing.length === 0) return 0;
+
+    // 구간별 요금 계산
+    let total = 0;
+
+    // minVal 순으로 정렬
+    const sortedPricing = [...additionalPricing].sort((a, b) => a.minValue - b.minValue);
+
+    for (const tier of sortedPricing) {
+      // 이 구간의 시작일과 끝일
+      const tierStart = tier.minValue;
+      const tierEnd = Math.min(tier.maxValue, diffDays);  // diffDays를 넘지 않게
+
+      // 이 구간에 해당하지 않으면 스킵
+      if (tierEnd < tierStart || tierStart > diffDays) continue;
+
+      // 이 구간에서 계산할 일수
+      const daysInTier = tierEnd - tierStart + 1;
+
+      // 이 구간 금액 = 기본가 × (rate/100) × 일수
+      total += basePricePerDay * (tier.rate / 100) * daysInTier;
+    }
+
+    return Math.round(total);  // 소수점 반올림
+  }, [luggageList, diffDays, additionalPricing]); 
 
   // ======================== 
   // ||     달력 커스텀     ||
@@ -118,29 +154,6 @@ export default function ReserveStorage() {
   // 맡길 수 있는 날 (오늘부터 한달 뒤 까지)
   const maxSelectableDate = new Date();
   maxSelectableDate.setMonth(maxSelectableDate.getMonth() + 1);
-
-  // 2. 찾는 시간 필터 (맡긴 시간 이후만 허용)
-  // const filterEndTime = (time) => {
-  //   const selectedDate = new Date(time);
-  //   console.log('비교:', selectedDate.getHours(), 'vs', startDate.getHours());
-  //   // 맡기는 시간이 아직 선택 안 됐으면 전부 통과
-  //   if (!startDate) return true;
-
-  //   // 날짜 비교를 위해 시간 초기화 (00:00:00)
-  //   const startDay = new Date(startDate); startDay.setHours(0,0,0,0);
-  //   const endDay = new Date(selectedDate); endDay.setHours(0,0,0,0);
-
-  //   // 1. 맡길 날보다 과거면 선택 불가
-  //   if (endDay < startDay) return false;
-    
-  //   // 2. 같은 날이면 → 맡긴 시간 이후만 통과
-  //   if (endDay.getTime() === startDay.getTime()) {
-  //     return selectedDate.getTime() > startDate.getTime();
-  //   }
-    
-  //   // 3. 미래 날짜면 통과
-  //   return true;
-  // };
 
   // ==========================
   // ||     결제 페이지로     ||
@@ -187,6 +200,16 @@ export default function ReserveStorage() {
   // 2. 결제 페이지로 넘어가기 & 유효성 검사
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+  // ===== 버튼 활성화 조건 (필수값 입력 여부만 체크)
+  const isFormFilled =
+    savedData?.userName &&
+    savedData?.email &&
+    startDate &&
+    endDate &&
+    storageStore &&
+    luggageList.length > 0 &&
+    (user || (password && passwordChk));
+
   function handleNext() {
     // 최종 formData 생성 (redux의 내 정보 + 로컬 state의 보관 정보)
     const formData = {
@@ -211,7 +234,7 @@ export default function ReserveStorage() {
     const diffTime = formData.endedAt && formData.startedAt
       ? new Date(formData.endedAt).getTime() - new Date(formData.startedAt).getTime()
       : 0;
-    const maxTime = 7 * 24 * 60 * 60 * 1000;
+    const maxTime = 30 * 24 * 60 * 60 * 1000;
 
     // 2-1. 유효성 검사
     if (!formData.userName) {
@@ -254,7 +277,7 @@ export default function ReserveStorage() {
       return;
     }
     if (diffTime > maxTime) {
-      toast.error('최대 보관 기간은 7일입니다.');
+      toast.error('최대 보관 기간은 30일입니다.');
       return;
     }
     if (!formData.store) {
@@ -327,6 +350,8 @@ export default function ReserveStorage() {
                 <div className="reserve-form-daypicker-wrapper">
                   <DatePicker
                     withPortal
+                    locale="ko"
+                    timeCaption="시간"
                     selected={startDate}
                     onChange={(date) => {
                       if (!date) {
@@ -363,6 +388,7 @@ export default function ReserveStorage() {
                   />
                 </div>
               </div>
+
               {/* 찾을 날짜 */}
               <div className="reserve-form-content">
                 <span className="reserve-form-essential">*</span>
@@ -383,6 +409,14 @@ export default function ReserveStorage() {
                   />
                 </div>
               </div>
+
+              <div className="reserve-form-content-notice">
+                <span className="reserve-form-content-notice-text">
+                  <span className="reserve-form-essential">*</span>
+                  보관은 최대 30일까지 가능합니다.
+                </span>
+              </div>
+
               {/* 보관소 */}
               <div className="reserve-form-content">
                 <span className="reserve-form-essential">*</span>
@@ -477,6 +511,7 @@ export default function ReserveStorage() {
           {/* 완료 버튼 */}
           <div className="reserve-form-complete-btn-wrapper">
             <button type="button" className="reserve-form-complete-btn"
+              style={{ opacity: isFormFilled ? 1 : 0.5, cursor: isFormFilled ? "pointer" : "not-allowed" }}
               onClick={handleNext}
             >보관 예약서 작성 완료</button>
           </div>

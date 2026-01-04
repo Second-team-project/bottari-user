@@ -136,6 +136,16 @@ export default function ReserveDelivery() {
   // 2. 결제 페이지로 넘어가기 & 유효성 검사
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+  // ===== 버튼 활성화 조건 (필수값 입력 여부만 체크)
+  const isFormFilled =
+    savedData?.userName &&
+    savedData?.email &&
+    pickupDate &&
+    startAddr &&
+    endAddr &&
+    luggageList.length > 0 &&
+    (user || (password && passwordChk));
+
   function handleNext() {
     // 최종 formData 생성 (redux의 내 정보 + 로컬 state의 배송 정보)
     const formData = {
@@ -280,6 +290,8 @@ export default function ReserveDelivery() {
                 <div className="reserve-form-daypicker-wrapper">
                   <DatePicker
                     withPortal
+                    locale="ko"
+                    timeCaption="시간"
                     selected={pickupDate}
                     onChange={(date) => {
                       if (!date) {
@@ -311,7 +323,7 @@ export default function ReserveDelivery() {
               {/* 안내문구  */}
               <div className="reserve-form-content-notice">
                 <span className="reserve-form-essential">*</span>
-                <span className="reserve-form-content-notice-text">보따리 운영시간 : 09시 ~ 21시</span>
+                <span className="reserve-form-content-notice-text">보따리 배송 가능 시간 : 09시 ~ 21시</span>
               </div>
 
               {/* 픽업장소 */}
@@ -445,6 +457,7 @@ export default function ReserveDelivery() {
           {/* 완료 버튼 */}
           <div className="reserve-form-complete-btn-wrapper">
             <button type="button" className="reserve-form-complete-btn"
+              style={{ opacity: isFormFilled ? 1 : 0.5, cursor: isFormFilled ? "pointer" : "not-allowed" }}
               onClick={handleNext}
             >배송 예약서 작성 완료</button>
           </div>
