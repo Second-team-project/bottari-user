@@ -54,12 +54,11 @@ const slice = createSlice({
       })
 
       .addCase(userReservationCancel.fulfilled, (state, action) => {
-        const cancelledId = action.meta.arg.reservId;
-        const item = state.reservationList.find(resev => resev.id === cancelledId);
+        const cancelledCode = action.meta.arg.code;
+        const item = state.reservationList.find(resev => resev.code === cancelledCode);
         if (item) item.state = 'CANCELLED';
       })
       .addCase(guestReservationCancel.fulfilled, (state, action) => {
-        const cancelledId = action.meta.arg.reservId;
         state.reservation.state = 'CANCELLED';
       })
   }
