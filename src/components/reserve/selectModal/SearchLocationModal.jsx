@@ -102,8 +102,13 @@ export default function SearchLocationModal({ modalFlgFalse, setLocation, locati
       {/* 컨텐츠 영역 */}
       <div className="search-location-modal-container">
         {/* 페이지 제목 */}
-        <div className="search-location-modal-wrapper page-modal-title-wrapper">
-          <h3 className="search-location-modal-title">주소 검색</h3>
+        <div className="search-location-modal-header">
+          <div className="search-location-modal-wrapper page-modal-title-wrapper">
+            <h3 className="search-location-modal-title">주소 검색</h3>
+          </div>
+          <button type="button" className="search-location-modal-x">
+            <X size={24}  onClick={modalFlgFalse} />
+          </button>
         </div>
 
         {/* 검색 영역 */}

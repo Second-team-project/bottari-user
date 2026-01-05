@@ -28,6 +28,22 @@
   z-index: 16;
 }
 
+/* 헤더 */
+.search-location-modal-header {
+  width: 100%;
+  display: flex;
+}
+.search-location-modal-x {
+  color: var(--bottari-gray);
+
+  width: 30px;
+  height: 30px;
+  background-color: #fff;
+  border: none;
+
+  cursor: pointer;
+}
+
 /* 검색창 영역 */
 .search-location-modal-input-wrapper {
   width: 100%;
@@ -65,7 +81,7 @@
 /* 검색어 초기화 */
 .search-location-modal-input-x {
   width: 10%;
-  color: var(--bottari-grayfont);
+  color: var(--bottari-gray);
 
   display: flex;
   justify-content: center;
