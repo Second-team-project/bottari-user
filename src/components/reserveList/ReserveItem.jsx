@@ -250,7 +250,7 @@ export default function ReserveItem({ data }) {
               )
               }
               {
-                data.state === 'RESERVED' && (
+                (data.state === 'RESERVED' && !driverInfo && !isLoadingDriver) && (
                   <div className="reserve-list-content-right">
                     <div className="reserve-list-tag reserve-list-cancel-btn" onClick={() => setRecheckFlg(true)}>예약 취소</div>
                   </div>
