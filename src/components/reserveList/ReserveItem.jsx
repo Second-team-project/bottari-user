@@ -74,9 +74,11 @@ export default function ReserveItem({ data }) {
   }
 
   useEffect(() => {
-    if( isDelivery && isProgress && isOpen && !driverInfo) {
-      setIsLoadingDriver(true);
+    let intervalId = null;
 
+    const fetchDriverLocation = () => {
+      if (!driverInfo) setIsLoadingDriver(true);  // 로딩 설정은 최초 1회만
+      
       dispatch(getDriverLocation(data.id)).unwrap()
         .then(res => {
           console.log('기사 정보 불러오기: ', res.data)
@@ -93,8 +95,23 @@ export default function ReserveItem({ data }) {
           setDriverInfo(null);
         })
         .finally(() => setIsLoadingDriver(false));
-    } 
-  }, [isOpen, isDelivery, isProgress, data.id, driverInfo, dispatch])
+    };
+    
+    // polling : 1초 간격으로 DB의 기사 정보 가져오기
+    if (isDelivery && isProgress && isOpen) {
+      fetchDriverLocation();  // 즉시 1회 호출
+      intervalId = setInterval(fetchDriverLocation, 60000);  // 1분마다
+    }
+
+    // cleanup
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    }
+    
+  }, [isOpen, isDelivery, isProgress, data.id, dispatch])
+
 
   return(
     <div className="reserve-list-content-body">
