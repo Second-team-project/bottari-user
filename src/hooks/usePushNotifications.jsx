@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import axiosIns from "../api/axiosInstance.js";
+import { isNotificationHidden, saveNotificationExpire } from "../utils/localStorageUtil.js";
 
 export default function usePushNotifications() {
   // 권한 플래그
@@ -15,6 +16,13 @@ export default function usePushNotifications() {
     // usePushNotifications 초기화
     async function init() {
       try {
+        // 1. 24시간 다시 보지 않기 체크
+        if (isNotificationHidden()) {
+          setIsCheckedSubscribe(true);
+          setIsInit(true);
+          return;
+        }
+
         // 서비스 워커 준비
         const registration = await navigator.serviceWorker.ready;
         
@@ -131,11 +139,18 @@ export default function usePushNotifications() {
     setIsCheckedSubscribe(true);
   }
 
+  // 오늘 하루 보지 않기 (24시간 동안 표시 방지)
+  function dismissToday() {
+    saveNotificationExpire();
+    setIsCheckedSubscribe(true);
+  }
+
   return {
     isInit,
     isSubscribing,
     isCheckedSubscribe,
     subscribeUser,
     dismissModal,
+    dismissToday,
   }
 }
