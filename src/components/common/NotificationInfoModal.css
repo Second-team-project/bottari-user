@@ -1,6 +1,6 @@
 /* 모바일 컨테이너 */
 .notification-info-container {
-  width: 70%;
+  width: 80%;
   max-width: 900px;
   background-color: #fff;
   box-shadow: var(--bottari-shadow);
@@ -23,7 +23,7 @@
     padding: 1.3rem 1.3rem;
 
     position: fixed;
-    top: 40%;
+    top: 20%;
     left: 50%;
     transform: translateX(-50%);
 
@@ -36,8 +36,6 @@
   width: 100%;
   display: flex;
   justify-content: flex-end;
-
-  cursor: pointer;
 }
 .notification-info-x {
   color: var(--bottari-gray);
@@ -45,10 +43,15 @@
   border: none;
   width: 30px;
   height: 30px;
+
+  cursor: pointer;
 }
 
 /* 제목 */
-.notification-info-title-wrapper {
+.notification-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
 }
 .notification-info-title {
@@ -58,13 +61,29 @@
 
 /* 내용 */
 .notification-info-content {
-  font-size: 0.95rem;
   color: var(--bottari-darkslate);
-  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
   line-height: 1.5;
+  margin-bottom: 1.5rem;
+
+  word-break: keep-all;
+  white-space: pre-wrap;
 }
 .notification-info-content p {
   margin: 0.3rem 0;
+}
+
+/* 체크박스 */
+.notification-check-wrapper {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  padding: 0 2%;
+}
+.notification-check-input {
+  margin-right: 0.5rem;
+}
+.notification-check-text {
+  font-size: 0.9rem;
 }
 
 /* 버튼 */
@@ -72,13 +91,14 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+  gap: 1%;
 }
 .notification-info-btn {
   color: var(--bottari-darkslate);
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
 
-  min-width: 40%;
+  width: 48%;
   background-color: var(--bottari-coolgray);
   border: none;
   border-radius: 10px;
@@ -93,4 +113,10 @@
   .notification-info-btn {
     padding: 0.5rem 2rem;
   }
+}
+
+
+/* 스타일 */
+.notification-info-content-bold {
+  font-weight: 600;
 }
