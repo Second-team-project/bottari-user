@@ -30,19 +30,19 @@ export default defineConfig({
           // Android (Chrome)의 경우, `maskable`을 우선 사용
           // IOS의 경우, manifest를 무시하고, index.html의 <link rel="apple-touch-icon">만 사용
           {               // TODO: bottari icons 크기별로 추가
-            src: '/icons/bottari-icon.png', // 로컬 경로로 설정
+            src: '/icons/bottari-icon-192.png', // 로컬 경로로 설정
             sizes: '192x192',              // 아이콘 크기
             type: 'image/png',
             purpose: 'any'                 // purpose 속성을 설정하지 않으면 기본 `any`
           },
           {
-            src: '/icons/bottari-icon.png',
+            src: '/icons/bottari-icon-512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any'               // purpose 속성을 설정하지 않으면 기본 `any`
           },
           {
-            src: '/icons/bottari-icon.png',
+            src: '/icons/bottari-icon-512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable'          // 마스크 가능 속성 추가
