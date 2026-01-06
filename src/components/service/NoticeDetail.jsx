@@ -23,9 +23,7 @@ export default function NoticeDetail({ notice, onClose }) {
       <div className="notice-detail-container">
 
         {/* 닫기 버튼 */}
-        <div className="notice-detail-x"
-          onClick={onClose}
-        >
+        <div className="notice-detail-x" onClick={onClose} >
           <X size={30} />
         </div>
 
@@ -46,6 +44,14 @@ export default function NoticeDetail({ notice, onClose }) {
 
         <hr className="notice-detail-line" />
 
+        {/* 이미지 */}
+        {
+          notice.img && (
+            <div className="notice-detail-image-wrapper">
+              <img className="notice-detail-image" src={notice.img} alt="공지사항 이미지" />
+            </div>
+          )
+        }
 
 
         {/* 내용 */}

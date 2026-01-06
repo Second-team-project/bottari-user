@@ -15,6 +15,13 @@ export default function FAQItem({ faq, isOpen, onToggle }) {
       </div>
       {isOpen && (
         <div className="faq-answer">
+          {
+            faq.img && (
+              <div className="faq-image-wrapper">
+                <img className="faq-image" src={faq.img} alt="공지사항 이미지" />
+              </div>
+            )
+          }
           A. {faq.content}
         </div>
       )}

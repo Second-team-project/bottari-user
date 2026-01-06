@@ -27,6 +27,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
+  overflow-y: auto;
   z-index: 16;
 }
 @media (min-width: 769px) {
@@ -78,6 +79,12 @@
   /* width: 80%; */
   border: 1px solid var(--bottari-coolgray);
   margin: 0 auto;
+}
+
+/* 이미지 */
+.notice-detail-image {
+  width: 100%;
+  height: auto;
 }
 
 /* 본문 */
