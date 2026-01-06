@@ -12,6 +12,7 @@ import HeaderMobile from "./components/header/HeaderMobile.jsx";
 import BottomNav from './components/header/BottomNav.jsx';
 import ProtectedRouter from './routes/ProtectedRouter.jsx';
 import NotificationInfoModal from './components/common/NotificationInfoModal.jsx';
+import LiveChatBtn from './components/LiveChat/LiveChatBtn.jsx';
 
 import { getGuideImgThunk } from './store/thunks/guideImgThunk.js';
 
@@ -44,6 +45,7 @@ function App() {
           <ProtectedRouter key={location.pathname} />
         </AnimatePresence>
         <NotificationInfoModal />
+        <LiveChatBtn />
       </div>
     </>
   )

@@ -1,0 +1,52 @@
+.live-chat-btn {
+  color: var(--bottari-navy);
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  background: linear-gradient(135deg, var(--bottari-skyblue) 0%, var(--bottari-pink) 100%);
+  padding: 0.9rem;
+
+  border: none;
+  border-radius: 50%;
+  box-shadow: var(--bottari-shadow);
+  
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  position: fixed;
+  bottom: 13%;
+  right: 2%;
+  z-index: 50;
+
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+@media (min-width: 769px) {
+  .live-chat-btn {
+    padding: 1rem 1rem;
+    border-radius: 50px;
+
+    position: fixed;
+    bottom: 3rem;
+    right: 2.5rem;
+  }
+  
+}
+
+.live-chat-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--bottari-shadow);
+}
+
+.live-chat-btn:active {
+  transform: translateY(-1px);
+}
+
+
+/* 모바일 대응 글자 없음 */
+@media (max-width: 480px) {
+  .live-chat-btn span {
+    display: none;
+  }
+}
