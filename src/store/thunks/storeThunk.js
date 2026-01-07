@@ -6,7 +6,7 @@ export const getStores = createAsyncThunk(
   async (_, {rejectWithValue}) => {
     try {
 
-      const url = `/api/common/store`;
+      const url = `/api/admin/store`;
 
       const response = await axiosIns.get(url)
       
