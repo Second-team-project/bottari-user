@@ -44,7 +44,15 @@ export default function ReviewCreate() {
   // 이미지 선택
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
     if (file) {
+      if (!allowedTypes.includes(file.type)) {
+        toast.error('JPG, PNG, WEBP 형식의 이미지만 가능합니다.');
+        e.target.value = '';
+        return;
+      }
+      // 이미지 - 유효성 검사 통과 후 설정
       setImage(file);
       setImagePreview(URL.createObjectURL(file));
     }
@@ -215,6 +223,7 @@ export default function ReviewCreate() {
           <div className="review-create-section">
             <label className="review-create-label">사진 ( 선택 )</label>
             <span className="review-small-notice-text">사진은 최대 1장 업로드 가능합니다.</span>
+            <span className="review-small-notice-text">jpg / jpeg / png 확장자의 이미지만 선택 가능합니다.</span>
 
             {
               imagePreview ? (
@@ -234,7 +243,7 @@ export default function ReviewCreate() {
                   <span>사진 추가</span>
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg, image/png, image/webp"
                     onChange={handleImageChange}
                     hidden
                   />
