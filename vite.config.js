@@ -67,6 +67,10 @@ export default defineConfig({
         secure: false,
       }
     }
+  },
+  preview: {
+    port: 4174,
+    strictPort: true,
   }
 })
 
