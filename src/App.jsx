@@ -15,6 +15,7 @@ import NotificationInfoModal from './components/common/NotificationInfoModal.jsx
 import LiveChatBtn from './components/LiveChat/LiveChatBtn.jsx';
 
 import { getGuideImgThunk } from './store/thunks/guideImgThunk.js';
+import LiveChat from './components/LiveChat/LiveChat.jsx';
 
 function App() {
   // ===== hooks

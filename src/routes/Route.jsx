@@ -30,6 +30,7 @@ import ReserveConfirm from "../components/reserve/ReserveConfirm.jsx";
 import CheckoutPage from '../components/reserve/tosspayments/TossCheckout.jsx';
 import SuccessPage from '../components/reserve/tosspayments/TossSuccess.jsx';
 import FailPage from '../components/reserve/tosspayments/TossFail.jsx';
+import LiveChat from "../components/LiveChat/LiveChat.jsx";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
       { path: "/review", element: <Review /> },
       { path: "/review/detail", element: <ReviewDetail /> },
       { path: "/review/create", element: <ReviewCreate /> },
+      { path: "/chat", element: <LiveChat /> },
       {
         path: "/service",
         element: <Service />,

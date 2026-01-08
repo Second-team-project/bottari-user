@@ -1,0 +1,167 @@
+/* ===== 배경 ===== */
+.chat-login-modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+/* ===== 컨테이너 ===== */
+.chat-login-modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== 닫기 버튼 ===== */
+.chat-login-modal-x {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  cursor: pointer;
+  color: #666;
+}
+
+/* ===== 제목 ===== */
+.chat-login-modal-title-wrapper {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.chat-login-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.chat-login-modal-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+/* ===== 버튼 컨테이너 ===== */
+.chat-login-modal-btn-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== 카카오 버튼 ===== */
+.chat-login-modal-kakao-btn-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 48px;
+  background-color: #FEE500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.chat-login-modal-kakao-btn-wrapper:hover {
+  background-color: #f5dc00;
+}
+
+.chat-login-modal-kakao-btn {
+  height: 20px;
+}
+
+.chat-login-modal-kakao-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #000;
+}
+
+/* ===== 구분선 ===== */
+.chat-login-modal-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-login-modal-divider::before,
+.chat-login-modal-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #e9ecef;
+}
+
+.chat-login-modal-divider span {
+  font-size: 13px;
+  color: #999;
+}
+
+/* ===== 폼 ===== */
+.chat-login-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-login-modal-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-login-modal-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.chat-login-modal-input:focus {
+  border-color: #3182f6;
+}
+
+.chat-login-modal-input:disabled {
+  background-color: #f9fafb;
+}
+
+/* ===== 비회원 버튼 ===== */
+.chat-login-modal-guest-btn-wrapper {
+  width: 100%;
+  height: 48px;
+  background-color: #3182f6;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.chat-login-modal-guest-btn-wrapper:hover:not(:disabled) {
+  background-color: #1c6dd0;
+}
+
+.chat-login-modal-guest-btn-wrapper:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.chat-login-modal-guest-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}

@@ -1,0 +1,54 @@
+/* ===== 채팅 페이지 컨테이너 ===== */
+.live-chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #fff;
+}
+
+/* ===== 헤더 ===== */
+.live-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e9ecef;
+  background-color: #fff;
+}
+
+.live-chat-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.live-chat-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.live-chat-header-spacer {
+  width: 40px;
+}
+
+/* ===== 로딩 ===== */
+.live-chat-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  height: 100dvh;
+}
+
+.live-chat-loading p {
+  color: #999;
+  font-size: 14px;
+}
