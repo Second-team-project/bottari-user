@@ -17,18 +17,18 @@
 
 /* 상태 안내말 */
 .reserve-item-status-desc-wrapper {
-margin-bottom: 1rem;
+  width: 100%;
+  padding-top: 0.3rem;
 }
 .reserve-item-status-desc {
-color: var(--bottari-grayfont);
-font-size: 0.95rem;
-font-weight: 600;
+color: var(--bottari-gray);
+font-size: 0.9rem;
+font-weight: 500;
 
 width: 100%;
-background-color: var();
 
 display: flex;
-align-items: center;
+/* align-items: center; */
 }
 
 /* 상태 태그 */
@@ -206,4 +206,13 @@ align-items: center;
   background-color: #fff;
   padding: 0.1rem 1rem;
   cursor: pointer;
+}
+
+/* 빈공간 */
+.padding-0-1rem {
+  padding: 0.1rem;
+} 
+.color-gray {
+  color: var(--bottari-gray);
+  font-weight: 400;
 }
