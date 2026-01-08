@@ -15,6 +15,7 @@ import NotificationInfoModal from './components/common/NotificationInfoModal.jsx
 import LiveChatBtn from './components/LiveChat/LiveChatBtn.jsx';
 
 import { getGuideImgThunk } from './store/thunks/guideImgThunk.js';
+import Footer from './components/common/footer.jsx';
 
 function App() {
   // ===== hooks
@@ -41,11 +42,19 @@ function App() {
           <HeaderMobile />
           <BottomNav />
         </div>
+
+        {/* 프로덱티드 라우터 */}
         <AnimatePresence mode="wait">
           <ProtectedRouter key={location.pathname} />
         </AnimatePresence>
+
+        {/* 알림 권한 유도 모달 */}
         <NotificationInfoModal />
+        {/* 채팅 상담 버튼 */}
         <LiveChatBtn />
+
+        {/* 푸터 */}
+        <Footer />
       </div>
     </>
   )
