@@ -30,11 +30,11 @@ export default function ReserveComplete() {
         setCompleteData(res);
         console.log('res: ', res)
         console.log('completeData.luggageList: ', res.luggageList)
-        if(completeData.code.startsWith('D')) {
+        if(res?.code?.startsWith('D')) {  // complete데이터는 시간이 걸리므로, res로 타입부터 설정
           setType('D');
           return;
         }
-        if(completeData.code.startsWith('S')) {
+        if(res?.code?.startsWith('S')) {
           console.log('completeData: ', completeData)
           setType('S');
           return;
@@ -80,7 +80,7 @@ export default function ReserveComplete() {
           {/* 예약 코드 */}
           <div className="reserve-form-content-container reserve-complete-margin-updonw">
             <div className="reserve-complete-reserve-code-wrapper">
-              <span className="reserve-complete-reserve-code-notice"><span>user</span>님의 예약코드는 아래와 같습니다.</span>
+              <span className="reserve-complete-reserve-code-notice"><span>{completeData.userName || '고객'}</span>님의 예약코드는 아래와 같습니다.</span>
               <div className="reserve-complete-reserve-code-copy" onClick={handleCopyCode}>
                 <span className="reserve-complete-reserve-code">{reserveCode}{' '}<span className="reserve-complete-copy-icon"><Copy size={16} title="예약 코드 복사" />복사하기</span></span>
               </div>
@@ -173,12 +173,6 @@ export default function ReserveComplete() {
               </div>
             </div>
           </div>
-
-
-
-       
-
-
 
         </div>
       </motion.div>
