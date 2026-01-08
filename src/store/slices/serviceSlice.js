@@ -3,7 +3,11 @@ import { getFaqThunk, getNoticeThunk } from "../thunks/serviceThunk.js";
 
 const initialState = {
   faqList: [],
+  faqListCount: 0,
+
   noticeList: [],
+  noticeListCount: 0,
+
   loading: true,
   error: null,
 }
@@ -31,7 +35,20 @@ const slice = createSlice({
       .addCase(getFaqThunk.fulfilled, (state, action) => {
         state.loading = false;
 
-        state.faqList = action.payload.data.faqs;
+        const page = action.meta.arg || 1;
+
+        if(page === 1) {
+          state.faqList = action.payload.faqs
+          // console.log('slice-faq: ', state.faqList)
+
+        } else {
+          state.faqList = [...state.faqList, ...action.payload.faqs];
+          // console.log('slice-faq: ', state.faqList)
+        }
+
+        state.faqListCount = action.payload.count;
+        // console.log('slice-faqs-count: ', state.faqListCount)
+
         console.log('slice-faqList: ', state.faqList);
       })
       .addCase(getFaqThunk.rejected, (state, action) => {
@@ -47,8 +64,19 @@ const slice = createSlice({
       .addCase(getNoticeThunk.fulfilled, (state, action) => {
         state.loading = false;
 
-        state.noticeList = action.payload.data.notices;
-        console.log('slice-noticeList: ', state.noticeList);
+        const page = action.meta.arg || 1;
+
+        if(page === 1) {
+          state.noticeList = action.payload.notices
+          // console.log('slice-notice: ', state.noticeList)
+          
+        } else {
+          state.noticeList = [...state.noticeList, ...action.payload.notices]; 
+          // console.log('slice-notice: ', state.noticeList)
+        }
+
+        state.noticeListCount = action.payload.count;
+        // console.log('slice-notice-count: ', state.noticeListCount)
       })
       .addCase(getNoticeThunk.rejected, (state, action) => {
         state.loading = false;

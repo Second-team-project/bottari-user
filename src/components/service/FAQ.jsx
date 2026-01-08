@@ -10,17 +10,28 @@ export default function FAQ() {
   // ===== hooks
   const dispatch = useDispatch();
   // ===== redux state
-  const faqList = useSelector(state => state.service.faqList)
+  const { faqList, faqListCount } = useSelector(state => state.service)
   // ===== local state
   const [openIndex, setOpenIndex] = useState(null);
+  const [page, setPage] = useState(1);
 
   // const toggleFaq = (index) => {
   //   setOpenIndex(openIndex === index ? null : index);
   // };
 
+  console.log('faqList.length / faqListCount: ', faqList.length, faqListCount)
+
+  // 첫 호출 : 마운트
   useEffect(() => {
     dispatch(getFaqThunk())
   }, [])
+
+  // === 더보기 호출
+  const loadMore = async () => {
+    const nextPage = page + 1;
+    await dispatch(getFaqThunk(nextPage));
+    setPage(nextPage);
+  }
 
   return (
     <div className="faq-container">
@@ -34,6 +45,15 @@ export default function FAQ() {
             onToggle={() => setOpenIndex(index)}
           />
         ))}
+        {
+          faqList?.length < faqListCount && (
+            <div className="service-more-btn-wrapper">
+              <button type="button" className="service-more-btn"
+                onClick={loadMore}
+              >더 보기</button>
+            </div>
+          )
+        }
       </div>
     </div>
   );

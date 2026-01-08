@@ -46,9 +46,11 @@
 
 /* 제목 */
 .notice-item-title {
+  color: var(--bottari-darkslate);
   font-size: 1rem;
   font-weight: 600;
-  color: var(--bottari-darkslate);
+  line-height: 1.6;
+
   flex: 1;
 }
 
