@@ -6,7 +6,7 @@ export const getGuideImgThunk = createAsyncThunk(
   async (_, {rejectWithValue}) => {
     try {
 
-      const url = `/api/common/guide-img`;
+      const url = `/api/user/guide-img`;
 
       const response = await axiosIns.get(url)
 
