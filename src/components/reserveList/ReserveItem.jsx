@@ -46,12 +46,12 @@ export default function ReserveItem({ data }) {
     case 'RESERVED':
       statusLabel = '예약 완료';
       statusDesc = isDelivery
-        ? <span className="reserve-item-status-desc"><CircleAlert size={20} />기사님의 출발을 기다리고 있어요.</span>
-        : <span className="reserve-item-status-desc"><Clock4 size={20} />보관 시작을 기다리고 있어요.</span>
+        ? <span className="reserve-item-status-desc"><CircleAlert size={18} /><span className="padding-0-1rem"></span>기사님의 출발을 기다리고 있어요.</span>
+        : <span className="reserve-item-status-desc"><Clock4 size={18} /><span className="padding-0-1rem"></span>보관 시작을 기다리고 있어요.</span>
       break;
     case 'PICKING_UP':
-      statusLabel = <span className="reserve-list-tag-inner">픽업중 <Truck size={20} /></span>;
-      statusDesc = <span className="reserve-item-status-desc"><Truck size={20} />기사님이 고객님의 보따리를 가지러 가고 있어요.</span>
+      statusLabel = <span className="reserve-list-tag-inner">픽업중 <Truck size={18} /></span>;
+      statusDesc = <span className="reserve-item-status-desc"><Truck size={18} /><span className="padding-0-1rem"></span>보따리를 가지러 픽업장소로 가고 있어요.</span>
       break;
     case 'IN_PROGRESS':
       statusLabel = isDelivery ? ( // 타입에 따라 분기
@@ -60,8 +60,8 @@ export default function ReserveItem({ data }) {
         <span className="reserve-list-tag-inner">보관 중</span>
       ) 
       statusDesc = isDelivery
-        ? <span className="reserve-item-status-desc">고객님의 보따리가 목적지로 이동 중이에요.<Truck size={20} /></span>
-        : <span className="reserve-item-status-desc">고객님의 보따리가 안전하게 보관되고 있어요.<Package size={20} /></span>
+        ? <span className="reserve-item-status-desc">고객님의 보따리가 목적지로 이동 중이에요.<span className="padding-0-1rem"></span><Truck size={18} /></span>
+        : <span className="reserve-item-status-desc">고객님의 보따리가 안전하게 보관되고 있어요.<span className="padding-0-1rem"></span><Package size={18} /></span>
       break;
     case 'COMPLETED':
       statusLabel = <span className="reserve-list-tag-inner">이용 완료</span>;
@@ -126,6 +126,13 @@ export default function ReserveItem({ data }) {
         }
       </AnimatePresence>
     
+      {/* 상태 설명 */}
+      {
+        statusDesc && (
+          <span className="reserve-item-status-desc-wrapper">{statusDesc}</span>
+        )
+      }
+
       {/* 상단 */}
       <div className="reserve-list-content-header">
         {/* 보관/배송 타입 */}
@@ -138,12 +145,6 @@ export default function ReserveItem({ data }) {
         </div>
       </div>
 
-      {/* 중간 */}
-      {
-        statusDesc && (
-          <span className="reserve-item-status-desc-wrapper">{statusDesc}</span>
-        )
-      }
 
       {/* 배송인 경우 */}
       {
@@ -152,14 +153,14 @@ export default function ReserveItem({ data }) {
 
             {/* 중간 */}
             <div className="reserve-list-content-left border-bottom-offwhite">
-              <span className="color-darkslate">{dayjs(data.startedAt).format('YYYY년 MM월 DD일 HH:mm')} 픽업</span>
+              <span className="color-darkslate padding-0-1rem">{dayjs(data.startedAt).format('YYYY년 MM월 DD일 HH:mm')} 픽업</span>
             </div>
 
             {/* 하단 */}
             <div className="reserve-list-content-right border-bottom-offwhite">
-              <span>{data.startedAddr} 에서</span>
+              <span className="padding-0-1rem">{data.startedAddr} <span className="color-gray">에서</span></span>
               <span className="reserve-confirm-arrow"><ArrowBigDown size={20} /><span className="reserve-confirm-margin-right-4-rem">{'   '}</span></span>
-              <span>{data.endedAddr} 까지</span>
+              <span className="padding-0-1rem">{data.endedAddr} <span className="color-gray">까지</span></span>
             </div>
 
           </div>
@@ -178,9 +179,9 @@ export default function ReserveItem({ data }) {
 
             {/* 하단 */}
             <div className="reserve-list-content-right">
-              <span>{dayjs(data.startedAt).format('YYYY년 MM월 DD일 HH:mm')} 부터</span>
+              <span>{dayjs(data.startedAt).format('YYYY년 MM월 DD일 HH:mm')} <span className="color-gray">부터</span></span>
               <span className="reserve-confirm-arrow"><ArrowBigDown size={20} /><span className="reserve-confirm-margin-right-4-rem">{'   '}</span></span>
-              <span>{dayjs(data.endedAt).format('YYYY년 MM월 DD일 HH:mm')} 까지</span>
+              <span>{dayjs(data.endedAt).format('YYYY년 MM월 DD일 HH:mm')} <span className="color-gray">까지</span></span>
             </div>
 
           </div>

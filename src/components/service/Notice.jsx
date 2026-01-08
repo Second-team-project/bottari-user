@@ -9,16 +9,26 @@ export default function Notice() {
   // ===== hooks
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [page, setPage] = useState(1);
 
   // ===== redux states
-  const noticeList = useSelector(state => state.service.noticeList);
+  const { noticeList, noticeListCount } = useSelector(state => state.service);
   // ===== local states
   const [selectedNotice, setselectedNotice] = useState(null);
 
-  // ===== 공지사항 목록 가져오기
+  console.log('faqList.length / faqListCount: ', noticeList.length, noticeListCount)
+
+  // ===== 첫 호출 : 마운트 - 공지사항 목록 가져오기
   useEffect(() => {
     dispatch(getNoticeThunk());
   }, []);
+
+  // === 더보기 호출
+  const loadMore = async () => {
+    const nextPage = page + 1;
+    await dispatch(getNoticeThunk(nextPage));
+    setPage(nextPage);
+  }
 
   // ===== URL 파라미터로 모달 자동 오픈
   useEffect(() => {
@@ -66,6 +76,15 @@ export default function Notice() {
               notice={selectedNotice}
               onClose={handleCloseModal}
             />
+          )
+        }
+        {
+          noticeList?.length < noticeListCount && (
+            <div className="service-more-btn-wrapper">
+              <button type="button" className="service-more-btn"
+                onClick={loadMore}
+              >더 보기</button>
+            </div>
           )
         }
 

@@ -37,17 +37,17 @@ registerRoute(
 // -----------------------------------------
 // ||     API 요청 캐싱 (최소 동작 보장, GET만 추천 - 나머지 제외)
 // -----------------------------------------
-registerRoute(
-  ({request, url}) => {
-    const isMyApi = url.origin === import.meta.env.VITE_SERVER_URL && request.method === 'GET';
-    // 제외 백엔드 라우트
-    const isExcluded = url.pathname.includes('/reserve') || url.pathname.includes('/pricing');
-    return isMyApi && !isExcluded;
-  },
-  new StaleWhileRevalidate({
-    cacheName: `${PREFIX}-api-cache`,
-  })
-);
+// registerRoute(
+//   ({request, url}) => {
+//     const isMyApi = url.origin === import.meta.env.VITE_SERVER_URL && request.method === 'GET';
+//     // 제외 백엔드 라우트
+//     const isExcluded = url.pathname.includes('/reserve') || url.pathname.includes('/pricing');
+//     return isMyApi && !isExcluded;
+//   },
+//   new StaleWhileRevalidate({
+//     cacheName: `${PREFIX}-api-cache`,
+//   })
+// );
 
 // -----------------------------------------
 // ||     웹 푸시 핸들러

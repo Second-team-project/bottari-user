@@ -71,6 +71,40 @@
     justify-content: center;
 
   }
-
 }
 
+/* 버튼 */
+.service-more-btn-wrapper {
+  width: 100%;
+  padding: 1rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.service-more-btn {
+  color: var(--bottari-grayfont);
+  font-size: 0.8rem;
+  font-weight: 500;
+  
+  width: 80%;
+  border: 1px solid var(--bottari-coolgray);
+  border-radius: 5px;
+  padding: 0.5rem;
+
+  cursor: pointer;
+}
+.service-more-btn:hover {
+  transform: scale(0.98);
+}
+.service-more-btn:active {
+  transform: scale(0.95);
+  filter: brightness(0.95);
+}
+@media (min-width: 769px) {
+  .service-more-btn {
+    font-size: 0.9rem;
+
+    width: 50%;
+  }
+}

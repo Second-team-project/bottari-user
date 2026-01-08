@@ -4,6 +4,7 @@
   box-sizing: border-box;
   /* 폰트 일괄 '페이퍼로지'폰트 적용 */
   font-family: 'Paperozi', sans-serif;
+  scrollbar-gutter: stable;
 }
 
 #root {

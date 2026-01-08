@@ -17,7 +17,7 @@
 @media (min-width: 769px) {
   /* 웹 컨테이너 */
   .notification-info-container {
-    width: 30%;
+    width: 40%;
     background-color: #fff;
     border-radius: 10px;
     padding: 1.3rem 1.3rem;
@@ -111,7 +111,7 @@
 }
 @media (min-width: 769px) {
   .notification-info-btn {
-    padding: 0.5rem 2rem;
+    padding: 0.5rem 0.9rem;
   }
 }
 
