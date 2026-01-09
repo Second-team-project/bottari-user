@@ -33,6 +33,7 @@ export default function ProtectedRouter() {
         try {
           await dispatch(reissueThunk()).unwrap();
         } catch (error) {
+          console.error('프로텍트라우터 재발급 실패: ', error);
           dispatch(clearAuth());
         }
       }
