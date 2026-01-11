@@ -74,12 +74,6 @@ export default function ProtectedRouter() {
     return null; // 화면 깜빡임 방지
   }
 
-  // 인증 체크 중이면 대기
-  if (!isAuthChecked) {
-    return null;
-  }
-
-
   // // 1. 게스트 전용 라우트 (로그인 시 홈으로)
   // const isGuestRoute = GUEST_ONLY_ROUTES.some(regex => regex.test(pathname));
   // if (isGuestRoute && isLoggedIn) {
