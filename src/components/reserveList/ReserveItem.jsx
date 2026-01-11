@@ -33,12 +33,18 @@ export default function ReserveItem({ data }) {
   // === driver
   const [driverInfo, setDriverInfo] = useState(null);
   const [isLoadingDriver, setIsLoadingDriver] = useState(false);
+  // 지도 렌더링 지연 상태
+  const [isMapVisible, setIsMapVisible] = useState(false);
+
   // data 가공
   const isDelivery = data.code.startsWith('D');
   const typeClass = isDelivery ? 'd' : 's';
   const typeText = isDelivery ? '배송' : '보관';
   const stateText = data.state?.trim().toLowerCase();
-  const isProgress = data.state === 'RESERVED' || data.state === 'IN_PROGRESS' || data.state === 'COMPLETED';
+  // 기사 정보가 필요한 상태
+  const showDriver = data.state === 'RESERVED' || data.state === 'PICKING_UP' || data.state === 'IN_PROGRESS' || data.state === 'COMPLETED';
+  // 기사 위치 정보 poling
+  const isPoling = data.state === 'PICKING_UP' || data.state === 'IN_PROGRESS'
 
   let statusLabel = '';
   let statusDesc = '';
@@ -55,9 +61,9 @@ export default function ReserveItem({ data }) {
       break;
     case 'IN_PROGRESS':
       statusLabel = isDelivery ? ( // 타입에 따라 분기
-        <span className="reserve-list-tag-inner">배송 중</span>
+        <span className="reserve-list-tag-inner">배송 중 <Truck size={18} /></span>
       ) : (
-        <span className="reserve-list-tag-inner">보관 중</span>
+        <span className="reserve-list-tag-inner">보관 중 <Package size={18} /></span>
       ) 
       statusDesc = isDelivery
         ? <span className="reserve-item-status-desc">고객님의 보따리가 목적지로 이동 중이에요.<span className="padding-0-1rem"></span><Truck size={18} /></span>
@@ -97,10 +103,14 @@ export default function ReserveItem({ data }) {
         .finally(() => setIsLoadingDriver(false));
     };
     
-    // polling : 1초 간격으로 DB의 기사 정보 가져오기
-    if (isDelivery && isProgress && isOpen) {
+    // 기사 정보 보여줄 상태면 1회 조회
+    if (isDelivery && showDriver && isOpen) {
       fetchDriverLocation();  // 즉시 1회 호출
-      intervalId = setInterval(fetchDriverLocation, 60000);  // 1분마다
+
+      // 폴링이 필요한 상태면 인터벌 추가 (1분 간격)
+      if (isPoling) {
+        intervalId = setInterval(fetchDriverLocation, 60000);
+      }
     }
 
     // cleanup
@@ -110,7 +120,14 @@ export default function ReserveItem({ data }) {
       }
     }
     
-  }, [isOpen, isDelivery, isProgress, data.id, dispatch])
+  }, [isOpen, isDelivery, isPoling, data.id, dispatch])
+
+  // 아코디언 닫힐 때 지도 상태 초기화
+  useEffect(() => {
+    if (!isOpen) {
+      setIsMapVisible(false);
+    }
+  }, [isOpen]);
 
 
   return(
@@ -208,6 +225,11 @@ export default function ReserveItem({ data }) {
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
               style={{ overflow: "hidden" }}
+              onAnimationComplete={(definition) => {
+                if (definition.height === "auto") {
+                  setIsMapVisible(true);
+                }
+              }}
             >
 
               <div className="reserve-list-content-wrapper">
@@ -237,7 +259,7 @@ export default function ReserveItem({ data }) {
                 {
                   data.luggageList && data.luggageList.map( (luggage, index) => (
                     <div className="reserve-list-content-right" key={index}>
-                      <span>{luggage.itemType} ({luggage.itemSize}) {luggage.itemWeight} {luggage.count}개</span>
+                      <span>{luggage.itemType} {luggage?.itemSize && `(${luggage.itemSize})`} {luggage.itemWeight} {luggage.count}개</span>
                     </div>
                   ))
                 }
@@ -248,7 +270,7 @@ export default function ReserveItem({ data }) {
 
 
               {
-                isDelivery && isProgress && (
+                isDelivery && showDriver && (
                   <>
                     <div className="reserve-list-content-wrapper">
                       <span className="reserve-list-content-left">배정 기사</span>
@@ -274,7 +296,7 @@ export default function ReserveItem({ data }) {
                   </div>
                 )
               }
-              {data.state === 'IN_PROGRESS' && driverInfo?.lat && driverInfo?.lng && (
+              {isPoling && driverInfo?.lat && driverInfo?.lng && (
                 <>
                   <hr className="reserve-list-line" />
                   <div className="reserve-list-content-wrapper reserve-item-align-center">
@@ -289,30 +311,34 @@ export default function ReserveItem({ data }) {
                       ><MapPin size={24} /></button>
                     </span>
                   </div>
-                  <div className="reserve-item-map-wrapper">
-                  <Map
-                    center={{ lat: Number(driverInfo.lat), lng: Number(driverInfo.lng) }} // 지도의 중심 좌표
-                    style={{ width: "100%", height: "100%" }} // 지도 크기
-                    level={5} // 확대 레벨
-                    ref={mapRef}
-                  >
-                    {/* 기사님 위치에 핀(마커) 표시 */}
-                    <MapMarker
-                      position={{ lat: Number(driverInfo.lat), lng: Number(driverInfo.lng) }}
-                      image={{ src: "/bottari-pick.png", size: { width: 35, height: 35 } }}
-                    ></MapMarker>
-                    <CustomOverlayMap
-                      position={{ lat: Number(driverInfo.lat), lng: Number(driverInfo.lng) }}
-                      yAnchor={2.5}
-                    >
-                    <div className="reserve-item-map-picker">
-                      보따리가 가고 있어요!
-                    </div>
-                    </CustomOverlayMap>
-                  </Map>
 
-                </div>
-                <div className="reserve-list-empty-space"></div>
+                  <div className="reserve-item-map-wrapper">
+                  {
+                    isMapVisible && (
+                      <Map
+                        center={{ lat: Number(driverInfo.lat), lng: Number(driverInfo.lng) }} // 지도의 중심 좌표
+                        style={{ width: "100%", height: "100%" }} // 지도 크기
+                        level={5} // 확대 레벨
+                        ref={mapRef}
+                      >
+                        {/* 기사님 위치에 핀(마커) 표시 */}
+                        <MapMarker
+                          position={{ lat: Number(driverInfo.lat), lng: Number(driverInfo.lng) }}
+                          image={{ src: "/bottari-pick.png", size: { width: 35, height: 35 } }}
+                        ></MapMarker>
+                        <CustomOverlayMap
+                          position={{ lat: Number(driverInfo.lat), lng: Number(driverInfo.lng) }}
+                          yAnchor={2.5}
+                        >
+                        <div className="reserve-item-map-picker">
+                          보따리가 가고 있어요!
+                        </div>
+                        </CustomOverlayMap>
+                      </Map>
+                    )
+                  }
+                  </div>
+                  <div className="reserve-list-empty-space"></div>
                 </>
 
                 )
