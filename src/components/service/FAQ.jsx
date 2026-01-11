@@ -15,10 +15,6 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
   const [page, setPage] = useState(1);
 
-  // const toggleFaq = (index) => {
-  //   setOpenIndex(openIndex === index ? null : index);
-  // };
-
   console.log('faqList.length / faqListCount: ', faqList.length, faqListCount)
 
   // 첫 호출 : 마운트
@@ -42,7 +38,7 @@ export default function FAQ() {
             key={faq.id}
             faq={faq}
             isOpen={openIndex === index}
-            onToggle={() => setOpenIndex(index)}
+            onToggle={() => setOpenIndex(openIndex === index ? null : index)}
           />
         ))}
         {
