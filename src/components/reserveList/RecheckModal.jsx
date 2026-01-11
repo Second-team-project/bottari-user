@@ -72,6 +72,10 @@ export default function RecheckModal({ modalFlgfalse, data}) {
       toast.error('취소 사유를 10글자 이상 입력해 주세요.');
       return;
     }
+    if(isReasonInput && reason.length > 200) {
+      toast.error('취소 사유는 최대 200글자 작성 가능합니다.');
+      return;
+    }
     setStep1(false);
     setStep2(true);
   }
