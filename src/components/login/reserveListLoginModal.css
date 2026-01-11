@@ -28,7 +28,6 @@
 
   z-index: 16;
 }
-
 @media (min-width: 769px) {
   /* 웹 컨테이너 */
   .reserve-list-login-modal-container {
@@ -73,6 +72,8 @@
   height: 50px;
   border: none;
   border-radius: 12px;
+
+  cursor: pointer;
 }
 .reserve-list-login-modal-kakao-btn {
   width: 220px;
@@ -98,6 +99,8 @@
   
   font-weight: 600;
   font-size: 1rem;
+
+  cursor: pointer;
 }
 
 /* 버튼 웹 버전 */
@@ -130,7 +133,6 @@
 /* 버튼 효과 : 호버, 활성화 */
 .reserve-list-login-modal-kakao-btn-wrapper:hover {
   transform: scale(0.98);
-  cursor: pointer;
 }
 .reserve-list-login-modal-kakao-btn-wrapper:active {
   transform: scale(0.95);
@@ -138,7 +140,6 @@
 }
 .reserve-list-login-modal-guest-btn-wrapper:hover {
   transform: scale(0.98);
-  cursor: pointer;
   border-width: 2px;
 }
 .reserve-list-login-modal-guest-btn-wrapper:active {

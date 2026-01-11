@@ -126,6 +126,10 @@ export default function ReserveListLoginModal({ modalFlgFasle }) {
           {/* 비회원 로그인 입력창 */}
           <form onSubmit={handleGuestLookup} className="reserve-list-login-modal-form">
             <div className="reserve-list-login-modal-input-container">
+              {/* 구분선 */}
+              <div className="chat-login-modal-divider">
+                <span>또는</span>
+              </div>
               <input 
                 type="text" name="code" 
                 className='reserve-list-login-modal-input' 
