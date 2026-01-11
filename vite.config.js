@@ -65,11 +65,34 @@ export default defineConfig({
         target: 'http://localhost:3000',
         changeOrigin: true,
         secure: false,
+      },
+      '/socket.io': {
+        target: 'http://localhost:3000',
+        ws: true,
+        changeOrigin: true
       }
     }
   },
   preview: {
-    port: 4174
+    port: 4174,
+    proxy: {
+      '/api' : {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+        ws: true
+      },
+      '/files' : {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/socket.io': {
+        target: 'http://localhost:3000',
+        ws: true,
+        changeOrigin: true
+      }
+    }
   }
 })
 

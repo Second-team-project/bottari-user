@@ -6,6 +6,30 @@ import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategi
 
 const PREFIX = import.meta.env.VITE_APP_NAME;
 
+// -----------------------------------------
+// ||     SW 즉시 활성화 (새 버전 즉시 반영)
+// -----------------------------------------
+self.addEventListener('install', () => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+// -----------------------------------------
+// ||     채팅 페이지 상태 관리 (postMessage)
+// -----------------------------------------
+let isChatOpen = false;
+
+self.addEventListener('message', (e) => {
+  if (e.data.type === 'CHAT_OPEN') {
+    isChatOpen = true;
+  } else if (e.data.type === 'CHAT_CLOSE') {
+    isChatOpen = false;
+  }
+});
+
 
 // -----------------------------------------
 // ||     정적 파일 캐싱 : 정적 파일, 이미지 등 html, css, js 캐싱
@@ -53,19 +77,24 @@ registerRoute(
 // ||     웹 푸시 핸들러
 // -----------------------------------------
 self.addEventListener('push', e => {
-  //     ↱ 객체 형태로 담김 (payload가 담김)
   const data = e.data.json();
 
-  self.registration.showNotification(
-    data.title,
-    {  // options
-      body: data.message,
-          // TODO : 아이콘 작업
-      icon: '/icons/bottari-icon.png',
-      data: {
-        targetUrl: data.data.targetUrl
+  // 채팅 페이지 열려있으면 알림 생략
+  if (isChatOpen) {
+    return;
+  }
+
+  e.waitUntil(
+    self.registration.showNotification(
+      data.title,
+      {
+        body: data.message,
+        icon: '/icons/bottari-icon.png',
+        data: {
+          targetUrl: data.data.targetUrl
+        }
       }
-    }
+    )
   );
 })
 
