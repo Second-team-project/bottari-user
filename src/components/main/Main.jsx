@@ -8,7 +8,7 @@ import MainEvent from "./MainEvent.jsx";
 import MainService from "./MainSevice.jsx";
 
 export default function Main() {
-  // ===== 스크롤 설정
+  // ===== 스크롤 top 설정
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
