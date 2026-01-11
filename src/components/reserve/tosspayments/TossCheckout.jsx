@@ -168,7 +168,7 @@ export default function TossCheckoutPage({ payData, password }) {
               // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
               await widgets.requestPayment({
                 orderId: reserveCode, 
-                orderName: payData.type === 'storage' ? '보따리 보관' : '보따리 배송',
+                orderName: payData.type === 'STORAGE' ? '보따리 보관' : '보따리 배송',
                 successUrl: window.location.origin + "/reserve/tosspayments/success",
                 failUrl: window.location.origin + "/reserve/tosspayments/fail",
                 customerEmail: payData.email,

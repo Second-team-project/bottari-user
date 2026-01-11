@@ -40,7 +40,7 @@ export default function TossSuccessPage() {
     }
     confirm();
 
-  }, []);
+  }, [searchParams, dispatch, navigate]);
 
   return (
     <>
