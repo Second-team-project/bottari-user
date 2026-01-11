@@ -56,7 +56,7 @@ export default function ReserveDelivery() {
   // ===== 달력 커스텀용 & 픽업 일시
   const [pickupDate, setPickupDate] = useState(savedData?.startedAt ? new Date(savedData.startedAt) : null);
 
-  // ===== 스크롤 설정
+  // ===== 스크롤 top 설정
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

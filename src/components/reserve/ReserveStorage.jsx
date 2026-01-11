@@ -57,7 +57,7 @@ export default function ReserveStorage() {
   // ===== 구간별 요금률
   const [additionalPricing, setAdditionalPricing] = useState([]);
 
-  // ===== 스크롤 설정
+  // ===== 스크롤 top 설정
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -74,7 +74,7 @@ export default function ReserveStorage() {
       .catch(err => {
         console.log('ReserveStorage-store: ', err);
       })
-    }, [])
+    }, [dispatch])
 
   // ===== 구간별 요금률 가져오기
   useEffect(() => {
@@ -87,7 +87,7 @@ export default function ReserveStorage() {
         console.log('ReserveStorage-additionalPricing: ', err);
         toast.error('요금 정보를 불러오지 못했습니다. 새로고침 해주세요.');
       })
-  }, [])
+  }, [dispatch])
     
   // ========================
   // ||     짐 요금 계산    ||
@@ -293,7 +293,7 @@ export default function ReserveStorage() {
     // 2-3. sessionStorage에도 저장 (새로고침 대비, password는 보안상 저장 안함)
     saveReserveSession({ data: formData, type: 'STORAGE' });
     // 2-4. 결제 페이지로 이동
-    navigate('/reserve/confirm', { state: { type: 'STORAGE', password: password.trim() } });
+    navigate('/reserve/confirm', { state: { type: 'STORAGE', password: user ? null : password.trim() } });
   }
 
 
