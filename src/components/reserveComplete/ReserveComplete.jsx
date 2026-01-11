@@ -42,8 +42,9 @@ export default function ReserveComplete() {
       })
       .catch(error => {
         console.error("조회 실패:", error);
+        toast.error('에러가 발생했습니다. 예약페이지에서 조회해주세요.')
       })
-  }, [])
+  }, [dispatch, reserveCode])
 
   console.log('completeData: ', completeData)
 
@@ -96,7 +97,13 @@ export default function ReserveComplete() {
 
           <div className="reserve-form-content-container">
             <div className="reserve-complete-content-title">
-              <span className="border-bottom-var-bottari-pink font-size-1-3-rem">{(type !== '' && type ==='D') ? '배송' : '보관'}</span>
+              {
+                type && (
+                  <span className="border-bottom-var-bottari-pink font-size-1-3-rem">
+                    {type ==='D' ? '배송' : '보관'}
+                  </span>
+                )
+              }
               <span>내용</span>
             </div>
 
@@ -117,7 +124,7 @@ export default function ReserveComplete() {
                   {
                     completeData?.luggageList?.map((luggage, index) => (
                       <div key={index}>
-                        <span>{luggage.itemType} ({luggage.itemSize}) {luggage.itemWeight} {luggage.count}개</span>
+                        <span>{luggage.itemType} {luggage?.itemSize && `(${luggage.itemSize})`} {luggage.itemWeight} {luggage.count}개</span>
                       </div>
                     ))
                   }
@@ -152,20 +159,18 @@ export default function ReserveComplete() {
                     {/* 보관 날짜 */}
                     <div className="reserve-confirm-data-wrapper">
                       <span className="reserve-confirm-data-key">보관 기한</span>
-                    </div>
-                    <div className="reserve-confirm-data-value">
-                      <span>{completeData?.startedAt && new Date(completeData.startedAt).toLocaleString()}<span className="reserve-confirm-content-gray"> 부터</span></span>
-                    </div>
-                    <div className="reserve-confirm-data-value">
-                      <span>{completeData?.endedAt && new Date(completeData.endedAt).toLocaleString()}<span className="reserve-confirm-content-gray"> 까지</span></span>
+                      <div className="reserve-confirm-data-value-wrapper">
+                        <span>{completeData?.startedAt && new Date(completeData.startedAt).toLocaleString()}<span className="reserve-confirm-content-gray"> 부터</span></span>
+                        <span>{completeData?.endedAt && new Date(completeData.endedAt).toLocaleString()}<span className="reserve-confirm-content-gray"> 까지</span></span>
+                      </div>
                     </div>
 
                     {/* 보관소 */}
                     <div className="reserve-confirm-data-wrapper">
                       <span className="reserve-confirm-data-key">보관소</span>
-                    </div>
-                    <div className="reserve-confirm-data-value">
-                      <span>{completeData?.storeName}<span className="reserve-confirm-content-gray"> 보관소</span></span>
+                      <div className="reserve-confirm-data-value-wrapper">
+                        <span>{completeData?.storeName}<span className="reserve-confirm-content-gray"> 보관소</span></span>
+                      </div>
                     </div>
                   </>
                 )}
