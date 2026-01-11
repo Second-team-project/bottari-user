@@ -9,7 +9,7 @@ import BottariIcon from "../logo/BottariIcon.jsx";
 export default function Reserve() {
   const navigate = useNavigate()
 
-  // ===== 스크롤 설정
+  // ===== 스크롤 top 설정
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -46,19 +46,6 @@ export default function Reserve() {
 
         {/* 버튼 영역 */}
         <div className="reserve-btn-container" >
-          {/* 맡기기 버튼 */}
-          <motion.div
-            className="reserve-btn-style reserve-btn-storage"
-            onClick={ () => { navigate('/reserve/storage') }}
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-          >
-            <BottariIcon className="reserve-btn-icon-style" />
-            <p className="reserve-btn-text">
-              맡기기
-            </p>
-          </motion.div>
           {/* 옮기기 버튼 */}
           <motion.div
             className="reserve-btn-style reserve-btn-delivery"
@@ -69,10 +56,23 @@ export default function Reserve() {
           >
             <BottariIcon className="reserve-btn-icon-style" />
             <p className="reserve-btn-text">
-              옮기기
+              배송
             </p>
           </motion.div>
 
+          {/* 맡기기 버튼 */}
+          <motion.div
+            className="reserve-btn-style reserve-btn-storage"
+            onClick={ () => { navigate('/reserve/storage') }}
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <BottariIcon className="reserve-btn-icon-style" />
+            <p className="reserve-btn-text">
+              보관
+            </p>
+          </motion.div>
 
         </div>
 

@@ -73,11 +73,11 @@ export default function HeaderWeb() {
               </div>
               {/* 드랍다운 메뉴 */} 
               <div className="header-web-menu-drop-container">
-                <div className="header-web-menu-drop-item header-web-click-effect" onClick={() => {navigate('/reserve/storage')}}>
-                  <h3>맡기기</h3>
-                </div>
                 <div className="header-web-menu-drop-item header-web-click-effect" onClick={() => {navigate('/reserve/delivery')}}>
-                  <h3>옮기기</h3>
+                  <h3>배송</h3>
+                </div>
+                <div className="header-web-menu-drop-item header-web-click-effect" onClick={() => {navigate('/reserve/storage')}}>
+                  <h3>보관</h3>
                 </div>
               </div>
             </div>
