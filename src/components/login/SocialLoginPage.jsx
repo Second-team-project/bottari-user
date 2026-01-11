@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import { useEffect } from "react";
 
 export default function Login() {
-  // ===== 스크롤 설정
+  // ===== 스크롤 top 설정
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
