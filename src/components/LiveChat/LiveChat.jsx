@@ -5,10 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 
 import { useSocket } from '../../contexts/SocketContext';
+import { createRoom, getMessages } from '../../api/chatApi.js';
 import ChatMessageList from './ChatMessageList';
 import ChatInput from './ChatInput';
 import ChatLoginModal from './ChatLoginModal';
 import './LiveChat.css';
+import { toast } from 'sonner';
+import Loading from '../common/Loading.jsx';
 
 export default function LiveChat() {
   // ===== hooks
@@ -23,22 +26,44 @@ export default function LiveChat() {
   const [isConnected, setIsConnected] = useState(false);
 
   // 비회원 상태
-  const [booker, setBooker] = useState(null);
+  const [guestData, setGuestData] = useState(null);  // { booker, reservation }
   const [guestSocket, setGuestSocket] = useState(null);
 
   // 현재 사용할 소켓 (회원이면 memberSocket, 비회원이면 guestSocket)
   const socket = isLoggedIn ? memberSocket : guestSocket;
 
+  // ===== 스크롤 top 설정
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // ===== 로그인/인증 체크
   useEffect(() => {
-    if (!loading && !isLoggedIn && !booker) {
+    if (!loading && !isLoggedIn && !guestData) {
       setShowLoginModal(true);
     }
-  }, [loading, isLoggedIn, booker]);
+  }, [loading, isLoggedIn, guestData]);
+
+  // ===== SW에 채팅 페이지 상태 알림
+  useEffect(() => {
+    const sw = navigator.serviceWorker?.controller;
+    sw?.postMessage({ type: 'CHAT_OPEN' });
+
+    const handleBeforeUnload = () => {
+      sw?.postMessage({ type: 'CHAT_CLOSE' });
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      sw?.postMessage({ type: 'CHAT_CLOSE' });
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   // ===== 비회원 인증 성공
-  const handleGuestSuccess = (bookerData) => {
-    setBooker(bookerData);
+  const handleGuestSuccess = (data) => {
+    // data = { accessToken, booker, reservation }
+    setGuestData(data);
     setShowLoginModal(false);
 
     // 비회원용 소켓 연결
@@ -59,39 +84,16 @@ export default function LiveChat() {
 
     const initRoom = async () => {
       try {
-        // 1. 기존 채팅방 조회
-        const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/chat/rooms/my`, {
-          credentials: 'include',
-        });
-
-        let room;
-        if (res.ok) {
-          const data = await res.json();
-          room = data.data;
-        }
-
-        // 2. 없으면 생성
-        if (!room) {
-          const createRes = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/chat/rooms`, {
-            method: 'POST',
-            credentials: 'include',
-          });
-          const createData = await createRes.json();
-          room = createData.data;
-        }
-
+        // 1. 채팅방 생성/조회 (없으면 생성, 있으면 반환)
+        const room = await createRoom();
         setRoomId(room.id);
 
-        // 3. 이전 메시지 로드
-        const msgRes = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/chat/rooms/${room.id}/messages`, {
-          credentials: 'include',
-        });
-        if (msgRes.ok) {
-          const msgData = await msgRes.json();
-          setMessages(msgData.data || []);
-        }
+        // 2. 이전 메시지 로드
+        const msgList = await getMessages(room.id);
+        setMessages(msgList || []);
       } catch (err) {
         console.error('채팅방 초기화 실패:', err);
+        toast.error('에러가 발생했습니다. 새로고침 해주세요.');
       }
     };
 
@@ -100,68 +102,58 @@ export default function LiveChat() {
 
   // ===== 채팅방 생성/입장 (비회원)
   useEffect(() => {
-    if (!booker?.id) return;
+    if (!guestData?.booker?.id || !guestData?.accessToken) return;
 
     const initGuestRoom = async () => {
       try {
-        // 1. 기존 채팅방 조회
-        const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/chat/rooms/guest/${booker.id}`, {
-          credentials: 'include',
-        });
-
-        let room;
-        if (res.ok) {
-          const data = await res.json();
-          room = data.data;
-        }
-
-        // 2. 없으면 생성
-        if (!room) {
-          const createRes = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/chat/rooms/guest`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ bookerId: booker.id }),
-          });
-          const createData = await createRes.json();
-          room = createData.data;
-        }
-
+        // 1. 채팅방 생성/조회 (bookerId + 비회원 토큰 전달)
+        const room = await createRoom({ bookerId: guestData.booker.id }, guestData.accessToken);
         setRoomId(room.id);
 
-        // 3. 이전 메시지 로드
-        const msgRes = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/chat/rooms/${room.id}/messages`, {
-          credentials: 'include',
-        });
-        if (msgRes.ok) {
-          const msgData = await msgRes.json();
-          setMessages(msgData.data || []);
-        }
+        // 2. 이전 메시지 로드
+        const msgList = await getMessages(room.id, guestData.accessToken);
+        setMessages(msgList || []);
       } catch (err) {
         console.error('비회원 채팅방 초기화 실패:', err);
+        toast.error('에러가 발생했습니다. 새로고침 해주세요.');
       }
     };
 
     initGuestRoom();
-  }, [booker]);
+  }, [guestData]);
 
   // ===== 소켓 연결 및 이벤트
   useEffect(() => {
     if (!socket || !roomId) return;
 
-    // 방 입장
-    socket.emit('join', roomId);
+    // 방 입장 (userType 전달)
+    socket.emit('join', { roomId, userType: 'USER' });
     setIsConnected(true);
 
     // 메시지 수신
     const handleMessage = (message) => {
       setMessages(prev => [...prev, message]);
+
+      // 상대방(ADMIN) 메시지면 바로 읽음 처리
+      if (message.senderType === 'ADMIN') {
+        socket.emit('read', { messageId: message.id, roomId });
+      }
+    };
+
+    // 읽음 처리 수신 (상대방이 읽었을 때)
+    const handleMessagesRead = ({ messageIds }) => {
+      setMessages(prev => prev.map(msg =>
+        messageIds.includes(msg.id) ? { ...msg, isRead: true } : msg
+      ));
     };
 
     socket.on('message', handleMessage);
+    socket.on('messagesRead', handleMessagesRead);
 
+    // 언마운트시 중단
     return () => {
       socket.off('message', handleMessage);
+      socket.off('messagesRead', handleMessagesRead);
     };
   }, [socket, roomId]);
 
@@ -197,14 +189,14 @@ export default function LiveChat() {
     navigate(-1);  // 로그인 안 하면 뒤로
   };
 
-  // 인증 여부 (회원 또는 비회원)
-  const isAuthenticated = isLoggedIn || !!booker;
+  // 인증 여부 (회원 또는 비회원 데이터 있으면 true)
+  const isAuthenticated = isLoggedIn || !!guestData;
 
   // 로딩 중
   if (loading) {
     return (
       <div className="live-chat-loading">
-        <p>로딩 중...</p>
+        <Loading fullScreen={false} />
       </div>
     );
   }
@@ -229,6 +221,13 @@ export default function LiveChat() {
           <h2 className="live-chat-title">1:1 상담</h2>
           <div className="live-chat-header-spacer" />
         </div>
+
+        {/* 비회원 경고 문구 */}
+        {guestData && (
+          <div className="live-chat-guest-warning">
+            비회원은 페이지를 나가거나 새로고침 시 재인증이 필요합니다.
+          </div>
+        )}
 
         {/* 메시지 목록 */}
         <ChatMessageList messages={messages} myType="USER" />

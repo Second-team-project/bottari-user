@@ -55,8 +55,8 @@ function App() {
         {/* 채팅 상담 버튼 */}
         <LiveChatBtn />
 
-        {/* 푸터 */}
-        <Footer />
+        {/* 푸터 (채팅 페이지 제외) */}
+        {location.pathname !== '/chat' && <Footer />}
       </div>
     </>
   )

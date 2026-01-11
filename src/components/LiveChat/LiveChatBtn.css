@@ -28,7 +28,7 @@
     border-radius: 50px;
 
     position: fixed;
-    bottom: 3rem;
+    bottom: 5rem;
     right: 2.5rem;
   }
   
@@ -45,8 +45,11 @@
 
 
 /* 모바일 대응 글자 없음 */
-@media (max-width: 480px) {
-  .live-chat-btn span {
-    display: none;
+.live-chat-btn-text {
+  display: none;
+}
+@media (min-width: 769px) {
+  .live-chat-btn-text {
+    display: block;
   }
 }

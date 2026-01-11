@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { X } from 'lucide-react';
 import { motion } from "framer-motion";
 
+import { guestAuth } from "../../api/chatApi.js";
+
 /**
  * 채팅용 로그인 모달
  * @param {function} onClose - 모달 닫기
@@ -50,21 +52,10 @@ export default function ChatLoginModal({ onClose, onGuestSuccess }) {
 
     try {
       // 비회원 채팅 인증 API 호출
-      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/chat/auth/guest`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ code, password }),
-      });
+      const data = await guestAuth({ code, password });
 
-      if (!res.ok) {
-        throw new Error('인증 실패');
-      }
-
-      const data = await res.json();
-
-      // 인증 성공 → booker 정보 전달
-      onGuestSuccess(data.data);
+      // 인증 성공 → booker, reservation 정보 전달
+      onGuestSuccess(data);
       toast.success('인증되었습니다.');
     } catch (err) {
       toast.error('예약코드와 비밀번호를 다시 확인해 주세요.');
@@ -115,8 +106,8 @@ export default function ChatLoginModal({ onClose, onGuestSuccess }) {
 
         {/* 페이지 제목 */}
         <div className="chat-login-modal-title-wrapper">
-          <h2 className="chat-login-modal-title">상담 로그인</h2>
-          <p className="chat-login-modal-subtitle">로그인 후 상담을 이용하실 수 있습니다.</p>
+          <h2 className="chat-login-modal-title">로그인</h2>
+          <p className="chat-login-modal-subtitle">상담을 위해 예약 확인이 필요합니다.</p>
         </div>
 
         {/* 버튼 영역 */}
@@ -134,14 +125,15 @@ export default function ChatLoginModal({ onClose, onGuestSuccess }) {
             </span>
           </button>
 
-          {/* 구분선 */}
-          <div className="chat-login-modal-divider">
-            <span>또는</span>
-          </div>
 
           {/* 비회원 인증 입력창 */}
           <form onSubmit={handleGuestAuth} className="chat-login-modal-form">
             <div className="chat-login-modal-input-container">
+              {/* 구분선 */}
+              <div className="chat-login-modal-divider">
+                <span>또는</span>
+              </div>
+              
               <input
                 type="text"
                 name="code"

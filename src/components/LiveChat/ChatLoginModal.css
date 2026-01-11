@@ -1,90 +1,127 @@
 /* ===== 배경 ===== */
 .chat-login-modal-background {
+  width: 100%;
+  max-width: 1024px;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+
+  z-index: 15;  
 }
 
 /* ===== 컨테이너 ===== */
 .chat-login-modal-container {
+  width: 85%;
+  max-width: 900px;
+  height: 60vh;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: var(--bottari-shadow);
+  padding: 1.3rem 1.3rem;
+
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 400px;
-  background-color: #fff;
-  border-radius: 16px;
-  padding: 24px;
-  z-index: 1000;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+  z-index: 16;
+}
+@media (min-width: 769px) {
+  /* 웹 컨테이너 */
+  .chat-login-modal-container {
+    width: 85%;
+    max-width: 900px;
+    height: 70vh;
+    min-height: 450px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 1.3rem 1.3rem;
+  
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+  
+    z-index: 16;
+  }
 }
 
 /* ===== 닫기 버튼 ===== */
 .chat-login-modal-x {
-  position: absolute;
-  top: 16px;
-  right: 16px;
+  color: var(--bottari-gray);
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+
   cursor: pointer;
-  color: #666;
 }
 
 /* ===== 제목 ===== */
 .chat-login-modal-title-wrapper {
-  text-align: center;
-  margin-bottom: 24px;
-}
+  /* text-align: center;
+  margin-bottom: 24px; */
+  width: 100%;
+  height: 3rem;
+  margin-bottom: 1rem;
 
-.chat-login-modal-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 8px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+@media (min-width: 769px) {
+  .chat-login-modal-title-wrapper {
+    margin: 0 auto ;
+  }
 }
 
 .chat-login-modal-subtitle {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
+
 }
 
 /* ===== 버튼 컨테이너 ===== */
 .chat-login-modal-btn-container {
+  padding: 6%;
+
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  gap: 1rem;
 }
 
 /* ===== 카카오 버튼 ===== */
 .chat-login-modal-kakao-btn-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  height: 48px;
-  background-color: #FEE500;
+  width: 220px;
+  height: 50px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
+
   cursor: pointer;
-  transition: background-color 0.2s;
+}
+.chat-login-modal-kakao-btn {
+  width: 220px;
+}
+.chat-login-modal-kakao-text {
+  display: none;
+}
+@media (min-width: 769px) {
+  .chat-login-modal-kakao-btn-wrapper {
+    width: 235px;
+  }
+  .chat-login-modal-kakao-btn {
+    width: 235px;
+  }
 }
 
 .chat-login-modal-kakao-btn-wrapper:hover {
-  background-color: #f5dc00;
+  transform: scale(0.98);
 }
-
-.chat-login-modal-kakao-btn {
-  height: 20px;
-}
-
-.chat-login-modal-kakao-text {
-  font-size: 15px;
-  font-weight: 600;
-  color: #000;
+.chat-login-modal-kakao-btn-wrapper:active {
+  transform: scale(0.95);
+  filter: brightness(0.95);  
 }
 
 /* ===== 구분선 ===== */
@@ -99,16 +136,18 @@
   content: '';
   flex: 1;
   height: 1px;
-  background-color: #e9ecef;
+  background-color: var(--bottari-coolgray);
 }
 
 .chat-login-modal-divider span {
-  font-size: 13px;
-  color: #999;
+  font-size: 0.75rem;
+  color: var(--bottari-gray)
 }
 
 /* ===== 폼 ===== */
 .chat-login-modal-form {
+  margin: 1rem 0;
+
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -117,41 +156,61 @@
 .chat-login-modal-input-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .chat-login-modal-input {
-  width: 100%;
-  height: 44px;
-  padding: 0 14px;
-  border: 1px solid #ddd;
+  width: 190px;
+  height: 40px;
   border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.2s;
-  box-sizing: border-box;
+  border: none;
+  background-color: #EEE;
+
+  padding: 5% 10%;
+  font-weight: 600;
 }
 
 .chat-login-modal-input:focus {
-  border-color: #3182f6;
+  outline: none;
+  box-shadow: var(--bottari-input-shadow);
 }
 
-.chat-login-modal-input:disabled {
+/* .chat-login-modal-input:disabled {
   background-color: #f9fafb;
-}
+} */
 
 /* ===== 비회원 버튼 ===== */
 .chat-login-modal-guest-btn-wrapper {
-  width: 100%;
-  height: 48px;
-  background-color: #3182f6;
-  border: none;
+  color: #fff;
+  background-color: var(--bottari-navy);
+  border: 2px solid var(--bottari-navy);
   border-radius: 8px;
+  
+  width: 220px;
+  height: 50px;
+  
+  font-weight: 600;
+  font-size: 1rem;
+
   cursor: pointer;
-  transition: background-color 0.2s;
+}
+@media (min-width: 769px) {
+  .chat-login-modal-guest-btn-wrapper {
+    width: 230px;
+  }
 }
 
-.chat-login-modal-guest-btn-wrapper:hover:not(:disabled) {
+.chat-login-modal-guest-btn-wrapper:hover {
+  transform: scale(0.98);
+}
+.chat-login-modal-guest-btn-wrapper:active {
+  transform: scale(0.95);
+  filter: brightness(0.95);  
+}
+
+
+/* .chat-login-modal-guest-btn-wrapper:hover:not(:disabled) {
   background-color: #1c6dd0;
 }
 
@@ -164,4 +223,4 @@
   font-size: 15px;
   font-weight: 600;
   color: #fff;
-}
+} */

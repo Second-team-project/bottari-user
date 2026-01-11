@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import './ChatBubble.css';
 
 /**
@@ -17,16 +18,7 @@ export default function ChatBubble({
   isRead,
   isMine
 }) {
-  // 시간 포맷 (HH:mm)
-  const formatTime = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('ko-KR', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    });
-  };
+  const formatTime = (dateString) => dateString ? dayjs(dateString).format('HH:mm') : '';
 
   return (
     <div className={`chat-bubble-wrapper ${isMine ? 'mine' : 'other'}`}>
@@ -51,7 +43,7 @@ export default function ChatBubble({
               src={content}
               alt="전송된 이미지"
               className="chat-bubble-image"
-              onClick={() => window.open(content, '_blank')}
+              onClick={() => window.open(content, '_blank', 'noopener,noreferrer')}
             />
           ) : (
             <p className="chat-bubble-text">{content}</p>

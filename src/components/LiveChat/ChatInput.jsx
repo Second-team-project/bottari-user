@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { Image, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import './ChatInput.css';
+import { sendImg } from '../../api/chatApi';
 
 /**
  * 채팅 입력창 컴포넌트
@@ -45,21 +46,13 @@ export default function ChatInput({ onSendMessage, disabled = false }) {
     }
 
     // 파일 업로드 후 URL 받아서 전송
-    // TODO: 실제 업로드 API 연동 필요
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('img', file);
 
-      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/common/files/chat`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'include',
-      });
+      const response = await sendImg(formData);
 
-      if (!response.ok) throw new Error('업로드 실패');
-
-      const result = await response.json();
-      onSendMessage(result.data.url, 'IMAGE');
+      onSendMessage(response, 'IMAGE');
     } catch (err) {
       console.error('이미지 업로드 실패:', err);
       toast.error('이미지 업로드에 실패했습니다.');
@@ -69,7 +62,7 @@ export default function ChatInput({ onSendMessage, disabled = false }) {
     e.target.value = '';
   };
 
-  // Enter 전송 (Shift+Enter는 줄바꿈)
+  // Enter 전송
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
