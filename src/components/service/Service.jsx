@@ -7,7 +7,7 @@ export default function Service() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // ===== 스크롤 최상위 설정
+  // ===== 스크롤 top 설정
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
