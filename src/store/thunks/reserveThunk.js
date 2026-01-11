@@ -91,12 +91,13 @@ export const reserveComplete = createAsyncThunk(
  */
 export const userReservation = createAsyncThunk(
   'reserve/userReservation',
-  async (_, {rejectWithValue}) => {
+  async ({ page = 1, limit = 10 } = {}, {rejectWithValue}) => {
     try {
       const url = `/api/user/reserve`;
-      const response = await axiosIns.get(url);
+      const params = { page, limit }
+      const response = await axiosIns.get(url, { params });
 
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error);
     }

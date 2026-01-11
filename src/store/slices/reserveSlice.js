@@ -4,8 +4,11 @@ import { guestReservation, guestReservationCancel, userReservation, userReservat
 const initialState = {
   deliveryReserve: null,
   storageReserve: null,
+
   reservationList: [],
+  reservationListCount: 0,
   reservation: null,
+
   loading: false,
   error: null,
 }
@@ -46,8 +49,26 @@ const slice = createSlice({
   },
   extraReducers: builder => {
     builder
+      .addCase(userReservation.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(userReservation.fulfilled, (state, action) => {
-        state.reservationList = action.payload.data;
+        const { list, count, page } = action.payload;
+
+        if(page === 1) {
+          state.reservationList = list;
+        } else {
+          state.reservationList = [...state.reservationList, ...list];
+        }
+        state.reservationListCount = count;
+        state.loading = false;
+      })
+      .addCase(userReservation.rejected, (state, action) => {
+        state.loading = false;
+
+        state.reservationList = [];
+
+        console.error('예약정보 불러오기 실패 : ', action.error);
       })
       .addCase(guestReservation.fulfilled, (state, action) => {
         state.reservation = action.payload.data;
