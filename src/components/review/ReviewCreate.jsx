@@ -41,6 +41,15 @@ export default function ReviewCreate() {
       })
   }, [dispatch]);
 
+  // ===== 언마운트 시 프리뷰 삭제
+  useEffect(() => {
+    return () => {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
+
   // 이미지 선택
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -223,7 +232,7 @@ export default function ReviewCreate() {
           <div className="review-create-section">
             <label className="review-create-label">사진 ( 선택 )</label>
             <span className="review-small-notice-text">사진은 최대 1장 업로드 가능합니다.</span>
-            <span className="review-small-notice-text">jpg / jpeg / png 확장자의 이미지만 선택 가능합니다.</span>
+            <span className="review-small-notice-text">jpg / jpeg / png / webp 확장자의 이미지만 선택 가능합니다.</span>
 
             {
               imagePreview ? (
