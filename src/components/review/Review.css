@@ -139,3 +139,31 @@
   flex-direction: column;
   gap: 0.1rem;
 }
+
+/* 더보기 버튼 */
+.review-more-btn-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.review-more-btn {
+  color: var(--bottari-grayfont);
+  width: 80%;
+  max-width: 500px;
+
+  background-color: var(--bottari-offwhite);
+  border: 1px solid var(--bottari-coolgray);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+
+  cursor: pointer;
+}
+.review-more-btn:hover {
+  transform: scale(0.98);
+}
+.review-more-btn:active {
+  transform: scale(0.95);
+  filter: brightness(0.95);
+}

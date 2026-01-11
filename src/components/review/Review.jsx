@@ -10,6 +10,7 @@ import { getReviewList } from "../../store/thunks/reviewThunk.js";
 import { maskEmail } from "../../utils/maskEmail.js";
 
 import ReviewDetailModal from "./ReviewDetail.jsx";
+import { toast } from "sonner";
 
 export default function Review() {
   // ===== hooks
@@ -17,21 +18,44 @@ export default function Review() {
   const navigate = useNavigate();
   // ===== local states
   const [reviewList, setReviewList] = useState([]);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [page, setPage] = useState(1);
   // 모달 상태
   const [reviewDetail, setReviewDetail] = useState(null);
 
   // ===== 데이터 불러오기
   useEffect(() => {
-    dispatch(getReviewList({page : 1})).unwrap()
+    dispatch(getReviewList({ page: 1 })).unwrap()
       .then(res => {
-        console.log('Review-thunkRes: ', res.data.list)
-        setReviewList(res.data.list);
+        console.log('Review-thunkRes: ', res.list)
+        setReviewList(res.list);
+        setReviewCount(res.count);
       })
-  }, [])
+      .catch(err => {
+        console.error('리뷰 목록 조회 실패: ', err);
+        toast.error('알 수 없는 오류가 발생했습니다. 새로고침 해주세요.');
+      })
+  }, [dispatch])
 
+  // ===== 핸들러
+  // 리뷰 삭제 시 목록에서 제거
   function handleDeleteReview(reviewId) {
     setReviewList(prev => prev.filter(item => item.id !== reviewId));
-  } 
+    setReviewCount(prev => prev - 1);
+  }
+
+  // 더보기
+  function handleMore() {
+    const nextPage = page + 1;
+    dispatch(getReviewList({ page: nextPage })).unwrap()
+      .then(res => {
+        setReviewList(prev => [...prev, ...res.list]);
+        setPage(nextPage);
+      })
+      .catch(err => {
+        console.error('리뷰 더보기 실패: ', err);
+      })
+  }
 
   return (
     <motion.div
@@ -89,13 +113,17 @@ export default function Review() {
           ))}
         </div>
 
-        {/* 작성 버튼 */}
-        {/* <button
-          className="review-write-btn"
-          onClick={() => navigate("/review/create")}
-        >
-          <Plus size={24} />
-        </button> */}
+        {/* 더보기 버튼 */}
+        {
+          reviewList.length < reviewCount && (
+            <div className="review-more-btn-wrapper">
+              <button type="button" className="review-more-btn"
+                onClick={handleMore}
+              >더 보기</button>
+            </div>
+          )
+        }
+
       </div>
 
       {/* 상세 모달 */}
