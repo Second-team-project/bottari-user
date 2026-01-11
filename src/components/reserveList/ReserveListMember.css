@@ -30,3 +30,30 @@
 .reserve-list-noItem-btn:active {
   transform: scale(0.95);
 }
+
+/* 더 보기 버튼 */
+.reserve-list-more-btn-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.reserve-list-more-btn {
+  color: var(--bottari-grayfont);
+  width: 80%;
+  max-width: 500px;
+
+  background-color: var(--bottari-offwhite);
+  border: 1px solid var(--bottari-coolgray);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+
+  cursor: pointer;
+}
+.reserve-list-more-btn:hover {
+  transform: scale(0.98);
+}
+.reserve-list-more-btn:active {
+  transform: scale(0.95);
+  filter: brightness(0.95);
+}
