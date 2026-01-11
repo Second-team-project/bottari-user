@@ -19,7 +19,7 @@ export default function ReserveConfirm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // ===== 스크롤 설정
+  // ===== 스크롤 top 설정
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -131,7 +131,7 @@ export default function ReserveConfirm() {
                 {
                   thisData?.luggageList.map((luggage, index) => (
                     <div key={index}>
-                      <span>{luggage.itemType} {luggage.itemSize ? '(luggage.itemSize)' : ''} {luggage.itemWeight} {luggage.count}개</span>
+                      <span>{luggage.itemType} {luggage.itemSize ? `( ${luggage.itemSize} )` : ''} {luggage.itemWeight} {luggage.count}개</span>
                     </div>
                   ))
                 }
