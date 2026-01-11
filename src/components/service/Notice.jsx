@@ -16,12 +16,12 @@ export default function Notice() {
   // ===== local states
   const [selectedNotice, setselectedNotice] = useState(null);
 
-  console.log('faqList.length / faqListCount: ', noticeList.length, noticeListCount)
+  console.log('noticeList.length / noticeListCount: ', noticeList.length, noticeListCount)
 
   // ===== 첫 호출 : 마운트 - 공지사항 목록 가져오기
   useEffect(() => {
     dispatch(getNoticeThunk());
-  }, []);
+  }, [dispatch]);
 
   // === 더보기 호출
   const loadMore = async () => {
