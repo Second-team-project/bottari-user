@@ -2,9 +2,15 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/icons/bottari-icon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/icons/bottari-icon-32.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=%VITE_KAKAO_JAVASCRIPT_KEY%&libraries=services"></script>
+    <!-- 아이폰용 -->
+    <link rel="apple-touch-icon" href="/icons/bottari-icon-180.png" sizes="180x180" />
+    <!-- PWA에서 사용하는 manifest 파일을 참조 -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <!-- 브라우저의 툴바 색상을 설정 (Android에서 적용됨) -->
+    <meta name="theme-color" content="#FFFFFF" />
     <title>bottari</title>
   </head>
   <body>
