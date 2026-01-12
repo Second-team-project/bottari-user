@@ -15,7 +15,6 @@ export const guestAuth = async ({ code, password }) => {
   const url = '/api/chat/guest/auth';
 
   const response = await axiosIns.post(url, { code, password });
-  console.log('guestAuth:', response.data);
 
   return response.data.data;
 };
@@ -34,7 +33,6 @@ export const createRoom = async (data = {}, guestToken = null) => {
     : {};
 
   const response = await axiosIns.post(url, data, config);
-  console.log('createRoom:', response.data);
 
   return response.data.data;
 };
@@ -53,7 +51,6 @@ export const getMessages = async (roomId, guestToken = null) => {
     : {};
 
   const response = await axiosIns.get(url, config);
-  console.log('getMessages:', response.data);
 
   return response.data.data;
 };
@@ -69,7 +66,6 @@ export const sendImg = async (data) => {
   const response = await axiosIns.post(url, data, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
-  console.log('sendImg:', response.data);
 
   return response.data.data;
 };

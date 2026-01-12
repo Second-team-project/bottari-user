@@ -9,8 +9,6 @@ export default function MainService() {
   const serviceList = useSelector(state => state.guideImg.serviceList);
   const loading = useSelector(state => state.guideImg.loading);
 
-  console.log('loading:', loading, 'serviceList:', serviceList);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

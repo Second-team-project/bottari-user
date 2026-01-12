@@ -9,8 +9,6 @@ export const getStores = createAsyncThunk(
       const url = `/api/admin/store`;
 
       const response = await axiosIns.get(url)
-      
-      // console.log('thunk-store: ', response.data)
 
       return response.data;
       

@@ -11,8 +11,7 @@ export const getPricing = createAsyncThunk(
 
       const url = `/api/admin/pricing`;
 
-      const response = await axiosIns.get(url)
-      console.log('pricing: ', response.data)
+      const response = await axiosIns.get(url);
 
       return response.data;
       
@@ -32,8 +31,7 @@ export const getAdditionalPricing = createAsyncThunk(
 
       const url = `/api/admin/pricing/additional`;
 
-      const response = await axiosIns.get(url)
-      console.log('pricing-additional: ', response.data.data)
+      const response = await axiosIns.get(url);
 
       return response.data.data;
       

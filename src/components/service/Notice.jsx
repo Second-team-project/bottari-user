@@ -16,8 +16,6 @@ export default function Notice() {
   // ===== local states
   const [selectedNotice, setselectedNotice] = useState(null);
 
-  console.log('noticeList.length / noticeListCount: ', noticeList.length, noticeListCount)
-
   // ===== 첫 호출 : 마운트 - 공지사항 목록 가져오기
   useEffect(() => {
     dispatch(getNoticeThunk());
@@ -52,8 +50,6 @@ export default function Notice() {
     setselectedNotice(null);
     setSearchParams({});
   };
-
-  console.log('Notice: ', noticeList)
 
   return (
     <div className="notice-container">

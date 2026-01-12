@@ -33,7 +33,7 @@ export default function usePushNotifications() {
         }
         
       } catch(error) {
-        console.log(error);
+        console.error(error);
       } finally {
         setIsInit(true);
       }

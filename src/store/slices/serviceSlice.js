@@ -36,20 +36,12 @@ const slice = createSlice({
         state.loading = false;
 
         const page = action.meta.arg || 1;
-
         if(page === 1) {
           state.faqList = action.payload.faqs
-          // console.log('slice-faq: ', state.faqList)
-
         } else {
           state.faqList = [...state.faqList, ...action.payload.faqs];
-          // console.log('slice-faq: ', state.faqList)
         }
-
         state.faqListCount = action.payload.count;
-        // console.log('slice-faqs-count: ', state.faqListCount)
-
-        console.log('slice-faqList: ', state.faqList);
       })
       .addCase(getFaqThunk.rejected, (state, action) => {
         state.loading = false;
@@ -65,18 +57,12 @@ const slice = createSlice({
         state.loading = false;
 
         const page = action.meta.arg || 1;
-
         if(page === 1) {
-          state.noticeList = action.payload.notices
-          // console.log('slice-notice: ', state.noticeList)
-          
+          state.noticeList = action.payload.notices;
         } else {
           state.noticeList = [...state.noticeList, ...action.payload.notices]; 
-          // console.log('slice-notice: ', state.noticeList)
         }
-
         state.noticeListCount = action.payload.count;
-        // console.log('slice-notice-count: ', state.noticeListCount)
       })
       .addCase(getNoticeThunk.rejected, (state, action) => {
         state.loading = false;

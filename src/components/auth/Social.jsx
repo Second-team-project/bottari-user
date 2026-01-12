@@ -27,14 +27,10 @@ export default function Social() {
     // 에러가 없으면 정상 로그인 진행
     async function getAuth() {
       try {
-        const result = await dispatch(reissueThunk()).unwrap();
-        console.log('✅ 액세스 토큰 발급 성공:', result);  // 여기!
-        console.log('액세스 토큰:', result.data?.accessToken);
-        await dispatch(reissueThunk());
+        await dispatch(reissueThunk()).unwrap();
         navigate('/', { replace: true });
 
       } catch (error) {
-        console.log('Social: ', error);
         toast.error('소셜 로그인 실패');
         navigate('/login', { replace: true });
       }

@@ -37,10 +37,6 @@ export default function MainEvent() {
     return () => clearInterval(timer);
   }, [isPaused, eventList, loading]); // isPaused가 바뀌면 타이머 재설정
 
-
-  // console.log('loading:', loading, 'eventList:', eventList);
-
-
   return (
     
       <div 

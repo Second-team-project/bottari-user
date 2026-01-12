@@ -35,8 +35,6 @@ const slice = createSlice({
         state.serviceList = action.payload.filter(item => item.type === 'SERVICE')
         state.usageList = action.payload.filter(item => item.type === 'USAGE')
         state.priceList = action.payload.filter(item => item.type === 'PRICE')
-
-        // console.log('guide redux: ',state.bannerList, state.eventList, state.serviceList, state.usageList, state.priceList)
       })
       .addCase(getGuideImgThunk.rejected, (state, action) => {
         state.loading = false;

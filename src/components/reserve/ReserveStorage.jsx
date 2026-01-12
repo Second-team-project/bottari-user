@@ -69,10 +69,10 @@ export default function ReserveStorage() {
     dispatch(getStores()).unwrap()
     .then((res) => {
       setStoreList(res.data);
-      console.log('ReserveStorage-store: ', res.data)
     })
       .catch(err => {
-        console.log('ReserveStorage-store: ', err);
+        console.error('ReserveStorage-store: ', err);
+        toast.error('보관소 정보를 불러오지 못했습니다. 새로고침 해주세요.');
       })
     }, [dispatch])
 
@@ -81,10 +81,9 @@ export default function ReserveStorage() {
     dispatch(getAdditionalPricing()).unwrap()
       .then((res) => {
         setAdditionalPricing(res);
-        console.log('ReserveStorage-additionalPricing: ', res)
       })
       .catch(err => {
-        console.log('ReserveStorage-additionalPricing: ', err);
+        console.error('ReserveStorage-additionalPricing: ', err);
         toast.error('요금 정보를 불러오지 못했습니다. 새로고침 해주세요.');
       })
   }, [dispatch])
@@ -174,7 +173,6 @@ export default function ReserveStorage() {
         ...storageInfoData,
       };
       dispatch(setStorageReserve(updatedData));
-      console.log('보관예약 - 보관정보 redux 저장: ', storageInfoData);
     }, 1000);
 
     return debounceFunc;

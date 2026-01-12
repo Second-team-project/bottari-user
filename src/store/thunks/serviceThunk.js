@@ -7,11 +7,8 @@ export const getFaqThunk = createAsyncThunk(
     try {
       const url = `/api/user/faq`;
       const params = { page };
-      // console.log('thunk-params: ', params)
 
       const response = await axiosIns.get(url, { params })
-      console.log('thunk-faq: ', response.data.data.faqs)
-      console.log('thunk-faq: ', response.data.data)
       
       return response.data.data;
       
@@ -29,8 +26,6 @@ export const getNoticeThunk = createAsyncThunk(
       const params = { page };
 
       const response = await axiosIns.get(url, { params })
-      console.log('thunk-notice: ', response.data.data.notices)
-      console.log('thunk-notice: ', response.data.data)
       
       return response.data.data;
       

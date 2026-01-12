@@ -15,8 +15,6 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
   const [page, setPage] = useState(1);
 
-  console.log('faqList.length / faqListCount: ', faqList.length, faqListCount)
-
   // 첫 호출 : 마운트
   useEffect(() => {
     dispatch(getFaqThunk())

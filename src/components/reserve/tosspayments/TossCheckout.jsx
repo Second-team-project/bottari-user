@@ -27,10 +27,7 @@ export default function TossCheckoutPage({ payData, password }) {
   const [widgets, setWidgets] = useState(null);
 
   // ===== 임시 저장용
-  // console.log('체크아웃: ', payData)
   const draftReservation = {...payData, password}
-  console.log('임시 저장 값: ', draftReservation);
-
 
   // 1. 클라이언트키로 위젯 설정
   useEffect(() => {
@@ -148,7 +145,6 @@ export default function TossCheckoutPage({ payData, password }) {
                 // 2-1. 보관인 경우
               if(draftReservation.type === 'STORAGE') {
                 const draftResult = await dispatch(createStorageDraft(draftReservation)).unwrap();
-                console.log('checkout-draftResult: ', draftResult.response);
                 reserveCode = draftResult.data.reserveCode;
 
                 // 2-2. 배송인 경우

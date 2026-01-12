@@ -27,7 +27,6 @@ export default function Review() {
   useEffect(() => {
     dispatch(getReviewList({ page: 1 })).unwrap()
       .then(res => {
-        console.log('Review-thunkRes: ', res.list)
         setReviewList(res.list);
         setReviewCount(res.count);
       })

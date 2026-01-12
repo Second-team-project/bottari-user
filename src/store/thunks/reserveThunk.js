@@ -11,10 +11,7 @@ export const createDeliveryDraft = createAsyncThunk(
     try {
       const url = `/api/user/reserve/draft/delivery`;
 
-      const response = await axiosIns.post(url, data)
-
-      
-      // console.log('response: ', response.data)
+      const response = await axiosIns.post(url, data);
 
       return response.data;
 
@@ -75,8 +72,6 @@ export const reserveComplete = createAsyncThunk(
       const url = `/api/user/reserve/complete/${reserveCode}`;
       const response = await axiosIns.get(url);
 
-      // console.log('reserveCompletethunk-response: ', response);
-
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -133,8 +128,6 @@ export const userReservationCancel = createAsyncThunk(
       const url = `/api/user/reserve/cancel/${data.code}`;
       const response = await axiosIns.post(url, data);
 
-      // console.log('reserveCompletethunk-response: ', response);
-
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -151,8 +144,6 @@ export const guestReservationCancel = createAsyncThunk(
     try {
       const url = `/api/user/reserve/guest/cancel/${data.code}`;
       const response = await axiosIns.post(url, data);
-
-      // console.log('reserveCompletethunk-response: ', response);
 
       return response.data.data;
     } catch (error) {

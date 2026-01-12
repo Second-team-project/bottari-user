@@ -11,8 +11,6 @@ export default function NotificationInfoModal() {
   const { isInit, isSubscribing, isCheckedSubscribe, subscribeUser, dismissModal, dismissToday } = usePushNotifications();
   const { isLoggedIn } = useSelector(state => state.auth);
 
-  // console.log('알림 권한 요청 모달: ', { isLoggedIn, isInit, isSubscribing, isCheckedSubscribe });
-
   // ========================
   // ||     스크롤 방지     ||
   useEffect(() => {
@@ -28,8 +26,6 @@ export default function NotificationInfoModal() {
       document.body.style.overflow = 'unset';
     };
   }, [isLoggedIn, isInit, isSubscribing, isCheckedSubscribe]);
-
-  // console.log('알림모달조건: ', isLoggedIn, isInit, !isSubscribing, !isCheckedSubscribe)
 
   return (
     <>

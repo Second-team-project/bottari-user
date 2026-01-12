@@ -12,7 +12,6 @@ export default function ReserveListGuest() {
   // PENDING_PAYMENT 제외한 유효한 예약인지 확인
   const isValidReservation = reservation && reservation.state !== 'PENDING_PAYMENT';
 
-  console.log('비회원 예약 정보: ', reservation)
   return(
     <div className="reserve-list-body">
       {/* 유효한 예약이 없는 경우 */}

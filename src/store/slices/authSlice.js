@@ -30,13 +30,8 @@ const slice = createSlice({
       .addCase(reissueThunk.fulfilled, (state, action) => {
         const { accessToken, user } = action.payload.data;
         state.accessToken = accessToken;
-        console.log('thunk-accessToken: ', accessToken);
-
         state.user = user;  //  user model 객체 (리프레시 제외)
-        console.log('thunk-user: ', user);
-
         state.isLoggedIn = true;
-        console.log('thunk-isLoggedIn: ', state.isLoggedIn);
 
         state.loading = false;
       })

@@ -41,7 +41,7 @@ axiosIns.interceptors.request.use(async (config) => {
       
       // 1-1. 엑세스 토큰의 만료시간이 5분 이하면, 엑세스 토큰 새로 담기
       if(now >= expTime) {
-        console.log('만료 5분 이내 토큰 재발급');
+        // console.log('만료 5분 이내 토큰 재발급');
         const response = await store.dispatch(reissueThunk()).unwrap();
         accessToken = response.data.accessToken;
       }
@@ -52,7 +52,7 @@ axiosIns.interceptors.request.use(async (config) => {
 
     return config;
   } catch (error) {
-    console.log('axios Interceptor : ', error)
+    console.error('axios Interceptor : ', error)
     // thunk에서 에러 처리로 넘어감
     return Promise.reject(error);
   }

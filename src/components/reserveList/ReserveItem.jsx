@@ -87,7 +87,6 @@ export default function ReserveItem({ data }) {
       
       dispatch(getDriverLocation(data.id)).unwrap()
         .then(res => {
-          console.log('기사 정보 불러오기: ', res.data)
           setDriverInfo(res.data);
         })
         .catch(err => {

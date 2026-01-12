@@ -10,8 +10,6 @@ export const getGuideImgThunk = createAsyncThunk(
 
       const response = await axiosIns.get(url)
 
-      console.log('thunk-guideImg: ', response.data.data)
-
       return response.data.data;
       
     } catch (error) {

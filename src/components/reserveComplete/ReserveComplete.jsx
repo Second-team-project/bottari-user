@@ -28,14 +28,11 @@ export default function ReserveComplete() {
     dispatch(reserveComplete(reserveCode)).unwrap()
       .then( res => {
         setCompleteData(res);
-        console.log('res: ', res)
-        console.log('completeData.luggageList: ', res.luggageList)
         if(res?.code?.startsWith('D')) {  // complete데이터는 시간이 걸리므로, res로 타입부터 설정
           setType('D');
           return;
         }
         if(res?.code?.startsWith('S')) {
-          console.log('completeData: ', completeData)
           setType('S');
           return;
         }
@@ -45,8 +42,6 @@ export default function ReserveComplete() {
         toast.error('에러가 발생했습니다. 예약페이지에서 조회해주세요.')
       })
   }, [dispatch, reserveCode])
-
-  console.log('completeData: ', completeData)
 
 
   // 복사 아이콘 조작

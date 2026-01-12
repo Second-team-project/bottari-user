@@ -97,7 +97,6 @@ export default function UserInfoSection({
       } else {
         dispatch(setDeliveryReserve(updatedData));
       }
-      console.log(`${type} 예약 - 내 정보 redux 저장:`, userInfoData);
     }, 1000);
   }, [dispatch, type]);
 

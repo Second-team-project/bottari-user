@@ -10,9 +10,6 @@ export const tossPaymentsThunk = createAsyncThunk(
 
       const response = await axiosIns.post(url, data)
 
-      
-      console.log('response: ', response.data)
-
       return response.data;
       
     } catch (error) {

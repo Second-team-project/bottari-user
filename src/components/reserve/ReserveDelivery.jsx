@@ -111,7 +111,6 @@ export default function ReserveDelivery() {
         ...deliveryInfoData,
       };
       dispatch(setDeliveryReserve(updatedData));
-      console.log('배송예약 - 배송정보 redux 저장: ', deliveryInfoData);
     }, 1000);
 
     return debounceFunc;

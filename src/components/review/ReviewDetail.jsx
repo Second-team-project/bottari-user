@@ -15,8 +15,6 @@ export default function ReviewDetailModal({ review, onClose, onDeleteSuccess }) 
   // ===== local states
   const [deleteFlg, setDeleteFlg] = useState(false);
 
-  // console.log('user.id: ', user?.id, 'review?.writer?.id: ', review?.writer?.userId)
-
   // ========================
   // ||     스크롤 방지     ||
   useEffect(() => {

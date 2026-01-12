@@ -10,8 +10,6 @@ export default function MainBanner() {
   const bannerList = useSelector(state => state.guideImg.bannerList);
   const loading = useSelector(state => state.guideImg.loading);
 
-  // console.log('loading:', loading, 'bannerList:', bannerList);
-
   return (
       <div className="main-banner-container">
         {

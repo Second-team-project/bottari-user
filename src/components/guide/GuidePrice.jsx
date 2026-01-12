@@ -10,8 +10,6 @@ export default function GuidePrice() {
   const priceList = useSelector(state => state.guideImg.priceList);
   const loading = useSelector(state => state.guideImg.loading);
 
-  console.log('loading:', loading, 'priceList:', priceList);
-
   return(
     <motion.div
       initial={{ opacity: 0 }}

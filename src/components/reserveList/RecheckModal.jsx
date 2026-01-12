@@ -46,8 +46,6 @@ export default function RecheckModal({ modalFlgfalse, data}) {
     ? isAgreed
     : isAgreed && password.length >= 4;
 
-  console.log('RecheckModal-reason: ', reason)
-
   // ========================
   // ||     스크롤 방지     ||
   // ========================
@@ -57,8 +55,6 @@ export default function RecheckModal({ modalFlgfalse, data}) {
       document.body.style.overflow = 'unset';
     };
   }, []);  
-
-  console.log('password: ', password)
 
   // ==========================
   // ||     step handler     ||

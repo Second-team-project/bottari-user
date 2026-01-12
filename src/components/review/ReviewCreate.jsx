@@ -31,7 +31,6 @@ export default function ReviewCreate() {
   useEffect(() => {
     dispatch(getReviewable()).unwrap()
       .then(res => {
-        console.log('RevieCreate.jsx-res: ', res.data)
         if(res.data && Array.isArray(res.data)) {
           setReservations(res.data);
         }
@@ -96,13 +95,6 @@ export default function ReviewCreate() {
       content: content,
       img: image, // 진짜 파일 데이터
     };
-
-    console.log({ 
-      reservId: selectedReserv.id,
-      title, 
-      content, 
-      image 
-    });
 
     dispatch(createReview(payload))
       .unwrap()
