@@ -32,6 +32,9 @@ export default function LiveChat() {
   // 현재 사용할 소켓 (회원이면 memberSocket, 비회원이면 guestSocket)
   const socket = isLoggedIn ? memberSocket : guestSocket;
 
+  // API 중복 호출 방지용 (useRef는 즉시 반영 방지에 적합)
+  const isInitRef = useRef(false);
+
   // ===== 스크롤 top 설정
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -81,8 +84,10 @@ export default function LiveChat() {
   // ===== 채팅방 생성/입장 (회원)
   useEffect(() => {
     if (!isLoggedIn || !user?.id) return;
+    if (isInitRef.current) return; // 이미 초기화 중이면 차단
 
     const initRoom = async () => {
+      isInitRef.current = true; // 진입하자마자 깃발 꽂기
       try {
         // 1. 채팅방 생성/조회 (없으면 생성, 있으면 반환)
         const room = await createRoom();
@@ -94,6 +99,7 @@ export default function LiveChat() {
       } catch (err) {
         console.error('채팅방 초기화 실패:', err);
         toast.error('에러가 발생했습니다. 새로고침 해주세요.');
+        isInitRef.current = false; // 실패 시 재시도 가능하도록 초기화
       }
     };
 
@@ -103,8 +109,10 @@ export default function LiveChat() {
   // ===== 채팅방 생성/입장 (비회원)
   useEffect(() => {
     if (!guestData?.booker?.id || !guestData?.accessToken) return;
+    if (isInitRef.current) return; // 이미 초기화 중이면 차단
 
     const initGuestRoom = async () => {
+      isInitRef.current = true; // 진입하자마자 깃발 꽂기
       try {
         // 1. 채팅방 생성/조회 (bookerId + 비회원 토큰 전달)
         const room = await createRoom({ bookerId: guestData.booker.id }, guestData.accessToken);
@@ -116,6 +124,7 @@ export default function LiveChat() {
       } catch (err) {
         console.error('비회원 채팅방 초기화 실패:', err);
         toast.error('에러가 발생했습니다. 새로고침 해주세요.');
+        isInitRef.current = false; // 실패 시 재시도 가능하도록 초기화
       }
     };
 
