@@ -1,5 +1,5 @@
 import "./tosspayments/TossPayments.css";
-import "./Reserveform.css";
+import "./ReserveForm.css";
 import "./ReserveConfirm.css";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
