@@ -247,6 +247,10 @@ export default function ReserveStorage() {
       toast.error('올바른 이메일 형식이 아닙니다');
       return;
     }
+    if (!formData.phone || formData.phone.length < 10) {
+      toast.error('휴대폰 번호를 입력해주세요');
+      return;
+    }
     // 2-1-1. 유저가 아닌 경우만 비밀번호 체크
     if (!user) {
       if (!password || password.trim().length < 4) {

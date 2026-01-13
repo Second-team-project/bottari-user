@@ -165,7 +165,7 @@ export default function UserInfoSection({
 
         {/* 휴대폰 */}
         <div className="reserve-form-content">
-          <span className="reserve-form-essential">{' '}</span>
+          <span className="reserve-form-essential">*</span>
           <label htmlFor="phone" className="reserve-form-content-name">휴대폰 :</label>
           <div className="reserve-form-phone-input-wrapper">
             <select name="phone1" id="phone1" className="reserve-form-phone-input"
