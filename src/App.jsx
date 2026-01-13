@@ -15,7 +15,7 @@ import NotificationInfoModal from './components/common/NotificationInfoModal.jsx
 import LiveChatBtn from './components/LiveChat/LiveChatBtn.jsx';
 
 import { getGuideImgThunk } from './store/thunks/guideImgThunk.js';
-import Footer from './components/common/footer.jsx';
+import Footer from './components/common/Footer.jsx';
 import LiveChat from './components/LiveChat/LiveChat.jsx';
 
 
