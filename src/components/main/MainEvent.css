@@ -27,7 +27,7 @@
 
   transition: color 0.2s;
   cursor: pointer;
-  z-index: 10;
+  z-index: 5;
 }
 @media (min-width: 769px) {
   .main-event-arrow {
